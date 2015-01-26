@@ -3,6 +3,8 @@
 
 #include "Lexeme.h"
 
+#include <string>
+
 using namespace std;
 
 class Token {

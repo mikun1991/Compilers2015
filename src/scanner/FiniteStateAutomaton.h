@@ -1,22 +1,21 @@
 #ifndef FINITE_STATE_AUTOMATON
 #define FINITE_STATE_AUTOMATON
 
-
 #include "Lexeme.h"
+#include <istream>
 
 using namespace std;
 
 class FiniteStateAutomaton {
     
-    FiniteStateAutomaton();
+    FiniteStateAutomaton(istream* fileStream);
     
     virtual ~FiniteStateAutomaton(){};
 public:
-    
-    virtual getLexeme() = 0;
-    
 
+    virtual Lexeme getLexeme() = 0;
     
+	istream* _filePointer;
 };
 
 #endif //FINITE_STATE_AUTOMATON

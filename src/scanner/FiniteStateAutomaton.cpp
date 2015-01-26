@@ -1,6 +1,6 @@
-#include "Token.h"
+#include "FiniteStateAutomaton.h"
 
-Token::Token(string name, Lexeme lexeme, int lineNumber, int columnNumber)
-:_lineNumber(lineNumber), _columnNumber(columnNumber), _name(name), _lexeme(lexeme))
-{
-}
+FiniteStateAutomaton::FiniteStateAutomaton(istream* fileStream)
+	:_filePointer(fileStream)
+{}
+
