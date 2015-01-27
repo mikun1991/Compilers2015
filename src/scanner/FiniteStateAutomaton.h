@@ -1,7 +1,7 @@
 #ifndef FINITE_STATE_AUTOMATON
 #define FINITE_STATE_AUTOMATON
 
-#include "Lexeme.h"
+#include "Token.h"
 #include <istream>
 
 using namespace std;
@@ -13,7 +13,13 @@ class FiniteStateAutomaton {
     virtual ~FiniteStateAutomaton(){};
 public:
 
-    virtual Lexeme getLexeme() = 0;
+    virtual Token getLexeme() = 0;
+
+	//static helper functions (regex definitions)
+	static bool charIsWhiteSpace(char c);
+	static bool charIsDigit(char c);
+	static bool charIsUpperAlphabet(char c);
+	static bool charIsLowerAlphabet(char c);
     
 	istream* _filePointer;
 };

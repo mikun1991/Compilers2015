@@ -11,7 +11,7 @@ public:
 	//add more types as we go here 
 	enum Type{ Invalid };
     
-
+	Lexeme();
 	Lexeme(Type type, string value);
 
 	Type getType();

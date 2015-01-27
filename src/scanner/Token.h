@@ -11,6 +11,13 @@ class Token {
     
     
 public:
+	enum TokenError{ 
+		InvalidLanguageChar,  //character is not supported in this language
+		EndOfFile, //End of the file has been reached
+		InvalidFile //Invalid file pointer
+	};
+
+	Token ();
     Token (string name, Lexeme lexeme, int lineNumber, int columnNumber );
     
     
