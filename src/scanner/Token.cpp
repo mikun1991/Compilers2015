@@ -2,7 +2,7 @@
 
 
 Token::Token()
-:_lineNumber(-1), _columnNumber(-1),
+:_lineNumber(-1), _columnNumber(-1)
 {
 }
 

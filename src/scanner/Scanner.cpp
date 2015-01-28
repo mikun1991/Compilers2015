@@ -15,11 +15,10 @@ Lexeme Scanner::getNextLexeme()
 
 
 	return Lexeme(Lexeme::Type::Invalid, "");
-
 }
 
 bool Scanner::moveToNextTockenStart()
 {
 
-
+	return false;
 }
