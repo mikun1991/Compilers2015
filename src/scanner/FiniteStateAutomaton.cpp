@@ -1,8 +1,6 @@
 #include "FiniteStateAutomaton.h"
 
-FiniteStateAutomaton::FiniteStateAutomaton(istream* fileStream)
-	:_filePointer(fileStream)
-{}
+#include <iostream>
 
 bool FiniteStateAutomaton::charIsWhiteSpace(char c)
 {
@@ -91,4 +89,47 @@ bool FiniteStateAutomaton::charIsLowerAlphabet(char c)
 	if (c == 'z') return true;
 
 	return false;
+}
+
+Token FiniteStateAutomaton::greaterThan(istream* stream, int& line, int& currentColum)
+{
+	char next;
+//Start State
+	{
+		//look without taking
+		next = stream->peek();
+		if (next == '>'){ //transition
+			//move ahead next char
+			stream->get(); //we already know it is a '>'
+			currentColum++;
+			goto GreaterThan;
+		}
+		//default condition
+		goto Reject;
+	}
+
+GreaterThan:
+	{
+		next = stream->peek();
+		if (next == '='){ //transition
+			//take the '='
+			stream->get();
+			currentColum++;
+			goto GreaterThanOrEqual;
+		}
+		//accept greater than
+		return Token(Lexeme(Lexeme::GreaterThan, ">"), line, currentColum);
+	}
+
+GreaterThanOrEqual:
+	{
+		//can go no further
+		return Token(Lexeme(Lexeme::GreaterThanOrEqual, "="), line, currentColum);
+	}
+
+Reject:
+	{
+		//nothing here, return default init token (invalid)
+		return Token();
+	}
 }

@@ -1,4 +1,4 @@
-# Mirco Pascal Scanner Test
+# Mirco Pascal Scanner Tests
 
 cmake_minimum_required(VERSION 3.0)
  
@@ -10,10 +10,10 @@ FILE(GLOB MP_SCANNER_TEST_SOURCES *.cpp)
 
 
 
-add_library( testscanner STATIC ${MP_SCANNER_TEST_SOURCES} ${MP_SCANNER_TEST_HEADERS} ) 
+add_library( mpscanner STATIC ${MP_SCANNER_TEST_SOURCES} ${MP_SCANNER_TEST_HEADERS} ) 
 
-install( TARGETS testscanner DESTINATION test)
-#install( FILES MP_SCANNER_TEST_HEADERS DESTINATION include)
+install( TARGETS mpscanner DESTINATION lib)
+install( FILES MP_SCANNER_HEADERS DESTINATION include)
 
 
 include_directories(${CMAKE_SOURCE_DIR}) #source root

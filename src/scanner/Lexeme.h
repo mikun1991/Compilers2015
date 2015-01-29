@@ -9,7 +9,10 @@ class Lexeme {
     
 public:
 	//add more types as we go here 
-	enum Type{ Invalid };
+	enum Type{ Invalid,
+		GreaterThan,
+		GreaterThanOrEqual
+	};
     
 	Lexeme();
 	Lexeme(Type type, string value);
