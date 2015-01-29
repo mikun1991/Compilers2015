@@ -94,13 +94,14 @@ bool FiniteStateAutomaton::charIsLowerAlphabet(char c)
 Token FiniteStateAutomaton::greaterThan(istream* stream, int& line, int& currentColum)
 {
 	char next;
+	string name;
 //Start State
 	{
 		//look without taking
 		next = stream->peek();
 		if (next == '>'){ //transition
 			//move ahead next char
-			stream->get(); //we already know it is a '>'
+			name += stream->get(); //we already know it is a '>'
 			currentColum++;
 			goto GreaterThan;
 		}
@@ -113,18 +114,18 @@ GreaterThan:
 		next = stream->peek();
 		if (next == '='){ //transition
 			//take the '='
-			stream->get();
+			name += stream->get();
 			currentColum++;
 			goto GreaterThanOrEqual;
 		}
 		//accept greater than
-		return Token(Lexeme(Lexeme::GreaterThan, ">"), line, currentColum);
+		return Token(Lexeme(Lexeme::GreaterThan, name), line, currentColum);
 	}
 
 GreaterThanOrEqual:
 	{
 		//can go no further
-		return Token(Lexeme(Lexeme::GreaterThanOrEqual, "="), line, currentColum);
+		return Token(Lexeme(Lexeme::GreaterThanOrEqual, name), line, currentColum);
 	}
 
 Reject:
