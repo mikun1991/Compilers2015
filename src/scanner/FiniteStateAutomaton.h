@@ -13,7 +13,7 @@ class FiniteStateAutomaton {
     virtual ~FiniteStateAutomaton(){};
 public:
 
-    virtual Token getLexeme() = 0;
+    virtual Token getToken() = 0;
 
 	//static helper functions (regex definitions)
 	static bool charIsWhiteSpace(char c);

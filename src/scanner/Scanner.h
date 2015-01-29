@@ -13,20 +13,25 @@ class Scanner {
     
 public:
     Scanner(string filePath);
+	~Scanner();
     
-    Lexeme getNextLexeme();
+    Lexeme getNextToken(); //<- this is the dispatcher 
+
+	bool hasError();
+	string getError();
 
 private:
 
 
 	bool moveToNextTockenStart();
 
-	int _lastTockenEnd;
-	int _beginingOfNextTocken; 
+	int _currentColumn;
+	int _currentRow;
 
+	bool _hasError;
+	string _errorString;
 
 	ifstream* _filePointer;
-    
 	string _filePath;
 };
 

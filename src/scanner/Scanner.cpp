@@ -6,7 +6,7 @@ Scanner::Scanner(string filePath)
 
 }
 
-Lexeme Scanner::getNextLexeme()
+Lexeme Scanner::getNextToken()
 {
 	//switch here
 
