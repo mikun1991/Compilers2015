@@ -91,7 +91,31 @@ bool FiniteStateAutomaton::charIsLowerAlphabet(char c)
 	return false;
 }
 
-Token FiniteStateAutomaton::greaterThan(istream* stream, int& line, int& currentColum)
+Token FiniteStateAutomaton::singleCharFSA(istream* stream, char c, Lexeme::Type type, int& line, int& currentColumn)
+{
+	char next;
+	string name;
+	//Start State
+	{
+		next = stream->peek();
+		if (next == c){ //transition
+			name += stream->get();
+			currentColumn++;
+			goto Accept;
+		}
+		goto Reject;
+	}
+Accept:
+	{
+		return Token(Lexeme(type, name), line, currentColumn);
+	}
+Reject:
+	{
+		return Token();
+	}
+}
+
+Token FiniteStateAutomaton::greaterThan(istream* stream, int& line, int& currentColumn)
 {
 	char next;
 	string name;
@@ -102,7 +126,7 @@ Token FiniteStateAutomaton::greaterThan(istream* stream, int& line, int& current
 		if (next == '>'){ //transition
 			//move ahead next char
 			name += stream->get(); //we already know it is a '>'
-			currentColum++;
+			currentColumn++;
 			goto GreaterThan;
 		}
 		//default condition
@@ -115,17 +139,17 @@ GreaterThan:
 		if (next == '='){ //transition
 			//take the '='
 			name += stream->get();
-			currentColum++;
+			currentColumn++;
 			goto GreaterThanOrEqual;
 		}
 		//accept greater than
-		return Token(Lexeme(Lexeme::GreaterThan, name), line, currentColum);
+		return Token(Lexeme(Lexeme::GreaterThan, name), line, currentColumn);
 	}
 
 GreaterThanOrEqual:
 	{
 		//can go no further
-		return Token(Lexeme(Lexeme::GreaterThanOrEqual, name), line, currentColum);
+		return Token(Lexeme(Lexeme::GreaterThanOrEqual, name), line, currentColumn);
 	}
 
 Reject:
@@ -133,4 +157,27 @@ Reject:
 		//nothing here, return default init token (invalid)
 		return Token();
 	}
+}
+
+Token FiniteStateAutomaton::equals(istream* stream, int& line, int& currentColumn)
+{
+	return singleCharFSA(stream, '=', Lexeme::Equals, line, currentColumn);
+}
+
+Token FiniteStateAutomaton::backslash(istream* stream, int& line, int& currentColumn)
+{
+	return singleCharFSA(stream, '/', Lexeme::Equals, line, currentColumn);
+}
+
+Token FiniteStateAutomaton::period(istream* stream, int& line, int& currentColumn)
+{
+	return singleCharFSA(stream, '.', Lexeme::Equals, line, currentColumn);
+}
+
+Token FiniteStateAutomaton::endOfFile(istream* stream, int& line, int& currentColumn)
+{
+	//file handle state
+
+	return Token();
+
 }

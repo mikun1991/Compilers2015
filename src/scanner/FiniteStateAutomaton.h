@@ -18,8 +18,17 @@ public:
 	static bool charIsUpperAlphabet(char c);
 	static bool charIsLowerAlphabet(char c);
 
+	//this can be used to do all the work for the single character FSAs
+	static Token singleCharFSA(istream* stream, char c, Lexeme::Type type, int& line, int& currentColumn);
+
 
 	static Token greaterThan(istream* stream, int& line, int& currentColumn);
+	static Token equals(istream* stream, int& line, int& currentColumn);
+	static Token backslash(istream* stream, int& line, int& currentColumn);
+	static Token period(istream* stream, int& line, int& currentColumn);
+	static Token endOfFile(istream* stream, int& line, int& currentColumn);
+
+
 
 
 };

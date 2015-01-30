@@ -11,7 +11,11 @@ public:
 	//add more types as we go here 
 	enum Type{ Invalid,
 		GreaterThan,
-		GreaterThanOrEqual
+		GreaterThanOrEqual,
+		Equals,
+		BackSlash,
+		Period,
+		EndOfFile
 	};
     
 	Lexeme();
