@@ -166,12 +166,12 @@ Token FiniteStateAutomaton::equals(istream* stream, int& line, int& currentColum
 
 Token FiniteStateAutomaton::backslash(istream* stream, int& line, int& currentColumn)
 {
-	return singleCharFSA(stream, '/', Lexeme::Equals, line, currentColumn);
+	return singleCharFSA(stream, '/', Lexeme::BackSlash, line, currentColumn);
 }
 
 Token FiniteStateAutomaton::period(istream* stream, int& line, int& currentColumn)
 {
-	return singleCharFSA(stream, '.', Lexeme::Equals, line, currentColumn);
+	return singleCharFSA(stream, '.', Lexeme::Period, line, currentColumn);
 }
 
 Token FiniteStateAutomaton::endOfFile(istream* stream, int& line, int& currentColumn)
