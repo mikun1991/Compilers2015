@@ -10,10 +10,9 @@ FILE(GLOB MP_SCANNER_TEST_SOURCES *.cpp)
 
 
 
-add_library( mpscanner STATIC ${MP_SCANNER_TEST_SOURCES} ${MP_SCANNER_TEST_HEADERS} ) 
+add_executable( testmp ${MP_SCANNER_TEST_SOURCES} ${MP_SCANNER_TEST_HEADERS} ) 
 
-install( TARGETS mpscanner DESTINATION lib)
-install( FILES MP_SCANNER_HEADERS DESTINATION include)
+install(TARGETS testmp DESTINATION bin)
 
 
 include_directories(${CMAKE_SOURCE_DIR}) #source root
@@ -24,5 +23,5 @@ include_directories("${PROJECT_BINARY_DIR}/src")
 include_directories(${CORE_DIR})
 include_directories(${PRECOMPILED_INCLUDE_DIR})
 
-source_group(Headers FILES ${MP_SCANNER_HEADERS})
-source_group(Sources FILES ${MP_SCANNER_SOURCES})
+source_group(Headers FILES ${MP_SCANNER_TEST_HEADERS})
+source_group(Sources FILES ${MP_SCANNER_TEST_SOURCES})

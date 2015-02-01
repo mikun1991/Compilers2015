@@ -10,3 +10,8 @@ Token::Token( Lexeme lexeme, int lineNumber, int columnNumber)
 :_lineNumber(lineNumber), _columnNumber(columnNumber), _lexeme(lexeme)
 {
 }
+
+Lexeme Token::getLexeme()
+{
+	return _lexeme;
+}

@@ -18,6 +18,18 @@ public:
 		EndOfFile
 	};
     
+
+	string TypeNames[0] = { "Invalid"
+			"GreaterThan"
+			"GreaterThanOrEqual"
+			"Equals"
+			"BackSlash"
+			"Period"
+			"EndOfFile"
+	};
+
+	static string typeToName(Type type);
+
 	Lexeme();
 	Lexeme(Type type, string value);
 

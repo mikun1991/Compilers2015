@@ -20,3 +20,8 @@ string Lexeme::getValue()
 {
 	return _value;
 }
+
+string Lexeme:typeToName(Type type)
+{
+	return TypeNames[type];
+}

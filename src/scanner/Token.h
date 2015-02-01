@@ -16,6 +16,9 @@ public:
     Token (Lexeme lexeme, int lineNumber, int columnNumber );
     
     
+    Lexeme getLexeme();
+
+
 protected:
     
     int _lineNumber;
