@@ -91,7 +91,7 @@ bool FiniteStateAutomaton::charIsLowerAlphabet(char c)
 	return false;
 }
 
-Token FiniteStateAutomaton::singleCharFSA(istream* stream, char c, Lexeme::Type type, int& line, int& currentColumn)
+Token FiniteStateAutomaton::singleCharFSA(istream* stream, char c, Lexeme::LexemeType type, int& line, int& currentColumn)
 {
 	char next;
 	string name;
@@ -107,7 +107,7 @@ Token FiniteStateAutomaton::singleCharFSA(istream* stream, char c, Lexeme::Type 
 	}
 Accept:
 	{
-		return Token(Lexeme(type, name), line, currentColumn);
+		return Token(type, name, line, currentColumn);
 	}
 Reject:
 	{
@@ -143,13 +143,13 @@ GreaterThan:
 			goto GreaterThanOrEqual;
 		}
 		//accept greater than
-		return Token(Lexeme(Lexeme::GreaterThan, name), line, currentColumn);
+		return Token(Lexeme::LexemeType::MP_GTHAN, name, line, currentColumn);
 	}
 
 GreaterThanOrEqual:
 	{
 		//can go no further
-		return Token(Lexeme(Lexeme::GreaterThanOrEqual, name), line, currentColumn);
+		return Token(Lexeme::LexemeType::MP_GEQUAL, name, line, currentColumn);
 	}
 
 Reject:
@@ -161,23 +161,157 @@ Reject:
 
 Token FiniteStateAutomaton::equals(istream* stream, int& line, int& currentColumn)
 {
-	return singleCharFSA(stream, '=', Lexeme::Equals, line, currentColumn);
+	return singleCharFSA(stream, '=', Lexeme::LexemeType::MP_EQUAL, line, currentColumn);
 }
 
 Token FiniteStateAutomaton::backslash(istream* stream, int& line, int& currentColumn)
 {
-	return singleCharFSA(stream, '/', Lexeme::BackSlash, line, currentColumn);
+	return singleCharFSA(stream, '/', Lexeme::LexemeType::MP_FLOAT_DIVIDE, line, currentColumn);
 }
 
 Token FiniteStateAutomaton::period(istream* stream, int& line, int& currentColumn)
 {
-	return singleCharFSA(stream, '.', Lexeme::Period, line, currentColumn);
+	return singleCharFSA(stream, '.', Lexeme::LexemeType::MP_PERIOD, line, currentColumn);
 }
 
 Token FiniteStateAutomaton::endOfFile(istream* stream, int& line, int& currentColumn)
 {
-	//file handle state
-
+	char next;
+	string name;
+	if (stream->peek() < 0){//then this is the end of the file
+		next = stream->get();
+		return Token(Lexeme::LexemeType::MP_EOF, name , line, currentColumn);
+	}
 	return Token();
+}
+
+Token FiniteStateAutomaton::number(istream* stream, int& line, int& currentColumn)
+{
+	char next;
+	string name;
+
+	Lexeme::LexemeType lastGoodType = Lexeme::LexemeType::MP_INVALID;
+	int lastGoodPosition = stream->tellg();
+	string temp;
+
+	//start state
+	{
+		next = stream->peek();
+		if (charIsDigit(next)){
+			name += stream->get();
+			currentColumn++;
+			goto IntegerLit;
+		}
+		goto Reject;
+	}
+
+IntegerLit://digit{digit}
+	{
+		next = stream->peek();
+
+		if (charIsDigit(next)){
+			name += stream->get();
+			currentColumn++;
+			goto IntegerLit;
+		}
+
+		lastGoodType == Lexeme::LexemeType::MP_INTEGER_LIT;
+
+		if (next == '.'){
+			lastGoodPosition = stream->tellg();
+			temp += stream->get();
+			goto FixedLit;
+		}
+
+		if (next == 'e' || next == 'E'){
+			lastGoodPosition = stream->tellg();
+			temp += stream->get();
+			goto FloatLitE;
+		}
+
+		return Token(lastGoodType, name, line, currentColumn);
+	}
+
+FixedLit: //got here from a "." 
+	{
+		next = stream->peek();
+
+		if (charIsDigit(next)){
+			temp += stream->get();
+			goto FixedLitTrailingInt;
+		}
+		
+		goto Reject;
+	}
+
+FixedLitTrailingInt:
+	{
+		next = stream->peek();
+
+		if (next == 'e' || next == 'E'){
+			//fixedlit is done 
+			name += temp;
+			currentColumn += temp.size();
+			lastGoodType = Lexeme::LexemeType::MP_FIXED_LIT;
+			temp.clear();
+
+			//go for the float lit
+			lastGoodPosition = stream->tellg();
+			temp += stream->get(); //get the 'e'
+			goto FloatLitE;
+		}
+
+		name += temp;
+		currentColumn += temp.size();
+
+		return Token(Lexeme::LexemeType::MP_FIXED_LIT, name, line, currentColumn);
+	}
+
+FloatLitE:
+	{
+		next = stream->peek();
+		
+		if (next == '+' || next == '-'){
+			temp += stream->get();
+			goto FloatLitPlusMinus;
+		}
+
+		goto Reject;
+	}
+
+FloatLitPlusMinus:
+	{
+		next = stream->peek();
+
+		if (charIsDigit(next)){
+			temp += stream->get();
+			goto FloatLitTrailingInt;
+		}
+
+		goto Reject;
+	}
+
+FloatLitTrailingInt:
+	{
+		next = stream->peek();
+
+		if (charIsDigit(next)){
+			temp += stream->get();
+			goto FloatLitTrailingInt;
+		}
+
+		name += temp;
+		currentColumn += temp.size();
+		return Token(Lexeme::LexemeType::MP_FLOAT_LIT, name, line, currentColumn);
+	}
+
+Reject:
+	{
+		if (lastGoodType == Lexeme::LexemeType::MP_INVALID){
+			return Token();
+		}
+		stream->seekg(lastGoodPosition);
+		return Token(lastGoodType, name, line, currentColumn);	
+	}
 
 }

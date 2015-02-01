@@ -3,9 +3,6 @@
 
 #include "Lexeme.h"
 
-#include <string>
-
-using namespace std;
 
 class Token {
     
@@ -13,7 +10,8 @@ class Token {
 public:
 
 	Token ();
-    Token (Lexeme lexeme, int lineNumber, int columnNumber );
+	Token(Lexeme::LexemeType type, std::string name , int lineNumber, int columnNumber);
+	Token(Lexeme lexeme, int lineNumber, int columnNumber);
     
     
     Lexeme getLexeme();

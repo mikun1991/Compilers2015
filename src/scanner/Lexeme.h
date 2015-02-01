@@ -33,6 +33,7 @@ public:
 		MP_LPAREN, //         "("
 		MP_RPAREN, //        ")"
 		MP_EQUAL,  //        "="
+		MP_FLOAT_DIVIDE, //   "/"
 		MP_GTHAN,  //        ">"
 		MP_GEQUAL, //        ">="
 		MP_LTHAN,  //        "<"
@@ -57,7 +58,7 @@ public:
 	};
     
 
-	char const* TypeAsString [26] =  
+	char const* TypeAsString [27] =  
 	{ 
 		/* Invalid */
 
@@ -79,6 +80,7 @@ public:
 		"MP_LPAREN", //         "("
 		"MP_RPAREN", //        ")"
 		"MP_EQUAL",  //        "="
+		"MP_FLOAT_DIVIDE", //   "/"
 		"MP_GTHAN",  //        ">"
 		"MP_GEQUAL", //        ">="
 		"MP_LTHAN",  //        "<"
