@@ -2,6 +2,7 @@
 #define SCANNER_H
 
 #include "Lexeme.h"
+#include "Token.h"
 
 #include <string>
 #include <fstream>
@@ -13,9 +14,8 @@ class Scanner {
     
 public:
     Scanner(string filePath);
-	~Scanner();
-    
-    Lexeme getNextToken(); //<- this is the dispatcher 
+
+    Token getNextToken(); //<- this is the dispatcher 
 
 	bool hasError();
 	string getError();

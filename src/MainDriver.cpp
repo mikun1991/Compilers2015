@@ -1,4 +1,7 @@
 
+#include "scanner\Scanner.h"
+#include "scanner\Token.h"
+
 #include "stdio.h"
 #include <iostream>
 #include <fstream>
@@ -13,18 +16,24 @@ int main(int argc, char * argv[])
 
         return 1;
     }
-    
-    ifstream inputFile(argv[1]);
+   
+	ifstream inputFile(argv[1]);
 
-    Scanner inputScanner;
+	if (!inputFile.is_open()){
+		fprintf(stdout, "Could not open file");
+	}
+
+	inputFile.close();
+
+    Scanner inputScanner(argv[1]);
 
     if(inputFile.is_open()){
     	Token nextToken;
     	do{
         	nextToken = inputScanner.getNextToken();
-
+			fprintf(stdout, "Found %s ", nextToken.getLexeme().typeToName());
     	}
-    	while(nextToken.getLexeme().getType() != Lexeme::EndOfFile);
+    	while(nextToken.getLexeme().getType() != Lexeme::LexemeType::MP_EOF);
     }
 
     return 0;

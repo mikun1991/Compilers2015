@@ -16,6 +16,10 @@ public:
     
     Lexeme getLexeme();
 
+	bool hasValidLexeme();
+
+	int getLineNumber();
+	int getColumnNumber();
 
 protected:
     
