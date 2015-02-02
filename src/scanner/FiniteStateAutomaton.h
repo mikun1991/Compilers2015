@@ -28,7 +28,13 @@ public:
 	static Token period(istream* stream, int& line, int& currentColumn);
 	static Token endOfFile(istream* stream, int& line, int& currentColumn);
 
+	static Token lessThan(istream* stream, int& line, int& currentColumn);
+	static Token roundLeftBracket(istream* stream, int& line, int& currentColumn);
+	static Token roundRightBracket(istream* stream, int& line, int& currentColumn);
+	static Token plus(istream* stream, int& line, int& currentColumn);
+
 	static Token number(istream* stream, int&line, int& currentColumn);
+	static Token identifier(istream* stream, int&line, int& currentColumn);
 
 
 

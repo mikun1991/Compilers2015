@@ -159,6 +159,63 @@ Reject:
 	}
 }
 
+
+Token FiniteStateAutomaton::lessThan(istream* stream, int& line, int& currentColumn)
+{
+	char next;
+	string name;
+	//Start State
+	{
+		//look without taking
+		next = stream->peek();
+		if (next == '<'){ //transition
+			//move ahead next char
+			name += stream->get(); //we already know it is a '<'
+			currentColumn++;
+			goto LessThan;
+		}
+		//default condition
+		goto Reject;
+	}
+
+LessThan:
+	{
+		next = stream->peek();
+		if (next == '='){ //transition
+			//take the '='
+			name += stream->get();
+			currentColumn++;
+			goto LessThanOrEqual;
+
+			if (next == '>'){//transition
+				//take the '>'
+				name += stream->get();
+				currentColumn++;
+				goto Negation;
+			}
+		}
+		//accept less than
+		return Token(Lexeme::LexemeType::MP_LTHAN, name, line, currentColumn);
+	}
+
+LessThanOrEqual:
+	{
+		//can go no further
+		return Token(Lexeme::LexemeType::MP_LEQUAL, name, line, currentColumn);
+	}
+
+Negation:
+	{
+		//accept negation
+		return Token(Lexeme::LexemeType::MP_NEQUAL, name, line, currentColumn);
+	}
+Reject:
+	{
+		//nothing here, return default init token (invalid)
+		return Token();
+	}
+}
+
 Token FiniteStateAutomaton::equals(istream* stream, int& line, int& currentColumn)
 {
 	return singleCharFSA(stream, '=', Lexeme::LexemeType::MP_EQUAL, line, currentColumn);
@@ -174,6 +231,22 @@ Token FiniteStateAutomaton::period(istream* stream, int& line, int& currentColum
 	return singleCharFSA(stream, '.', Lexeme::LexemeType::MP_PERIOD, line, currentColumn);
 }
 
+Token FiniteStateAutomaton::plus(istream* stream, int& line, int& currentColumn)
+{
+	return singleCharFSA(stream, '+', Lexeme::LexemeType::MP_PLUS, line, currentColumn);
+}
+
+Token FiniteStateAutomaton::roundLeftBracket(istream* stream, int& line, int& currentColumn)
+{
+	return singleCharFSA(stream, '(', Lexeme::LexemeType::MP_LPAREN, line, currentColumn);
+}
+
+Token FiniteStateAutomaton::roundRightBracket(istream* stream, int& line, int& currentColumn)
+{
+	return singleCharFSA(stream, ')', Lexeme::LexemeType::MP_RPAREN, line, currentColumn);
+}
+
+
 Token FiniteStateAutomaton::endOfFile(istream* stream, int& line, int& currentColumn)
 {
 	char next;
@@ -183,6 +256,61 @@ Token FiniteStateAutomaton::endOfFile(istream* stream, int& line, int& currentCo
 		return Token(Lexeme::LexemeType::MP_EOF, name , line, currentColumn);
 	}
 	return Token();
+}
+
+
+Token FiniteStateAutomaton::identifier(istream* stream, int& line, int& currentColumn)
+{
+	char next;
+	string name;
+
+	Lexeme::LexemeType lastGoodType = Lexeme::LexemeType::MP_INVALID;
+	int lastGoodPosition = stream->tellg();
+	string temp;
+
+	identifier:
+	//start state
+	{
+		next = stream->peek();
+
+		if (charIsUpperAlphabet(next) || charIsLowerAlphabet(next))
+		{
+			name += stream->get();
+			currentColumn++;
+			goto identifier;
+		}
+
+		lastGoodType == Lexeme::LexemeType::MP_IDENTIFIER;
+
+		if (next == '_'){
+			lastGoodPosition = stream->tellg();
+			temp += stream->get();
+			goto underscore;
+		}
+
+		goto Reject;
+	}
+
+underscore:
+	next = stream->peek();
+
+	if (charIsDigit(next) || charIsUpperAlphabet(next) || charIsLowerAlphabet(next))
+	{
+		name += stream->get();
+		currentColumn++;
+		goto identifier;
+	}
+	
+		return Token(lastGoodType, name, line, currentColumn);
+
+Reject:
+	{
+		if (lastGoodType == Lexeme::LexemeType::MP_INVALID){
+			return Token();
+		}
+		stream->seekg(lastGoodPosition);
+		return Token(lastGoodType, name, line, currentColumn);
+	}
 }
 
 Token FiniteStateAutomaton::number(istream* stream, int& line, int& currentColumn)
