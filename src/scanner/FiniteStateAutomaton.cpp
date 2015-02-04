@@ -187,12 +187,13 @@ LessThan:
 			currentColumn++;
 			goto LessThanOrEqual;
 
-			if (next == '>'){//transition
-				//take the '>'
-				name += stream->get();
-				currentColumn++;
-				goto Negation;
-			}
+		}
+
+		if (next == '>'){//transition
+			//take the '>'
+			name += stream->get();
+			currentColumn++;
+			goto Negation;
 		}
 		//accept less than
 		return Token(Lexeme::LexemeType::MP_LTHAN, name, line, currentColumn);
@@ -300,7 +301,8 @@ underscore:
 		currentColumn++;
 		goto identifier;
 	}
-	
+
+		stream->seekg(lastGoodPosition);
 		return Token(lastGoodType, name, line, currentColumn);
 
 Reject:
