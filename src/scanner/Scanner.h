@@ -23,7 +23,7 @@ public:
 private:
 
 
-	bool moveToNextTockenStart();
+	bool moveToNextTokenStart();
 
 	int _currentColumn;
 	int _currentRow;

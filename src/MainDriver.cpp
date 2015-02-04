@@ -23,7 +23,7 @@ int main(int argc, char * argv[])
 		fprintf(stdout, "Could not open file");
 	}
 
-	inputFile.close();
+	//inputFile.close();
 
     Scanner inputScanner(argv[1]);
 
@@ -35,6 +35,8 @@ int main(int argc, char * argv[])
     	}
     	while(nextToken.getLexeme().getType() != Lexeme::LexemeType::MP_EOF);
     }
+
+	inputFile.close();
 
     return 0;
 

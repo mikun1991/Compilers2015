@@ -40,7 +40,7 @@ Token Scanner::getNextToken()
 	return nextToken;
 }
 
-bool Scanner::moveToNextTockenStart()
+bool Scanner::moveToNextTokenStart()
 {
 
 	return false;

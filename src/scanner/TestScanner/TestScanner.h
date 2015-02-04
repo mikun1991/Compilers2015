@@ -4,9 +4,8 @@
 class TestScanner
 {
 public:
-	TestScanner();
 
-
+	bool static testNumber();
 };
 
 
