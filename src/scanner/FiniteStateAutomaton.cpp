@@ -91,8 +91,10 @@ bool FiniteStateAutomaton::charIsLowerAlphabet(char c)
 	return false;
 }
 
+
 Token FiniteStateAutomaton::singleCharFSA(istream* stream, char c, Lexeme::LexemeType type, int& line, int& currentColumn)
 {
+	int currentColumnIndex = currentColumn;
 	char next;
 	string name;
 	//Start State
@@ -107,7 +109,7 @@ Token FiniteStateAutomaton::singleCharFSA(istream* stream, char c, Lexeme::Lexem
 	}
 Accept:
 	{
-		return Token(type, name, line, currentColumn);
+		return Token(type, name, line, currentColumnIndex);
 	}
 Reject:
 	{
@@ -117,6 +119,7 @@ Reject:
 
 Token FiniteStateAutomaton::greaterThan(istream* stream, int& line, int& currentColumn)
 {
+	int currentColumnIndex = currentColumn;
 	char next;
 	string name;
 //Start State
@@ -143,13 +146,13 @@ GreaterThan:
 			goto GreaterThanOrEqual;
 		}
 		//accept greater than
-		return Token(Lexeme::LexemeType::MP_GTHAN, name, line, currentColumn);
+		return Token(Lexeme::LexemeType::MP_GTHAN, name, line, currentColumnIndex);
 	}
 
 GreaterThanOrEqual:
 	{
 		//can go no further
-		return Token(Lexeme::LexemeType::MP_GEQUAL, name, line, currentColumn);
+		return Token(Lexeme::LexemeType::MP_GEQUAL, name, line, currentColumnIndex);
 	}
 
 Reject:
@@ -162,6 +165,7 @@ Reject:
 
 Token FiniteStateAutomaton::lessThan(istream* stream, int& line, int& currentColumn)
 {
+	int currentColumnIndex = currentColumn;
 	char next;
 	string name;
 	//Start State
@@ -187,7 +191,6 @@ LessThan:
 			currentColumn++;
 			goto LessThanOrEqual;
 
-<<<<<<< HEAD
 		}
 
 		if (next == '>'){//transition
@@ -195,76 +198,25 @@ LessThan:
 			name += stream->get();
 			currentColumn++;
 			goto Negation;
-=======
-			if (next == '>'){//transition    ***Possible logic error: nested if -joe***
-				//take the '>'
-				name += stream->get();
-				currentColumn++;
-				goto Negation;
-			}
->>>>>>> origin/master
 		}
 		//accept less than
-		return Token(Lexeme::LexemeType::MP_LTHAN, name, line, currentColumn);
+		return Token(Lexeme::LexemeType::MP_LTHAN, name, line, currentColumnIndex);
 	}
 
 LessThanOrEqual:
 	{
 		//can go no further
-		return Token(Lexeme::LexemeType::MP_LEQUAL, name, line, currentColumn);
+		return Token(Lexeme::LexemeType::MP_LEQUAL, name, line, currentColumnIndex);
 	}
 
 Negation:
 	{
 		//accept negation
-		return Token(Lexeme::LexemeType::MP_NEQUAL, name, line, currentColumn);
+		return Token(Lexeme::LexemeType::MP_NEQUAL, name, line, currentColumnIndex);
 	}
 Reject:
 	{
 		//nothing here, return default init token (invalid)
-		return Token();
-	}
-}
-
-Token FiniteStateAutomaton::colon(istream* stream, int& line, int& currentColumn)
-{
-	char next;
-	string name;
-
-//Start State
-	{
-		//look without taking
-		next = stream->peek();
-		if (next == ':'){//transition
-			//move ahead next character
-			name += stream->get();
-			currentColumn++;
-			goto Colon;
-		}
-		//default
-		goto Reject;
-	}
-
-Colon:
-	{
-		next = stream->peek();
-		if (next == '='){
-			name += stream->get();
-			currentColumn++;
-			goto Assign;
-		}
-		//accept colon
-		return Token(Lexeme::LexemeType::MP_COLON, name, line, currentColumn);
-	}
-
-Assign:
-	{
-		//accept assign
-		return Token(Lexeme::LexemeType::MP_ASSIGN, name, line, currentColumn);
-	}
-
-Reject:
-	{
 		return Token();
 	}
 }
@@ -297,26 +249,6 @@ Token FiniteStateAutomaton::roundLeftBracket(istream* stream, int& line, int& cu
 Token FiniteStateAutomaton::roundRightBracket(istream* stream, int& line, int& currentColumn)
 {
 	return singleCharFSA(stream, ')', Lexeme::LexemeType::MP_RPAREN, line, currentColumn);
-}
-
-Token FiniteStateAutomaton::scolon(istream* stream, int& line, int& currentColumn)
-{
-	return singleCharFSA(stream, ';', Lexeme::LexemeType::MP_SCOLON, line, currentColumn);
-}
-
-Token FiniteStateAutomaton::comma(istream* stream, int& line, int& currentColumn)
-{
-	return singleCharFSA(stream, ',', Lexeme::LexemeType::MP_COMMA, line, currentColumn);
-}
-
-Token FiniteStateAutomaton::minus(istream* stream, int& line, int& currentColumn)
-{
-	return singleCharFSA(stream, '-', Lexeme::LexemeType::MP_MINUS, line, currentColumn);
-}
-
-Token FiniteStateAutomaton::times(istream* stream, int& line, int& currentColumn)
-{
-	return singleCharFSA(stream, '*', Lexeme::LexemeType::MP_TIMES, line, currentColumn);
 }
 
 
@@ -516,74 +448,4 @@ Reject:
 		return Token(lastGoodType, name, line, currentColumn);	
 	}
 
-}
-
-//string literal FSA stub
-Token FiniteStateAutomaton::stringLiteral(istream* stream, int& line, int& currentColumn)
-{
-	char next;
-	string name;
-
-	Lexeme::LexemeType lastGoodType = Lexeme::LexemeType::MP_INVALID;
-	int lastGoodPosition = stream->tellg();
-
-//start state
-	{
-		next = stream->peek();
-		if (next == '\''){
-			name += stream->get();
-			currentColumn++;
-			goto OddApostrophes;
-		}
-		//if you don't see an apostrophe
-		goto Reject;
-	}
-
-OddApostrophes:  //this is a non-accept state looking for more characters in the string literal
-	{
-		next = stream->peek();
-		if (next == '\''){
-			//if you see another apostrophe
-			name += stream->get();
-			currentColumn++;
-			goto EvenApostrophes;
-		}
-		
-		if (next == '\n'){
-			//if you encounter EOL in open string you return MP_RUN_STRING error and set stream position back?
-			lastGoodType = Lexeme::LexemeType::MP_RUN_STRING;
-			goto Reject;
-		}
-
-		//otherwise add character to the string literal and keep looking
-		name += stream->get();
-		currentColumn++;
-		goto OddApostrophes;
-	}
-
-EvenApostrophes:  //this is a state that checks for more apostrophes, otherwise accepts end of string
-	{
-		next = stream->peek();
-		if (next == '\''){
-			//if you see another apostrophe
-			name += stream->get();
-			currentColumn++;
-			goto OddApostrophes;
-		}
-
-		//otherwise you have a valid string literal
-		return Token(Lexeme::LexemeType::MP_STRING_LIT, name, line, currentColumn);
-	}
-
-Reject:
-	{
-		if (lastGoodType == Lexeme::LexemeType::MP_INVALID){
-			return Token();
-		}
-		stream->seekg(lastGoodPosition);
-		return Token(lastGoodType, name, line, currentColumn);
-	}
-
-
-	
 }
