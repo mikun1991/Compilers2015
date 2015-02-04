@@ -33,8 +33,15 @@ public:
 	static Token roundRightBracket(istream* stream, int& line, int& currentColumn);
 	static Token plus(istream* stream, int& line, int& currentColumn);
 
+	static Token colon(istream* stream, int& line, int& currentColumn);
+	static Token scolon(istream* stream, int& line, int& currentColumn);
+	static Token comma(istream* stream, int& line, int& currentColumn);
+	static Token minus(istream* stream, int& line, int& currentColumn);
+	static Token times(istream* stream, int& line, int& currentColumn);
+
 	static Token number(istream* stream, int&line, int& currentColumn);
 	static Token identifier(istream* stream, int&line, int& currentColumn);
+	static Token stringLiteral(istream* stream, int& line, int& currentColumn);
 
 
 
