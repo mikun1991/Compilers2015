@@ -474,7 +474,7 @@ Token FiniteStateAutomaton::stringLiteral(istream* stream, int& line, int& curre
 	int startColumn = currentColumn;
 
 	Lexeme::LexemeType lastGoodType = Lexeme::LexemeType::MP_INVALID;
-	int lastGoodPosition = stream->tellg();
+	//int lastGoodPosition = stream->tellg();
 
 //start state
 	{
@@ -492,7 +492,7 @@ OddApostrophes:  //this is a non-accept state looking for more characters in the
 	{
 		next = stream->peek();
 		if (next == '\''){
-			//if you see another apostrophe
+			//if you see another apostrophe need to check for end of string or escaped apostrophe character
 			lastGoodType = Lexeme::LexemeType::MP_STRING_LIT;
 			stream->ignore(1);
 			currentColumn++;
@@ -541,4 +541,66 @@ Reject:  //returns a blank token if this method was called in error, otherwise r
 
 
 	
+}
+
+Token FiniteStateAutomaton::comment(istream* stream, int& line, int& currentColumn)
+{
+	char next;
+	int startColumn = currentColumn;
+	int startLine = line;
+
+//start state
+	{
+		next = stream->peek();
+		if (next == '{'){
+			stream->ignore(1);
+			currentColumn++;
+			goto IgnoreComments;
+		}
+		//if you don't see a {
+		goto Reject;
+
+	}
+
+IgnoreComments:  //state that ignores comments while updating line and currentColumn, and watches for MP_RUN_COMMENT error
+	{
+		next = stream->peek();
+		
+		//if you encounter a newline inside a comment, reset currentColumn, increment line, and continue processing comment
+		if (next == '\n'){
+			stream->ignore(1);
+			currentColumn = 0;
+			line++;
+			goto IgnoreComments;
+		}
+
+		//if you encounter EOF inside a comment, return MP_RUN_COMMENT error
+		if (next == EOF){
+			return Token(Lexeme::LexemeType::MP_RUN_COMMENT, " ", startLine, startColumn);
+		}
+
+		//if you encounter }, this indicates end of comments
+		if (next == '}'){
+			stream->ignore(1);
+			currentColumn++;
+			return Token();
+		}
+
+		//if you encounter another {, alert programmer of possible error with unclosed comment
+		if (next == '{'){
+			stream->ignore(1);
+			currentColumn++;
+			goto IgnoreComments;
+		}
+
+		//otherwise continue processing comment
+		stream->ignore(1);
+		currentColumn++;
+		goto IgnoreComments;
+	}
+
+Reject:
+	{
+		return Token();
+	}
 }
