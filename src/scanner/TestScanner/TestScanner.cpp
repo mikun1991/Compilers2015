@@ -7,13 +7,14 @@
 #include <sstream>
 
 #include <assert.h>
+
+
 int main(int argc, char * argv[])
 {
 
 	TestScanner::testNumber();
 	TestScanner::testIdentifier();
 }
-
 
 bool TestScanner::testNumber()
 {
@@ -26,7 +27,7 @@ bool TestScanner::testNumber()
 		int line = 0;
 		int col = 0;
 		Token ret = FiniteStateAutomaton::number(&ss, line, col);
-		//assert(ret.getLexeme().getType() == Lexeme::LexemeType::MP_INTEGER_LIT);
+		assert(ret.getLexeme().getType() == Lexeme::LexemeType::MP_INTEGER_LIT);
 	}
 
 	//TestCase 1

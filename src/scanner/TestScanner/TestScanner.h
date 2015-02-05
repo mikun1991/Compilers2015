@@ -5,8 +5,8 @@ class TestScanner
 {
 public:
 
-	bool static testNumber();
-	bool static testIdentifier();
+	static bool testNumber();
+	static bool testIdentifier();
 };
 
 
