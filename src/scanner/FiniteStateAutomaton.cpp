@@ -467,11 +467,11 @@ Reject:
 
 }
 
-//string literal FSA stub
 Token FiniteStateAutomaton::stringLiteral(istream* stream, int& line, int& currentColumn)
 {
 	char next;
 	string name;
+	int startColumn = currentColumn;
 
 	Lexeme::LexemeType lastGoodType = Lexeme::LexemeType::MP_INVALID;
 	int lastGoodPosition = stream->tellg();
@@ -480,7 +480,7 @@ Token FiniteStateAutomaton::stringLiteral(istream* stream, int& line, int& curre
 	{
 		next = stream->peek();
 		if (next == '\''){
-			name += stream->get();
+			stream->ignore(1);
 			currentColumn++;
 			goto OddApostrophes;
 		}
@@ -493,13 +493,20 @@ OddApostrophes:  //this is a non-accept state looking for more characters in the
 		next = stream->peek();
 		if (next == '\''){
 			//if you see another apostrophe
-			name += stream->get();
+			lastGoodType = Lexeme::LexemeType::MP_STRING_LIT;
+			stream->ignore(1);
 			currentColumn++;
 			goto EvenApostrophes;
 		}
 		
 		if (next == '\n'){
-			//if you encounter EOL in open string you return MP_RUN_STRING error and set stream position back?
+			//if you encounter EOL in open string you return MP_RUN_STRING error 
+			lastGoodType = Lexeme::LexemeType::MP_RUN_STRING;
+			goto Reject;
+		}
+
+		if (next == EOF){
+			//if you encounter EOF in open string you return MP_RUN_STRING error
 			lastGoodType = Lexeme::LexemeType::MP_RUN_STRING;
 			goto Reject;
 		}
@@ -510,27 +517,26 @@ OddApostrophes:  //this is a non-accept state looking for more characters in the
 		goto OddApostrophes;
 	}
 
-EvenApostrophes:  //this is a state that checks for more apostrophes, otherwise accepts end of string
+EvenApostrophes:  //this is a state that checks for more apostrophes, otherwise accepts and returns string literal 
 	{
 		next = stream->peek();
 		if (next == '\''){
-			//if you see another apostrophe
+			//if you see another apostrophe, it is an escaped apostrophe and is added to the string
 			name += stream->get();
 			currentColumn++;
 			goto OddApostrophes;
 		}
 
 		//otherwise you have a valid string literal
-		return Token(Lexeme::LexemeType::MP_STRING_LIT, name, line, currentColumn);
+		return Token(Lexeme::LexemeType::MP_STRING_LIT, name, line, startColumn);
 	}
 
-Reject:
+Reject:  //returns a blank token if this method was called in error, otherwise returns MP_RUN_STRING errors
 	{
 		if (lastGoodType == Lexeme::LexemeType::MP_INVALID){
 			return Token();
 		}
-		stream->seekg(lastGoodPosition);
-		return Token(lastGoodType, name, line, currentColumn);
+		return Token(lastGoodType, name, line, startColumn);
 	}
 
 
