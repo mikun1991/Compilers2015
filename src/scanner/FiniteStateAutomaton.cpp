@@ -337,7 +337,7 @@ Token FiniteStateAutomaton::identifier(istream* stream, int& line, int& currentC
 //start state	
 	next = stream->peek();
 
-	if (charIsDigit(next) || charIsUpperAlphabet(next) || charIsLowerAlphabet(next))
+	if (charIsUpperAlphabet(next) || charIsLowerAlphabet(next))
 	{
 		name += stream->get();
 		currentColumn++;
@@ -346,41 +346,41 @@ Token FiniteStateAutomaton::identifier(istream* stream, int& line, int& currentC
 	goto Reject;
 
 	identifier:
-	//start state
 	{
 		next = stream->peek();
 
-		if (charIsUpperAlphabet(next) || charIsLowerAlphabet(next))
+		if (charIsDigit(next) || charIsUpperAlphabet(next) || charIsLowerAlphabet(next))
 		{
 			name += stream->get();
 			currentColumn++;
 			goto identifier;
 		}
 
-		lastGoodType == Lexeme::LexemeType::MP_IDENTIFIER;
+		
 
 		if (next == '_'){
 			lastGoodPosition = stream->tellg();
 			temp += stream->get();
 			goto underscore;
 		}
-
-		goto Reject;
+		lastGoodType = Lexeme::LexemeType::MP_IDENTIFIER;
+		return Token(lastGoodType, name, line, currentColumn);
 	}
 
 underscore:
-	next = stream->peek();
-
-	if (charIsDigit(next) || charIsUpperAlphabet(next) || charIsLowerAlphabet(next))
 	{
-		name += stream->get();
-		currentColumn++;
-		goto identifier;
-	}
+		next = stream->peek();
+
+		if (charIsDigit(next) || charIsUpperAlphabet(next) || charIsLowerAlphabet(next))
+		{
+			name += stream->get();
+			currentColumn++;
+			goto identifier;
+		}
 
 		stream->seekg(lastGoodPosition);
 		return Token(lastGoodType, name, line, currentColumn);
-
+	}
 Reject:
 	{
 		if (lastGoodType == Lexeme::LexemeType::MP_INVALID){
@@ -421,7 +421,7 @@ IntegerLit://digit{digit}
 			goto IntegerLit;
 		}
 
-		lastGoodType == Lexeme::LexemeType::MP_INTEGER_LIT;
+		lastGoodType = Lexeme::LexemeType::MP_INTEGER_LIT;
 
 		if (next == '.'){
 			lastGoodPosition = stream->tellg();
