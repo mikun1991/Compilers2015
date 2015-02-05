@@ -187,7 +187,7 @@ LessThan:
 			currentColumn++;
 			goto LessThanOrEqual;
 
-<<<<<<< HEAD
+
 		}
 
 		if (next == '>'){//transition
@@ -195,14 +195,7 @@ LessThan:
 			name += stream->get();
 			currentColumn++;
 			goto Negation;
-=======
-			if (next == '>'){//transition    ***Possible logic error: nested if -joe***
-				//take the '>'
-				name += stream->get();
-				currentColumn++;
-				goto Negation;
-			}
->>>>>>> origin/master
+
 		}
 		//accept less than
 		return Token(Lexeme::LexemeType::MP_LTHAN, name, line, currentColumn);
