@@ -29,6 +29,18 @@ bool TestScanner::testNumber()
 		//assert(ret.getLexeme().getType() == Lexeme::LexemeType::MP_INTEGER_LIT);
 	}
 
+	//TestCase 1
+	{
+		std::stringstream ss;
+
+		ss << "3E4";
+
+		int line = 0;
+		int col = 0;
+		Token ret = FiniteStateAutomaton::number(&ss, line, col);
+		assert(ret.getLexeme().getType() == Lexeme::LexemeType::MP_INTEGER_LIT);
+	}
+
 	return true;
 }
 
