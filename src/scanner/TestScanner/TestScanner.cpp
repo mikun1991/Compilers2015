@@ -14,6 +14,8 @@ int main(int argc, char * argv[])
 
 	TestScanner::testNumber();
 	TestScanner::testIdentifier();
+	TestScanner::testString();
+	TestScanner::testComment();
 }
 
 bool TestScanner::testNumber()
@@ -123,18 +125,106 @@ bool TestScanner::testIdentifier()
 		assert(ret.getLexeme().getType() == Lexeme::LexemeType::MP_IDENTIFIER);
 	}
 
-	//TestCase 2
+	/*TestCase 2 
 	{
-	std::stringstream ss;
+		std::stringstream ss;
 
-	ss << "_dfszdf";
+		ss << "_dfszdf";
 
-	int line = 0;
-	int col = 0;
-	Token ret = FiniteStateAutomaton::number(&ss, line, col);
-	assert(ret.getLexeme().getType() == Lexeme::LexemeType::MP_INTEGER_LIT);
+		int line = 0;
+		int col = 0;
+		Token ret = FiniteStateAutomaton::number(&ss, line, col);
+		assert(ret.getLexeme().getType() == Lexeme::LexemeType::MP_INTEGER_LIT);
+	}
+*/
+
+	return true;
 }
 
+bool TestScanner::testString()
+{
+	//TestCase 1
+	{
+		std::stringstream ss;
+
+		ss << "'hellow my name is simon' ";
+
+		int line = 0;
+		int col = 0;
+		Token ret = FiniteStateAutomaton::stringLiteral(&ss, line, col);
+
+		assert(ret.getLexeme().getType() == Lexeme::LexemeType::MP_STRING_LIT);
+	}
+
+	//TestCase 2
+	{
+		std::stringstream ss;
+
+		ss << "'this ain''t how it''s done' ";
+
+		int line = 0;
+		int col = 0;
+		Token ret = FiniteStateAutomaton::stringLiteral(&ss, line, col);
+
+		assert(ret.getLexeme().getType() == Lexeme::LexemeType::MP_STRING_LIT);
+	}
+
+	//TestCase 3
+	{
+		std::stringstream ss;
+
+		ss << "'here is a run on string \n ";
+
+		int line = 0;
+		int col = 0;
+		Token ret = FiniteStateAutomaton::stringLiteral(&ss, line, col);
+
+		assert(ret.getLexeme().getType() == Lexeme::LexemeType::MP_RUN_STRING);
+	}
+
+	return true;
+}
+
+bool TestScanner::testComment()
+{
+	//TestCase 1
+	{
+		std::stringstream ss;
+
+		ss << "{here are some comments}";
+
+		int line = 0;
+		int col = 0;
+		Token ret = FiniteStateAutomaton::comment(&ss, line, col);
+
+		assert(ret.getLexeme().getType() == Lexeme::LexemeType::MP_INVALID);
+	}
+
+	//TestCase 2
+	{
+		std::stringstream ss;
+
+		ss << "{here is a run on comment ";
+
+		int line = 0;
+		int col = 0;
+		Token ret = FiniteStateAutomaton::comment(&ss, line, col);
+
+		assert(ret.getLexeme().getType() == Lexeme::LexemeType::MP_RUN_COMMENT);
+	}
+
+	//TestCase 3
+	{
+		std::stringstream ss;
+
+		ss << "{here is a multi line \n comment \n to check line number} ";
+
+		int line = 0;
+		int col = 0;
+		Token ret = FiniteStateAutomaton::comment(&ss, line, col);
+
+		assert(ret.getLexeme().getType() == Lexeme::LexemeType::MP_INVALID);
+	}
 
 	return true;
 }

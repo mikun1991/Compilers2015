@@ -546,6 +546,7 @@ Reject:  //returns a blank token if this method was called in error, otherwise r
 Token FiniteStateAutomaton::comment(istream* stream, int& line, int& currentColumn)
 {
 	char next;
+	Lexeme lex = Lexeme();
 	int startColumn = currentColumn;
 	int startLine = line;
 
@@ -583,7 +584,7 @@ IgnoreComments:  //state that ignores comments while updating line and currentCo
 		if (next == '}'){
 			stream->ignore(1);
 			currentColumn++;
-			return Token();
+			return Token(lex, startLine, startColumn);
 		}
 
 		//if you encounter another {, alert programmer of possible error with unclosed comment

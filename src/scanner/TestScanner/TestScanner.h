@@ -7,6 +7,9 @@ public:
 
 	static bool testNumber();
 	static bool testIdentifier();
+	static bool testString();
+	static bool testComment();
+
 };
 
 
