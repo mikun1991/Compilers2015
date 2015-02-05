@@ -6,6 +6,7 @@ class TestScanner
 public:
 
 	bool static testNumber();
+	bool static testIdentifier();
 };
 
 

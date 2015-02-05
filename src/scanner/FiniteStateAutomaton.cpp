@@ -324,7 +324,7 @@ Token FiniteStateAutomaton::endOfFile(istream* stream, int& line, int& currentCo
 {
 	char next;
 	string name;
-	if (stream->peek() < 0){//then this is the end of the file
+	if (stream->peek() == EOF){//then this is the end of the file
 		next = stream->get();
 		return Token(Lexeme::LexemeType::MP_EOF, name , line, currentColumn);
 	}
@@ -340,6 +340,17 @@ Token FiniteStateAutomaton::identifier(istream* stream, int& line, int& currentC
 	Lexeme::LexemeType lastGoodType = Lexeme::LexemeType::MP_INVALID;
 	int lastGoodPosition = stream->tellg();
 	string temp;
+
+//start state	
+	next = stream->peek();
+
+	if (charIsDigit(next) || charIsUpperAlphabet(next) || charIsLowerAlphabet(next))
+	{
+		name += stream->get();
+		currentColumn++;
+		goto identifier;
+	}
+	goto Reject;
 
 	identifier:
 	//start state
