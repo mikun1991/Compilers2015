@@ -337,15 +337,15 @@ Token FiniteStateAutomaton::identifier(istream* stream, int& line, int& currentC
 //start state	
 	next = stream->peek();
 
-	if (charIsUpperAlphabet(next) || charIsLowerAlphabet(next))
+	if (charIsUpperAlphabet(next) || charIsLowerAlphabet(next) || (next == '_'))
 	{
 		name += stream->get();
 		currentColumn++;
-		goto identifier;
+		goto Identifier;
 	}
 	goto Reject;
 
-	identifier:
+Identifier:
 	{
 		next = stream->peek();
 
@@ -353,7 +353,7 @@ Token FiniteStateAutomaton::identifier(istream* stream, int& line, int& currentC
 		{
 			name += stream->get();
 			currentColumn++;
-			goto identifier;
+			goto Identifier;
 		}
 
 		
@@ -361,13 +361,13 @@ Token FiniteStateAutomaton::identifier(istream* stream, int& line, int& currentC
 		if (next == '_'){
 			lastGoodPosition = stream->tellg();
 			temp += stream->get();
-			goto underscore;
+			goto Underscore;
 		}
 		lastGoodType = Lexeme::LexemeType::MP_IDENTIFIER;
 		return Token(lastGoodType, name, line, currentColumn);
 	}
 
-underscore:
+Underscore:
 	{
 		next = stream->peek();
 
@@ -375,12 +375,13 @@ underscore:
 		{
 			name += stream->get();
 			currentColumn++;
-			goto identifier;
+			goto Identifier;
 		}
 
 		stream->seekg(lastGoodPosition);
 		return Token(lastGoodType, name, line, currentColumn);
 	}
+
 Reject:
 	{
 		if (lastGoodType == Lexeme::LexemeType::MP_INVALID){
