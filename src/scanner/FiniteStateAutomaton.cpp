@@ -283,12 +283,19 @@ Token FiniteStateAutomaton::identifier(istream* stream, int& line, int& currentC
 //start state	
 	next = stream->peek();
 
-	if (charIsUpperAlphabet(next) || charIsLowerAlphabet(next) || (next == '_'))
+	if (charIsUpperAlphabet(next) || charIsLowerAlphabet(next))
 	{
 		name += stream->get();
 		currentColumn++;
 		goto Identifier;
 	}
+
+	if (next == '_'){
+		lastGoodPosition = stream->tellg();
+		temp += stream->get();
+		goto Underscore;
+	}
+
 	goto Reject;
 
 Identifier:
@@ -302,15 +309,16 @@ Identifier:
 			goto Identifier;
 		}
 
-		
-
 		if (next == '_'){
 			lastGoodPosition = stream->tellg();
 			temp += stream->get();
 			goto Underscore;
 		}
+
 		lastGoodType = Lexeme::LexemeType::MP_IDENTIFIER;
 		return Token(lastGoodType, name, line, currentColumn);
+		//goto Reject; //???????????????
+	
 	}
 
 Underscore:
