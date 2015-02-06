@@ -1,6 +1,7 @@
 
-#include "scanner\Scanner.h"
-#include "scanner\Token.h"
+#include "Scanner.h"
+#include "Token.h"
+#include "Lexeme.h"
 
 #include "stdio.h"
 #include <iostream>
@@ -32,14 +33,14 @@ int main(int argc, char * argv[])
     	Token nextToken;
     	do{
 			nextToken = inputScanner.getNextToken();
-			if (nextToken.getLexeme().getType() == Lexeme::LexemeType::MP_WHITESPACE)
+			if (nextToken.getLexeme().getType() == Lexeme::MP_WHITESPACE)
 				continue;
 			string type = nextToken.getLexeme().typeToName();
 			string name = nextToken.getLexeme().getValue();
 			printf("Found \"%s\",", name.c_str());
 			printf("with type %s \n", type.c_str());
     	}
-    	while(nextToken.getLexeme().getType() != Lexeme::LexemeType::MP_EOF);
+    	while(nextToken.getLexeme().getType() != Lexeme::MP_EOF);
     }
 
 	inputFile.close();

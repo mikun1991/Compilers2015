@@ -26,5 +26,5 @@ Lexeme Token::getLexeme()
 
 bool Token::hasValidLexeme()
 {
-	return _lexeme.getType() != Lexeme::LexemeType::MP_INVALID;
+	return _lexeme.getType() != Lexeme::MP_INVALID;
 }

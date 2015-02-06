@@ -1,4 +1,6 @@
 #include "FiniteStateAutomaton.h"
+#include "Token.h"
+#include "Lexeme.h"
 
 #include <iostream>
 
@@ -88,13 +90,13 @@ GreaterThan:
 			goto GreaterThanOrEqual;
 		}
 		//accept greater than
-		return Token(Lexeme::LexemeType::MP_GTHAN, name, line, currentColumn);
+		return Token(Lexeme::MP_GTHAN, name, line, currentColumn);
 	}
 
 GreaterThanOrEqual:
 	{
 		//can go no further
-		return Token(Lexeme::LexemeType::MP_GEQUAL, name, line, currentColumn);
+		return Token(Lexeme::MP_GEQUAL, name, line, currentColumn);
 	}
 
 Reject:
@@ -143,19 +145,19 @@ LessThan:
 
 		}
 		//accept less than
-		return Token(Lexeme::LexemeType::MP_LTHAN, name, line, currentColumn);
+		return Token(Lexeme::MP_LTHAN, name, line, currentColumn);
 	}
 
 LessThanOrEqual:
 	{
 		//can go no further
-		return Token(Lexeme::LexemeType::MP_LEQUAL, name, line, currentColumn);
+		return Token(Lexeme::MP_LEQUAL, name, line, currentColumn);
 	}
 
 Negation:
 	{
 		//accept negation
-		return Token(Lexeme::LexemeType::MP_NEQUAL, name, line, currentColumn);
+		return Token(Lexeme::MP_NEQUAL, name, line, currentColumn);
 	}
 Reject:
 	{
@@ -192,13 +194,13 @@ Colon:
 			goto Assign;
 		}
 		//accept colon
-		return Token(Lexeme::LexemeType::MP_COLON, name, line, currentColumn);
+		return Token(Lexeme::MP_COLON, name, line, currentColumn);
 	}
 
 Assign:
 	{
 		//accept assign
-		return Token(Lexeme::LexemeType::MP_ASSIGN, name, line, currentColumn);
+		return Token(Lexeme::MP_ASSIGN, name, line, currentColumn);
 	}
 
 Reject:
@@ -209,52 +211,52 @@ Reject:
 
 Token FiniteStateAutomaton::equals(istream* stream, int& line, int& currentColumn)
 {
-	return singleCharFSA(stream, '=', Lexeme::LexemeType::MP_EQUAL, line, currentColumn);
+	return singleCharFSA(stream, '=', Lexeme::MP_EQUAL, line, currentColumn);
 }
 
 Token FiniteStateAutomaton::backslash(istream* stream, int& line, int& currentColumn)
 {
-	return singleCharFSA(stream, '/', Lexeme::LexemeType::MP_FLOAT_DIVIDE, line, currentColumn);
+	return singleCharFSA(stream, '/', Lexeme::MP_FLOAT_DIVIDE, line, currentColumn);
 }
 
 Token FiniteStateAutomaton::period(istream* stream, int& line, int& currentColumn)
 {
-	return singleCharFSA(stream, '.', Lexeme::LexemeType::MP_PERIOD, line, currentColumn);
+	return singleCharFSA(stream, '.', Lexeme::MP_PERIOD, line, currentColumn);
 }
 
 Token FiniteStateAutomaton::plus(istream* stream, int& line, int& currentColumn)
 {
-	return singleCharFSA(stream, '+', Lexeme::LexemeType::MP_PLUS, line, currentColumn);
+	return singleCharFSA(stream, '+', Lexeme::MP_PLUS, line, currentColumn);
 }
 
 Token FiniteStateAutomaton::roundLeftBracket(istream* stream, int& line, int& currentColumn)
 {
-	return singleCharFSA(stream, '(', Lexeme::LexemeType::MP_LPAREN, line, currentColumn);
+	return singleCharFSA(stream, '(', Lexeme::MP_LPAREN, line, currentColumn);
 }
 
 Token FiniteStateAutomaton::roundRightBracket(istream* stream, int& line, int& currentColumn)
 {
-	return singleCharFSA(stream, ')', Lexeme::LexemeType::MP_RPAREN, line, currentColumn);
+	return singleCharFSA(stream, ')', Lexeme::MP_RPAREN, line, currentColumn);
 }
 
 Token FiniteStateAutomaton::scolon(istream* stream, int& line, int& currentColumn)
 {
-	return singleCharFSA(stream, ';', Lexeme::LexemeType::MP_SCOLON, line, currentColumn);
+	return singleCharFSA(stream, ';', Lexeme::MP_SCOLON, line, currentColumn);
 }
 
 Token FiniteStateAutomaton::comma(istream* stream, int& line, int& currentColumn)
 {
-	return singleCharFSA(stream, ',', Lexeme::LexemeType::MP_COMMA, line, currentColumn);
+	return singleCharFSA(stream, ',', Lexeme::MP_COMMA, line, currentColumn);
 }
 
 Token FiniteStateAutomaton::minus(istream* stream, int& line, int& currentColumn)
 {
-	return singleCharFSA(stream, '-', Lexeme::LexemeType::MP_MINUS, line, currentColumn);
+	return singleCharFSA(stream, '-', Lexeme::MP_MINUS, line, currentColumn);
 }
 
 Token FiniteStateAutomaton::times(istream* stream, int& line, int& currentColumn)
 {
-	return singleCharFSA(stream, '*', Lexeme::LexemeType::MP_TIMES, line, currentColumn);
+	return singleCharFSA(stream, '*', Lexeme::MP_TIMES, line, currentColumn);
 }
 
 
@@ -264,7 +266,7 @@ Token FiniteStateAutomaton::endOfFile(istream* stream, int& line, int& currentCo
 	char next = stream->get();
 	string name;
 	if (next == EOF|| next < 0){//then this is the end of the file
-		return Token(Lexeme::LexemeType::MP_EOF, name , line, currentColumn);
+		return Token(Lexeme::MP_EOF, name , line, currentColumn);
 	}
 	stream->seekg(pos);
 	return Token();
@@ -276,7 +278,7 @@ Token FiniteStateAutomaton::identifier(istream* stream, int& line, int& currentC
 	char next;
 	string name;
 
-	Lexeme::LexemeType lastGoodType = Lexeme::LexemeType::MP_INVALID;
+	Lexeme::LexemeType lastGoodType = Lexeme::MP_INVALID;
 	int lastGoodPosition = stream->tellg();
 	string temp;
 
@@ -316,7 +318,7 @@ Identifier:
 		}
 		
 		
-		lastGoodType = Lexeme::LexemeType::MP_IDENTIFIER;
+		lastGoodType = Lexeme::MP_IDENTIFIER;
 		return Token(lastGoodType, name, line, currentColumn);
 		//goto Reject; //???????????????
 	
@@ -339,7 +341,7 @@ Underscore:
 
 Reject:
 	{
-		if (lastGoodType == Lexeme::LexemeType::MP_INVALID){
+		if (lastGoodType == Lexeme::MP_INVALID){
 			return Token();
 		}
 		stream->seekg(lastGoodPosition);
@@ -352,7 +354,7 @@ Token FiniteStateAutomaton::number(istream* stream, int& line, int& currentColum
 	char next;
 	string name;
 
-	Lexeme::LexemeType lastGoodType = Lexeme::LexemeType::MP_INVALID;
+	Lexeme::LexemeType lastGoodType = Lexeme::MP_INVALID;
 	int lastGoodPosition = stream->tellg();
 	string temp;
 
@@ -371,7 +373,7 @@ IntegerLit://digit{digit}
 	{
 		next = stream->peek();
 
-		lastGoodType = Lexeme::LexemeType::MP_INTEGER_LIT;
+		lastGoodType = Lexeme::MP_INTEGER_LIT;
 
 		if (charIsDigit(next)){
 			name += stream->get();
@@ -414,7 +416,7 @@ FixedLitTrailingInt:
 			//fixedlit is done 
 			name += temp;
 			currentColumn += temp.size();
-			lastGoodType = Lexeme::LexemeType::MP_FIXED_LIT;
+			lastGoodType = Lexeme::MP_FIXED_LIT;
 			temp.clear();
 
 			//go for the float lit
@@ -426,7 +428,7 @@ FixedLitTrailingInt:
 		name += temp;
 		currentColumn += temp.size();
 
-		return Token(Lexeme::LexemeType::MP_FIXED_LIT, name, line, currentColumn);
+		return Token(Lexeme::MP_FIXED_LIT, name, line, currentColumn);
 	}
 
 FloatLitE:
@@ -464,12 +466,12 @@ FloatLitTrailingInt:
 
 		name += temp;
 		currentColumn += temp.size();
-		return Token(Lexeme::LexemeType::MP_FLOAT_LIT, name, line, currentColumn);
+		return Token(Lexeme::MP_FLOAT_LIT, name, line, currentColumn);
 	}
 
 Reject:
 	{
-		if (lastGoodType == Lexeme::LexemeType::MP_INVALID){
+		if (lastGoodType == Lexeme::MP_INVALID){
 			return Token();
 		}
 		stream->seekg(lastGoodPosition);
@@ -484,7 +486,7 @@ Token FiniteStateAutomaton::stringLiteral(istream* stream, int& line, int& curre
 	string name;
 	int startColumn = currentColumn;
 
-	Lexeme::LexemeType lastGoodType = Lexeme::LexemeType::MP_INVALID;
+	Lexeme::LexemeType lastGoodType = Lexeme::MP_INVALID;
 	//int lastGoodPosition = stream->tellg();
 
 //start state
@@ -504,7 +506,7 @@ OddApostrophes:  //this is a non-accept state looking for more characters in the
 		next = stream->peek();
 		if (next == '\''){
 			//if you see another apostrophe need to check for end of string or escaped apostrophe character
-			lastGoodType = Lexeme::LexemeType::MP_STRING_LIT;
+			lastGoodType = Lexeme::MP_STRING_LIT;
 			stream->ignore(1);
 			currentColumn++;
 			goto EvenApostrophes;
@@ -512,13 +514,13 @@ OddApostrophes:  //this is a non-accept state looking for more characters in the
 		
 		if (next == '\n'){
 			//if you encounter EOL in open string you return MP_RUN_STRING error 
-			lastGoodType = Lexeme::LexemeType::MP_RUN_STRING;
+			lastGoodType = Lexeme::MP_RUN_STRING;
 			goto Reject;
 		}
 
 		if (next == EOF){
 			//if you encounter EOF in open string you return MP_RUN_STRING error
-			lastGoodType = Lexeme::LexemeType::MP_RUN_STRING;
+			lastGoodType = Lexeme::MP_RUN_STRING;
 			goto Reject;
 		}
 
@@ -539,12 +541,12 @@ EvenApostrophes:  //this is a state that checks for more apostrophes, otherwise 
 		}
 
 		//otherwise you have a valid string literal
-		return Token(Lexeme::LexemeType::MP_STRING_LIT, name, line, startColumn);
+		return Token(Lexeme::MP_STRING_LIT, name, line, startColumn);
 	}
 
 Reject:  //returns a blank token if this method was called in error, otherwise returns MP_RUN_STRING errors
 	{
-		if (lastGoodType == Lexeme::LexemeType::MP_INVALID){
+		if (lastGoodType == Lexeme::MP_INVALID){
 			return Token();
 		}
 		return Token(lastGoodType, name, line, startColumn);
@@ -586,7 +588,7 @@ IgnoreComments:  //state that ignores comments while updating line and currentCo
 
 		//if you encounter EOF inside a comment, return MP_RUN_COMMENT error
 		if (next == EOF){
-			return Token(Lexeme::LexemeType::MP_RUN_COMMENT, " ", startLine, startColumn);
+			return Token(Lexeme::MP_RUN_COMMENT, " ", startLine, startColumn);
 		}
 
 		//if you encounter }, this indicates end of comments
@@ -631,7 +633,7 @@ Token FiniteStateAutomaton::whiteSpace(istream* stream, int& line, int& currentC
 	}
 Accept:
 	{
-		return Token(Lexeme::LexemeType::MP_WHITESPACE, name, line, currentColumn);
+		return Token(Lexeme::MP_WHITESPACE, name, line, currentColumn);
 	}
 Reject:
 	{

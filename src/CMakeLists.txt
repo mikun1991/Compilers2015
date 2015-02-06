@@ -4,9 +4,11 @@ project(app_project)
 
 add_subdirectory(scanner)
 
-
 add_executable( mp MainDriver.cpp)
 
 target_link_libraries(mp mpscanner)
 
 install(TARGETS mp DESTINATION bin)
+
+#try this
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/scanner/) 

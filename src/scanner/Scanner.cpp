@@ -72,7 +72,7 @@ Token Scanner::getNextToken()
 
 	std::string name;
 	name += _filePointer->get();
-	return Token(Lexeme::LexemeType::MP_INVALID, name, _currentRow, _currentColumn);
+	return Token(Lexeme::MP_INVALID, name, _currentRow, _currentColumn);
 	_currentColumn++;
 }
 
