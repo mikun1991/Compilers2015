@@ -315,6 +315,7 @@ Identifier:
 			goto Underscore;
 		}
 		
+		
 		lastGoodType = Lexeme::LexemeType::MP_IDENTIFIER;
 		return Token(lastGoodType, name, line, currentColumn);
 		//goto Reject; //???????????????

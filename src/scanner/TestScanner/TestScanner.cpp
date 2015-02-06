@@ -210,11 +210,11 @@ bool TestScanner::testIdentifier()
 			assert(ret.getLexeme().getType() == Lexeme::LexemeType::MP_INVALID);
 		}
 
-	////TestCase 9 - space in between
+	////Testcase 9 - space in between
 	//	{
 	//		std::stringstream ss;
 
-	//		ss << "_df df"; 
+	//		ss << "_df df";
 
 	//		int line = 0;
 	//		int col = 0;
