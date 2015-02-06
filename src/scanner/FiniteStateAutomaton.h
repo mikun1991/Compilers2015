@@ -45,7 +45,7 @@ public:
 
 	static Token comment(istream* stream, int& line, int& currentColumn);
 
-
+	static Token whiteSpace(istream* stream, int& line, int& currentColumn);
 };
 
 #endif //FINITE_STATE_AUTOMATON

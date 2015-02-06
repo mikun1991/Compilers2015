@@ -1,6 +1,6 @@
 #include "Lexeme.h"
 
-const char* TypeAsString[27] = {
+const char* TypeAsString[28] = {
 	/* Invalid */
 
 	"MP_INVALID",
@@ -41,7 +41,10 @@ const char* TypeAsString[27] = {
 
 	"MP_RUN_COMMENT", // starts with { and end with a }
 	"MP_RUN_STRING",
-	"MP_ERROR"
+	"MP_ERROR",
+
+	/* Other */
+	"MP_WHITESPACE"
 };
 
 

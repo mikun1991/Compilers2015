@@ -260,12 +260,13 @@ Token FiniteStateAutomaton::times(istream* stream, int& line, int& currentColumn
 
 Token FiniteStateAutomaton::endOfFile(istream* stream, int& line, int& currentColumn)
 {
-	char next;
+	int pos = stream->tellg();
+	char next = stream->get();
 	string name;
-	if (stream->peek() == EOF){//then this is the end of the file
-		next = stream->get();
+	if (next == EOF|| next < 0){//then this is the end of the file
 		return Token(Lexeme::LexemeType::MP_EOF, name , line, currentColumn);
 	}
+	stream->seekg(pos);
 	return Token();
 }
 
@@ -601,6 +602,30 @@ IgnoreComments:  //state that ignores comments while updating line and currentCo
 		goto IgnoreComments;
 	}
 
+Reject:
+	{
+		return Token();
+	}
+}
+
+Token FiniteStateAutomaton::whiteSpace(istream* stream, int& line, int& currentColumn)
+{
+	char next;
+	string name;
+	//Start State
+	{
+		next = stream->peek();
+		if (charIsWhiteSpace(next)){ //transition
+			name += stream->get();
+			currentColumn++;
+			goto Accept;
+		}
+		goto Reject;
+	}
+Accept:
+	{
+		return Token(Lexeme::LexemeType::MP_WHITESPACE, name, line, currentColumn);
+	}
 Reject:
 	{
 		return Token();

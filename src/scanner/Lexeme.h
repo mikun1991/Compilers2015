@@ -53,6 +53,9 @@ public:
 		MP_RUN_STRING,
 		MP_ERROR,
 
+		/*Other*/
+
+		MP_WHITESPACE
 	};
     
 
