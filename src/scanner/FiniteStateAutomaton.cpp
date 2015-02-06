@@ -13,80 +13,25 @@ bool FiniteStateAutomaton::charIsWhiteSpace(char c)
 
 bool FiniteStateAutomaton::charIsDigit(char c)
 {
-	if (c == '1') return true;
-	if (c == '2') return true;
-	if (c == '3') return true;
-	if (c == '4') return true;
-	if (c == '5') return true;
-	if (c == '6') return true;
-	if (c == '7') return true;
-	if (c == '8') return true;
-	if (c == '9') return true;
-	if (c == '0') return true;
+	//48 -57
+	if ((int)c > 47 && (int)c < 58)
+		return true;
 	
 	return false;
 }
 
 bool FiniteStateAutomaton::charIsUpperAlphabet(char c)
 {
-	if (c == 'A') return true;
-	if (c == 'B') return true;
-	if (c == 'C') return true;
-	if (c == 'D') return true;
-	if (c == 'E') return true;
-	if (c == 'F') return true;
-	if (c == 'G') return true;
-	if (c == 'H') return true;
-	if (c == 'I') return true;
-	if (c == 'J') return true;
-	if (c == 'K') return true;
-	if (c == 'L') return true;
-	if (c == 'M') return true;
-	if (c == 'N') return true;
-	if (c == 'O') return true;
-	if (c == 'P') return true;
-	if (c == 'Q') return true;
-	if (c == 'R') return true;
-	if (c == 'S') return true;
-	if (c == 'T') return true;
-	if (c == 'U') return true;
-	if (c == 'V') return true;
-	if (c == 'W') return true;
-	if (c == 'X') return true;
-	if (c == 'Y') return true;
-	if (c == 'Z') return true;
-
+	if ((int) c > 64 && (int)c < 91)
+		return true;
 	return false;
 }
 
 bool FiniteStateAutomaton::charIsLowerAlphabet(char c)
 {
-	if (c == 'a') return true;
-	if (c == 'b') return true;
-	if (c == 'c') return true;
-	if (c == 'd') return true;
-	if (c == 'e') return true;
-	if (c == 'f') return true;
-	if (c == 'g') return true;
-	if (c == 'h') return true;
-	if (c == 'i') return true;
-	if (c == 'j') return true;
-	if (c == 'k') return true;
-	if (c == 'l') return true;
-	if (c == 'm') return true;
-	if (c == 'n') return true;
-	if (c == 'o') return true;
-	if (c == 'p') return true;
-	if (c == 'q') return true;
-	if (c == 'r') return true;
-	if (c == 's') return true;
-	if (c == 't') return true;
-	if (c == 'u') return true;
-	if (c == 'v') return true;
-	if (c == 'w') return true;
-	if (c == 'x') return true;
-	if (c == 'y') return true;
-	if (c == 'z') return true;
+	//97 - 122
+	if (c > 96 && c < 123)
+		return true;
 
 	return false;
 }
@@ -416,13 +361,13 @@ IntegerLit://digit{digit}
 	{
 		next = stream->peek();
 
+		lastGoodType = Lexeme::LexemeType::MP_INTEGER_LIT;
+
 		if (charIsDigit(next)){
 			name += stream->get();
 			currentColumn++;
 			goto IntegerLit;
 		}
-
-		lastGoodType = Lexeme::LexemeType::MP_INTEGER_LIT;
 
 		if (next == '.'){
 			lastGoodPosition = stream->tellg();
@@ -523,20 +468,20 @@ Reject:
 
 }
 
-//string literal FSA stub
 Token FiniteStateAutomaton::stringLiteral(istream* stream, int& line, int& currentColumn)
 {
 	char next;
 	string name;
+	int startColumn = currentColumn;
 
 	Lexeme::LexemeType lastGoodType = Lexeme::LexemeType::MP_INVALID;
-	int lastGoodPosition = stream->tellg();
+	//int lastGoodPosition = stream->tellg();
 
 //start state
 	{
 		next = stream->peek();
 		if (next == '\''){
-			name += stream->get();
+			stream->ignore(1);
 			currentColumn++;
 			goto OddApostrophes;
 		}
@@ -548,14 +493,21 @@ OddApostrophes:  //this is a non-accept state looking for more characters in the
 	{
 		next = stream->peek();
 		if (next == '\''){
-			//if you see another apostrophe
-			name += stream->get();
+			//if you see another apostrophe need to check for end of string or escaped apostrophe character
+			lastGoodType = Lexeme::LexemeType::MP_STRING_LIT;
+			stream->ignore(1);
 			currentColumn++;
 			goto EvenApostrophes;
 		}
 		
 		if (next == '\n'){
-			//if you encounter EOL in open string you return MP_RUN_STRING error and set stream position back?
+			//if you encounter EOL in open string you return MP_RUN_STRING error 
+			lastGoodType = Lexeme::LexemeType::MP_RUN_STRING;
+			goto Reject;
+		}
+
+		if (next == EOF){
+			//if you encounter EOF in open string you return MP_RUN_STRING error
 			lastGoodType = Lexeme::LexemeType::MP_RUN_STRING;
 			goto Reject;
 		}
@@ -566,29 +518,91 @@ OddApostrophes:  //this is a non-accept state looking for more characters in the
 		goto OddApostrophes;
 	}
 
-EvenApostrophes:  //this is a state that checks for more apostrophes, otherwise accepts end of string
+EvenApostrophes:  //this is a state that checks for more apostrophes, otherwise accepts and returns string literal 
 	{
 		next = stream->peek();
 		if (next == '\''){
-			//if you see another apostrophe
+			//if you see another apostrophe, it is an escaped apostrophe and is added to the string
 			name += stream->get();
 			currentColumn++;
 			goto OddApostrophes;
 		}
 
 		//otherwise you have a valid string literal
-		return Token(Lexeme::LexemeType::MP_STRING_LIT, name, line, currentColumn);
+		return Token(Lexeme::LexemeType::MP_STRING_LIT, name, line, startColumn);
 	}
 
-Reject:
+Reject:  //returns a blank token if this method was called in error, otherwise returns MP_RUN_STRING errors
 	{
 		if (lastGoodType == Lexeme::LexemeType::MP_INVALID){
 			return Token();
 		}
-		stream->seekg(lastGoodPosition);
-		return Token(lastGoodType, name, line, currentColumn);
+		return Token(lastGoodType, name, line, startColumn);
 	}
 
 
 	
+}
+
+Token FiniteStateAutomaton::comment(istream* stream, int& line, int& currentColumn)
+{
+	char next;
+	Lexeme lex = Lexeme();
+	int startColumn = currentColumn;
+	int startLine = line;
+
+//start state
+	{
+		next = stream->peek();
+		if (next == '{'){
+			stream->ignore(1);
+			currentColumn++;
+			goto IgnoreComments;
+		}
+		//if you don't see a {
+		goto Reject;
+
+	}
+
+IgnoreComments:  //state that ignores comments while updating line and currentColumn, and watches for MP_RUN_COMMENT error
+	{
+		next = stream->peek();
+		
+		//if you encounter a newline inside a comment, reset currentColumn, increment line, and continue processing comment
+		if (next == '\n'){
+			stream->ignore(1);
+			currentColumn = 0;
+			line++;
+			goto IgnoreComments;
+		}
+
+		//if you encounter EOF inside a comment, return MP_RUN_COMMENT error
+		if (next == EOF){
+			return Token(Lexeme::LexemeType::MP_RUN_COMMENT, " ", startLine, startColumn);
+		}
+
+		//if you encounter }, this indicates end of comments
+		if (next == '}'){
+			stream->ignore(1);
+			currentColumn++;
+			return Token(lex, startLine, startColumn);
+		}
+
+		//if you encounter another {, alert programmer of possible error with unclosed comment
+		if (next == '{'){
+			stream->ignore(1);
+			currentColumn++;
+			goto IgnoreComments;
+		}
+
+		//otherwise continue processing comment
+		stream->ignore(1);
+		currentColumn++;
+		goto IgnoreComments;
+	}
+
+Reject:
+	{
+		return Token();
+	}
 }
