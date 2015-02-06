@@ -162,17 +162,17 @@ bool TestScanner::testIdentifier()
 			assert(ret.getLexeme().getType() == Lexeme::LexemeType::MP_IDENTIFIER);
 		}
 
-	////TestCase 5 - "_" as a last character
-	//	{
-	//		std::stringstream ss;
+	//TestCase 5 - "_" as a last character
+		{
+			std::stringstream ss;
 
-	//		ss << "_dj_s5f_";
+			ss << "_dj_s5f_";
 
-	//		int line = 0;
-	//		int col = 0;
-	//		Token ret = FiniteStateAutomaton::identifier(&ss, line, col);
-	//		assert(ret.getLexeme().getType() == Lexeme::LexemeType::MP_IDENTIFIER);
-	//	}
+			int line = 0;
+			int col = 0;
+			Token ret = FiniteStateAutomaton::identifier(&ss, line, col);
+			assert(ret.getLexeme().getType() == Lexeme::LexemeType::MP_INVALID);
+		}
 
 	//TestCase 6 - more that one "_" in a row
 		{
@@ -214,7 +214,7 @@ bool TestScanner::testIdentifier()
 	//	{
 	//		std::stringstream ss;
 
-	//		ss << "_dfsz df"; 
+	//		ss << "_df df"; 
 
 	//		int line = 0;
 	//		int col = 0;

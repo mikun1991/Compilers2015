@@ -314,7 +314,7 @@ Identifier:
 			temp += stream->get();
 			goto Underscore;
 		}
-
+		
 		lastGoodType = Lexeme::LexemeType::MP_IDENTIFIER;
 		return Token(lastGoodType, name, line, currentColumn);
 		//goto Reject; //???????????????
@@ -548,8 +548,6 @@ Reject:  //returns a blank token if this method was called in error, otherwise r
 		}
 		return Token(lastGoodType, name, line, startColumn);
 	}
-
-
 	
 }
 
