@@ -19,6 +19,16 @@ Token::Token(Lexeme::LexemeType type, string name, int lineNumber, int columnNum
 {
 }
 
+int Token::getColumnNumber()
+{
+	return _columnNumber;
+}
+
+int Token::getLineNumber()
+{
+	return _lineNumber;
+}
+
 Lexeme Token::getLexeme()
 {
 	return _lexeme;

@@ -37,8 +37,10 @@ int main(int argc, char * argv[])
 				continue;
 			string type = nextToken.getLexeme().typeToName();
 			string name = nextToken.getLexeme().getValue();
+			int line = nextToken.getLineNumber();
+			int column = nextToken.getColumnNumber();
 			printf("Found \"%s\",", name.c_str());
-			printf("with type %s \n", type.c_str());
+			printf("with type %s , line:%d , column:%d \n", type.c_str(), line, column);
     	}
     	while(nextToken.getLexeme().getType() != Lexeme::MP_EOF);
     }

@@ -11,6 +11,41 @@ public:
 	//add more types as we go here 
 
 	enum LexemeType{ 
+
+		/* Reserved Words */
+		MP_AND,
+		MP_BEGIN,
+		MP_BOOLEAN,
+		MP_DIV,
+		MP_DO,
+		MP_DOWNTO,
+		MP_ELSE,
+		MP_END,
+		MP_FALSE,
+		MP_FIXED,
+		MP_FLOAT,
+		MP_FOR,
+		MP_FUNCTION,
+		MP_IF,
+		MP_INTEGER,
+		MP_MOD,
+		MP_NOT,
+		MP_OR,
+		MP_PROCEDURE,
+		MP_PROGRAM,
+		MP_READ,
+		MP_REPEAT,
+		MP_STRING,
+		MP_THEN,
+		MP_TRUE,
+		MP_TO,
+		MP_Type,
+		MP_UNTIL,
+		MP_VAR,
+		MP_WHILE,
+		MP_WRITE,
+		MP_WRITELN,
+
 		/* Invalid */
 
 		 MP_INVALID ,

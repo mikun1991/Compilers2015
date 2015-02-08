@@ -1,7 +1,46 @@
 #include "Scanner.h"
 
-#include "scanner/Token.h"
-#include "scanner/FiniteStateAutomaton.h"
+#include "Token.h"
+#include "FiniteStateAutomaton.h"
+
+
+
+//// RESERVED WORDS ///////
+const char* ReservedWords[32] = {
+		"and",
+		"begin",
+		"Boolean",
+		"div",
+		"do",
+		"downto",
+		"else",
+		"end",
+		"false",
+		"fixed",
+		"float",
+		"for",
+		"function",
+		"if",
+		"integer",
+		"mod",
+		"not",
+		"or",
+		"procedure",
+		"program",
+		"read",
+		"repeat",
+		"string",
+		"then",
+		"true",
+		"to",
+		"type",
+		"until",
+		"var",
+		"while",
+		"write",
+		"writeln"};
+
+
 
 Scanner::Scanner(string filePath)
 {
@@ -11,6 +50,20 @@ Scanner::Scanner(string filePath)
 }
 
 Token Scanner::getNextToken()
+{
+	Token next = scanNextToken();
+
+	std::string name = next.getLexeme().getValue();
+
+	//if(ReservedWords.contains(name)){
+	//	int index = ReservedWords.indexOf(name);
+	//}
+
+	return next;
+}
+
+
+Token Scanner::scanNextToken()
 {
 	//switch here
 	Token nextToken;

@@ -624,6 +624,13 @@ Token FiniteStateAutomaton::whiteSpace(istream* stream, int& line, int& currentC
 	//Start State
 	{
 		next = stream->peek();
+
+		if (next == '\n'){
+			name += stream->get();
+			currentColumn = 0;
+			line++;
+			goto Accept;
+		}
 		if (charIsWhiteSpace(next)){ //transition
 			name += stream->get();
 			currentColumn++;

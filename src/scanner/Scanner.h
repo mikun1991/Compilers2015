@@ -15,6 +15,8 @@ class Scanner {
 public:
     Scanner(string filePath);
 
+    Token scanNextToken();
+
     Token getNextToken(); //<- this is the dispatcher 
 
 	bool hasError();
