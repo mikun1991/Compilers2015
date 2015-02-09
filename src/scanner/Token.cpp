@@ -19,6 +19,11 @@ Token::Token(Lexeme::LexemeType type, string name, int lineNumber, int columnNum
 {
 }
 
+void Token::setLexeme(Lexeme newLexeme)
+{
+	_lexeme = newLexeme;
+}
+
 int Token::getColumnNumber()
 {
 	return _columnNumber;

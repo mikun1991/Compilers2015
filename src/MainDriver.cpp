@@ -21,13 +21,13 @@ int main(int argc, char * argv[])
 	ifstream inputFile(argv[1]);
 
 	if (!inputFile.is_open()){
-		fprintf(stdout, "Could not open file");
+		fprintf(stdout, "Could not open file \nCheck the path and try again");
 		return 1;
 	}
 
 	//inputFile.close();
 
-    Scanner inputScanner(argv[1]);
+	Scanner inputScanner(argv[1]); 
 
     if(inputFile.is_open()){
     	Token nextToken;

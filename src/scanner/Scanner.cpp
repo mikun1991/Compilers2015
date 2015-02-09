@@ -3,6 +3,8 @@
 #include "Token.h"
 #include "FiniteStateAutomaton.h"
 
+#include <string>
+#include <algorithm>
 
 
 //// RESERVED WORDS ///////
@@ -48,20 +50,6 @@ Scanner::Scanner(string filePath)
 	_currentRow = 0;
 	_currentColumn = 0;
 }
-
-Token Scanner::getNextToken()
-{
-	Token next = scanNextToken();
-
-	std::string name = next.getLexeme().getValue();
-
-	//if(ReservedWords.contains(name)){
-	//	int index = ReservedWords.indexOf(name);
-	//}
-
-	return next;
-}
-
 
 Token Scanner::scanNextToken()
 {
@@ -127,6 +115,58 @@ Token Scanner::scanNextToken()
 	name += _filePointer->get();
 	return Token(Lexeme::MP_INVALID, name, _currentRow, _currentColumn);
 	_currentColumn++;
+}
+
+Token Scanner::getNextToken()
+{
+	Token next = scanNextToken();
+	checkReserved(next);
+	return next;
+}
+
+void Scanner::checkReserved(Token& token)
+{
+	std::string lowerName = token.getLexeme().getValue();
+	std::transform(lowerName.begin(), lowerName.end(), lowerName.begin(), ::tolower);
+
+	int index = indexInReservedWords(lowerName);
+	if (index < 0){
+		return;
+	}
+
+	//otherwise this is a reserved word and we should update the token accordingly
+	Lexeme newLexeme((Lexeme::LexemeType) index, ReservedWords[index]);
+	token.setLexeme(newLexeme);
+}
+
+int Scanner::indexInReservedWords(const std::string& name)
+{
+	return indexInReservedWordsHelper(name, 16, 32, 0);
+}
+
+int Scanner::indexInReservedWordsHelper(const std::string& name , int location, int upperBound, int lowerBound)
+{
+	if (location >= upperBound){
+		return -1;
+	}
+	if (location <= lowerBound){
+		return -1;
+	}
+	if (name == ReservedWords[location]){
+		return location;
+	}
+	
+	if (name < ReservedWords[location]){
+		upperBound = location;
+		location -= ((upperBound-1 - lowerBound) / 2);
+	}
+	else{
+		//name > reservedWords[location]
+		lowerBound = location;
+		location += ((upperBound+1 - lowerBound) / 2);
+	}
+
+	return indexInReservedWordsHelper(name, location, upperBound, lowerBound);
 }
 
 bool Scanner::moveToNextTokenStart()

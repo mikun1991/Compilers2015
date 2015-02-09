@@ -13,7 +13,7 @@ public:
 	Token(Lexeme::LexemeType type, std::string name , int lineNumber, int columnNumber);
 	Token(Lexeme lexeme, int lineNumber, int columnNumber);
     
-    
+	void setLexeme(Lexeme newLexeme);
     Lexeme getLexeme();
 
 	bool hasValidLexeme();

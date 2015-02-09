@@ -15,8 +15,6 @@ class Scanner {
 public:
     Scanner(string filePath);
 
-    Token scanNextToken();
-
     Token getNextToken(); //<- this is the dispatcher 
 
 	bool hasError();
@@ -24,8 +22,15 @@ public:
 
 private:
 
+	Token scanNextToken();
+
+	void checkReserved(Token& token);
 
 	bool moveToNextTokenStart();
+
+	//return -1 if it is not present
+	int indexInReservedWords(const std::string&  name);
+	int indexInReservedWordsHelper(const std::string&, int locaiton, int upperBound, int lowerBound);
 
 	int _currentColumn;
 	int _currentRow;
