@@ -21,5 +21,9 @@ install( FILES MP_SCANNER_HEADERS DESTINATION include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}) #source path
 include_directories(${CMAKE_CURRENT_BINARY_DIR}) #build path
 
+include_directories(${CMAKE_SOURCE_DIR}/scanner/) #source root
+include_directories(${CMAKE_BINARY_DIR}/scanner/) #build root
+
+
 source_group(Headers FILES ${MP_PARSER_HEADERS})
 source_group(Sources FILES ${MP_PARSER_SOURCES})

@@ -11,7 +11,7 @@
 const char* ReservedWords[32] = {
 		"and",
 		"begin",
-		"Boolean",
+		"boolean",
 		"div",
 		"do",
 		"downto",
@@ -20,11 +20,11 @@ const char* ReservedWords[32] = {
 		"false",
 		"fixed",
 		"float",
-		"for",
+		"for", //12
 		"function",
 		"if",
 		"integer",
-		"mod",
+		"mod", //16
 		"not",
 		"or",
 		"procedure",
@@ -141,7 +141,15 @@ void Scanner::checkReserved(Token& token)
 
 int Scanner::indexInReservedWords(const std::string& name)
 {
-	return indexInReservedWordsHelper(name, 16, 32, 0);
+	int index = -1;
+	for (int i = 0; i < 32; i++){
+		if (ReservedWords[i] == name){
+			return i;
+		}
+	}
+	return -1;
+
+	//return indexInReservedWordsHelper(name, 16, 32, 0);
 }
 
 int Scanner::indexInReservedWordsHelper(const std::string& name , int location, int upperBound, int lowerBound)
@@ -163,7 +171,7 @@ int Scanner::indexInReservedWordsHelper(const std::string& name , int location, 
 	else{
 		//name > reservedWords[location]
 		lowerBound = location;
-		location += ((upperBound+1 - lowerBound) / 2);
+		location += ((upperBound+1 - lowerBound) / 2) -1;
 	}
 
 	return indexInReservedWordsHelper(name, location, upperBound, lowerBound);

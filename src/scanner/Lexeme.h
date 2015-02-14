@@ -94,7 +94,7 @@ public:
 	};
     
 
-	string typeToName();
+	std::string typeToName();
 
 	Lexeme();
 	Lexeme(LexemeType type, string value);

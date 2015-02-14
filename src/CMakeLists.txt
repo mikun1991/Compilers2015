@@ -10,6 +10,8 @@ add_executable( mp MainDriver.cpp)
 
 target_link_libraries(mp mpparser)
 
+target_link_libraries(mp mpscanner)
+
 install(TARGETS mp DESTINATION bin)
 
 #try this
