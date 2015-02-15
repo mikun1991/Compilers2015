@@ -10,6 +10,13 @@
 
 using namespace std;
 
+/******************************
+* This is the main driver which
+* will take a file as an input
+* and output the name and type of tokens 
+* found in the file
+******************************/
+
 int main(int argc, char * argv[])
 {
 
@@ -32,15 +39,17 @@ int main(int argc, char * argv[])
 	inputFile.close();
 
 	Scanner inputScanner(argv[1]);
+
+	if (!inputScanner.isValid()){
+		fprintf(stdout, "Could not open file for read with scanner!");
+		return 1;
+	}
+
 	Token nextToken;
 
 	do{
 		nextToken = inputScanner.getNextToken();
 		
-		//skip whitespace
-		if (nextToken.getLexeme().getType() == LexemeResources::MP_WHITESPACE)
-			continue;
-
 		string type = nextToken.getLexeme().typeToName();
 		string name = nextToken.getLexeme().getValue();
 		int line = nextToken.getLineNumber();
@@ -50,8 +59,6 @@ int main(int argc, char * argv[])
 		printf("with type %s , line:%d , column:%d \n", type.c_str(), line, column);
 	
 	} while (nextToken.getLexeme().getType() != LexemeResources::MP_EOF);
-
-
 
 	return 0;
 }

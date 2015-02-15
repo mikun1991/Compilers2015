@@ -18,11 +18,12 @@ public:
 	~Scanner();
 
 	bool isValid();
-
-	Token getNextToken(); //<- this is the dispatcher 
+	Token getNextToken(); 
 
 private:
-	Token scanNextToken();
+	Token scanNextToken(); //<- this is the dispatcher 
+
+	//Check to see if the scanned token is a reserved word 
 	void checkReserved(Token& token);
 	bool moveToNextTokenStart();
 

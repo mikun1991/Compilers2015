@@ -36,8 +36,18 @@ bool Scanner::isValid()
 
 Token Scanner::getNextToken()
 {
-	Token next = scanNextToken();
-	checkReserved(next);
+	Token next;
+
+	do{
+		//skip all whitespace 
+		next = scanNextToken();
+	} while (next.getLexeme().getType() == MP_WHITESPACE);
+
+	//only need to check identifiers
+	//to see if they are reserved words
+	if (next.getLexeme().getType() == MP_IDENTIFIER)
+		checkReserved(next);
+
 	return next;
 }
 
@@ -102,7 +112,7 @@ Token Scanner::scanNextToken()
 	if (nextToken.hasValidLexeme()) return nextToken;
 
 	//no valid lexeme was found
-	//out put a error token
+	//out put in a error token
 
 	std::string name;
 	name += _filePointer->get();
@@ -138,9 +148,6 @@ const int Scanner::indexInReservedWordsHelper(const std::string& name, int top, 
 	if (middle >= top){
 		return -1;
 	}
-	//if (middle < bottom){
-	//	return -1;
-	//}
 
 	if (name == ReservedWords[middle]){
 		return middle;
