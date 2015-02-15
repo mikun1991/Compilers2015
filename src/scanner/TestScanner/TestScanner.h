@@ -1,8 +1,15 @@
 #ifndef TEST_SCANNER_H
 #define TEST_SCANNER_H
 
+//-----------------------
+// TestScanner 
+//
+// this contains unit tests for specific FSA that
+// complicted enough to warrent them 
+//----------------------=
 class TestScanner
 {
+
 public:
 
 	static bool testNumber();
@@ -11,8 +18,5 @@ public:
 	static bool testComment();
 
 };
-
-
-
 
 #endif //TEST_SCANNER_H

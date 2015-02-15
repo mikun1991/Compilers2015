@@ -9,37 +9,31 @@
 
 
 using namespace std;
-    
-class Scanner {
-    
+
+class Scanner
+{
+
 public:
-    Scanner(string filePath);
+	Scanner(string filePath);
+	~Scanner();
 
-    Token getNextToken(); //<- this is the dispatcher 
+	bool isValid();
 
-	bool hasError();
-	string getError();
+	Token getNextToken(); //<- this is the dispatcher 
 
 private:
-
 	Token scanNextToken();
-
 	void checkReserved(Token& token);
-
 	bool moveToNextTokenStart();
 
 	//return -1 if it is not present
-	int indexInReservedWords(const std::string&  name);
-	int indexInReservedWordsHelper(const std::string&, int locaiton, int upperBound, int lowerBound);
+	const int indexInReservedWords(const std::string&  name);
+	const int indexInReservedWordsHelper(const std::string&, int locaiton, int upperBound, int lowerBound) ;
 
 	int _currentColumn;
 	int _currentRow;
 
-	bool _hasError;
-	string _errorString;
-
 	ifstream* _filePointer;
-	string _filePath;
 };
 
 

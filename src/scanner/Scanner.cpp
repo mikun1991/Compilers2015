@@ -2,53 +2,43 @@
 
 #include "Token.h"
 #include "FiniteStateAutomaton.h"
+#include "Resources.h"
 
 #include <string>
 #include <algorithm>
 
-
-//// RESERVED WORDS ///////
-const char* ReservedWords[32] = {
-		"and",
-		"begin",
-		"boolean",
-		"div",
-		"do",
-		"downto",
-		"else",
-		"end",
-		"false",
-		"fixed",
-		"float",
-		"for", //12
-		"function",
-		"if",
-		"integer",
-		"mod", //16
-		"not",
-		"or",
-		"procedure",
-		"program",
-		"read",
-		"repeat",
-		"string",
-		"then",
-		"true",
-		"to",
-		"type",
-		"until",
-		"var",
-		"while",
-		"write",
-		"writeln"};
-
-
+using namespace LexemeResources;
 
 Scanner::Scanner(string filePath)
 {
 	_filePointer = new ifstream(filePath);
 	_currentRow = 0;
 	_currentColumn = 0;
+}
+
+Scanner::~Scanner()
+{
+	if (_filePointer){
+		if (_filePointer->is_open()){
+			_filePointer->close();
+		}
+		delete _filePointer;
+	}
+}
+
+bool Scanner::isValid()
+{
+	bool isValid = true;
+	isValid &= _filePointer->is_open();
+	isValid &= _filePointer->good();
+	return isValid;
+}
+
+Token Scanner::getNextToken()
+{
+	Token next = scanNextToken();
+	checkReserved(next);
+	return next;
 }
 
 Token Scanner::scanNextToken()
@@ -111,18 +101,16 @@ Token Scanner::scanNextToken()
 	nextToken = FiniteStateAutomaton::whiteSpace(_filePointer, _currentRow, _currentColumn);
 	if (nextToken.hasValidLexeme()) return nextToken;
 
+	//no valid lexeme was found
+	//out put a error token
+
 	std::string name;
 	name += _filePointer->get();
-	return Token(Lexeme::MP_INVALID, name, _currentRow, _currentColumn);
+	return Token(LexemeType::MP_INVALID, name, _currentRow, _currentColumn);
 	_currentColumn++;
 }
 
-Token Scanner::getNextToken()
-{
-	Token next = scanNextToken();
-	checkReserved(next);
-	return next;
-}
+
 
 void Scanner::checkReserved(Token& token)
 {
@@ -135,11 +123,11 @@ void Scanner::checkReserved(Token& token)
 	}
 
 	//otherwise this is a reserved word and we should update the token accordingly
-	Lexeme newLexeme((Lexeme::LexemeType) index, ReservedWords[index]);
+	Lexeme newLexeme((LexemeType)index, ReservedWords[index]);
 	token.setLexeme(newLexeme);
 }
 
-int Scanner::indexInReservedWords(const std::string& name)
+const int Scanner::indexInReservedWords(const std::string& name) 
 {
 	int index = -1;
 	for (int i = 0; i < 32; i++){
@@ -152,7 +140,7 @@ int Scanner::indexInReservedWords(const std::string& name)
 	//return indexInReservedWordsHelper(name, 16, 32, 0);
 }
 
-int Scanner::indexInReservedWordsHelper(const std::string& name , int location, int upperBound, int lowerBound)
+const int Scanner::indexInReservedWordsHelper(const std::string& name, int location, int upperBound, int lowerBound)
 {
 	if (location >= upperBound){
 		return -1;
@@ -163,22 +151,17 @@ int Scanner::indexInReservedWordsHelper(const std::string& name , int location, 
 	if (name == ReservedWords[location]){
 		return location;
 	}
-	
+
 	if (name < ReservedWords[location]){
 		upperBound = location;
-		location -= ((upperBound-1 - lowerBound) / 2);
+		location -= ((upperBound - 1 - lowerBound) / 2);
 	}
 	else{
 		//name > reservedWords[location]
 		lowerBound = location;
-		location += ((upperBound+1 - lowerBound) / 2) -1;
+		location += ((upperBound + 1 - lowerBound) / 2) - 1;
 	}
 
 	return indexInReservedWordsHelper(name, location, upperBound, lowerBound);
 }
 
-bool Scanner::moveToNextTokenStart()
-{
-
-	return false;
-}

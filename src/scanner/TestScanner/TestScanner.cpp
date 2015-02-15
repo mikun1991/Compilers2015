@@ -3,12 +3,17 @@
 #include "Token.h"
 #include "FiniteStateAutomaton.h"
 #include "Lexeme.h"
+#include "Resources.h"
 
 #include <sstream>
 
 #include <assert.h>
 
+//using namespace LexemeResources;
 
+//--------------------------------------
+// This is the dirver for the FSA unit tests 
+//-------------------------------- -----
 int main(int argc, char * argv[])
 {
 
@@ -18,6 +23,12 @@ int main(int argc, char * argv[])
 	TestScanner::testComment();
 }
 
+//--------------------------------
+// TestScanner
+//
+// Each function contains a number of test cases
+// for a given FSA
+//--------------------------------
 bool TestScanner::testNumber()
 {
 	//TestCase 1
@@ -29,7 +40,7 @@ bool TestScanner::testNumber()
 		int line = 0;
 		int col = 0;
 		Token ret = FiniteStateAutomaton::number(&ss, line, col);
-		assert(ret.getLexeme().getType() == Lexeme::MP_INTEGER_LIT);
+		assert(ret.getLexeme().getType() == LexemeResources::MP_INTEGER_LIT);
 		assert(line == 0);
 		assert(col == 6);
 	}
@@ -43,7 +54,7 @@ bool TestScanner::testNumber()
 		int line = 0;
 		int col = 0;
 		Token ret = FiniteStateAutomaton::number(&ss, line, col);
-		assert(ret.getLexeme().getType() == Lexeme::MP_FLOAT_LIT);
+		assert(ret.getLexeme().getType() == LexemeResources::MP_FLOAT_LIT);
 		assert(line == 0);
 		assert(col == 4);
 	}
@@ -57,7 +68,7 @@ bool TestScanner::testNumber()
 		int line = 0;
 		int col = 0;
 		Token ret = FiniteStateAutomaton::number(&ss, line, col);
-		assert(ret.getLexeme().getType() == Lexeme::MP_FLOAT_LIT);
+		assert(ret.getLexeme().getType() == LexemeResources::MP_FLOAT_LIT);
 	}
 
 	//TestCase 4
@@ -69,7 +80,7 @@ bool TestScanner::testNumber()
 		int line = 0;
 		int col = 0;
 		Token ret = FiniteStateAutomaton::number(&ss, line, col);
-		assert(ret.getLexeme().getType() == Lexeme::MP_FIXED_LIT);
+		assert(ret.getLexeme().getType() == LexemeResources::MP_FIXED_LIT);
 	}
 
 	//TestCase 5
@@ -81,7 +92,7 @@ bool TestScanner::testNumber()
 		int line = 0;
 		int col = 0;
 		Token ret = FiniteStateAutomaton::number(&ss, line, col);
-		assert(ret.getLexeme().getType() == Lexeme::MP_FIXED_LIT);
+		assert(ret.getLexeme().getType() == LexemeResources::MP_FIXED_LIT);
 	}
 
 	//TestCase 6
@@ -93,7 +104,7 @@ bool TestScanner::testNumber()
 		int line = 0;
 		int col = 0;
 		Token ret = FiniteStateAutomaton::number(&ss, line, col);
-		assert(ret.getLexeme().getType() == Lexeme::MP_INVALID);
+		assert(ret.getLexeme().getType() == LexemeResources::MP_INVALID);
 	}
 
 	//TestCase 6
@@ -105,7 +116,7 @@ bool TestScanner::testNumber()
 		int line = 0;
 		int col = 0;
 		Token ret = FiniteStateAutomaton::number(&ss, line, col);
-		assert(ret.getLexeme().getType() == Lexeme::MP_INVALID);
+		assert(ret.getLexeme().getType() == LexemeResources::MP_INVALID);
 	}
 
 	return true;
@@ -122,7 +133,7 @@ bool TestScanner::testIdentifier()
 		int line = 0;
 		int col = 0;
 		Token ret = FiniteStateAutomaton::identifier(&ss, line, col);
-		assert(ret.getLexeme().getType() == Lexeme::MP_IDENTIFIER);
+		assert(ret.getLexeme().getType() == LexemeResources::MP_IDENTIFIER);
 	}
 
 		//TestCase 2 - "_" and letters	
@@ -134,7 +145,7 @@ bool TestScanner::testIdentifier()
 		int line = 0;
 		int col = 0;
 		Token ret = FiniteStateAutomaton::identifier(&ss, line, col);
-		assert(ret.getLexeme().getType() == Lexeme::MP_IDENTIFIER);
+		assert(ret.getLexeme().getType() == LexemeResources::MP_IDENTIFIER);
 		}
 		
 		//TestCase 3 - "_" and digits
@@ -146,7 +157,7 @@ bool TestScanner::testIdentifier()
 		int line = 0;
 		int col = 0;
 		Token ret = FiniteStateAutomaton::identifier(&ss, line, col);
-		assert(ret.getLexeme().getType() == Lexeme::MP_IDENTIFIER);
+		assert(ret.getLexeme().getType() == LexemeResources::MP_IDENTIFIER);
     	}
 
 
@@ -159,7 +170,7 @@ bool TestScanner::testIdentifier()
 			int line = 0;
 			int col = 0;
 			Token ret = FiniteStateAutomaton::identifier(&ss, line, col);
-			assert(ret.getLexeme().getType() == Lexeme::MP_IDENTIFIER);
+			assert(ret.getLexeme().getType() == LexemeResources::MP_IDENTIFIER);
 		}
 
 	//TestCase 5 - "_" as a last character
@@ -171,7 +182,7 @@ bool TestScanner::testIdentifier()
 			int line = 0;
 			int col = 0;
 			Token ret = FiniteStateAutomaton::identifier(&ss, line, col);
-			assert(ret.getLexeme().getType() == Lexeme::MP_INVALID);
+			assert(ret.getLexeme().getType() == LexemeResources::MP_INVALID);
 		}
 
 	//TestCase 6 - more that one "_" in a row
@@ -183,7 +194,7 @@ bool TestScanner::testIdentifier()
 			int line = 0;
 			int col = 0;
 			Token ret = FiniteStateAutomaton::identifier(&ss, line, col);
-			assert(ret.getLexeme().getType() == Lexeme::MP_INVALID);
+			assert(ret.getLexeme().getType() == LexemeResources::MP_INVALID);
 		}
 
 	//TestCase 7 - 'unwanted' symbol like @ 
@@ -195,7 +206,7 @@ bool TestScanner::testIdentifier()
 			int line = 0;
 			int col = 0;
 			Token ret = FiniteStateAutomaton::identifier(&ss, line, col);
-			assert(ret.getLexeme().getType() == Lexeme::MP_INVALID);
+			assert(ret.getLexeme().getType() == LexemeResources::MP_INVALID);
 		}
 
 	//TestCase 8 - only digits
@@ -207,7 +218,7 @@ bool TestScanner::testIdentifier()
 			int line = 0;
 			int col = 0;
 			Token ret = FiniteStateAutomaton::identifier(&ss, line, col);
-			assert(ret.getLexeme().getType() == Lexeme::MP_INVALID);
+			assert(ret.getLexeme().getType() == LexemeResources::MP_INVALID);
 		}
 
 	////Testcase 9 - space in between
@@ -219,7 +230,7 @@ bool TestScanner::testIdentifier()
 	//		int line = 0;
 	//		int col = 0;
 	//		Token ret = FiniteStateAutomaton::identifier(&ss, line, col);
-	//		assert(ret.getLexeme().getType() == Lexeme::MP_INVALID);
+	//		assert(ret.getLexeme().getType() == LexemeResources::MP_INVALID);
 	//	}
 
 	//TestCase 10 - start wih digit
@@ -231,7 +242,7 @@ bool TestScanner::testIdentifier()
 			int line = 0;
 			int col = 0;
 			Token ret = FiniteStateAutomaton::identifier(&ss, line, col);
-			assert(ret.getLexeme().getType() == Lexeme::MP_INVALID);
+			assert(ret.getLexeme().getType() == LexemeResources::MP_INVALID);
 		}
 
 
@@ -250,7 +261,7 @@ bool TestScanner::testString()
 		int col = 0;
 		Token ret = FiniteStateAutomaton::stringLiteral(&ss, line, col);
 
-		assert(ret.getLexeme().getType() == Lexeme::MP_STRING_LIT);
+		assert(ret.getLexeme().getType() == LexemeResources::MP_STRING_LIT);
 	}
 
 	//TestCase 2
@@ -264,7 +275,7 @@ bool TestScanner::testString()
 		int col = 0;
 		Token ret = FiniteStateAutomaton::stringLiteral(&ss, line, col);
 
-		assert(ret.getLexeme().getType() == Lexeme::MP_STRING_LIT);
+		assert(ret.getLexeme().getType() == LexemeResources::MP_STRING_LIT);
 	}
 
 	//TestCase 3
@@ -277,7 +288,7 @@ bool TestScanner::testString()
 		int col = 0;
 		Token ret = FiniteStateAutomaton::stringLiteral(&ss, line, col);
 
-		assert(ret.getLexeme().getType() == Lexeme::MP_RUN_STRING);
+		assert(ret.getLexeme().getType() == LexemeResources::MP_RUN_STRING);
 	}
 
 		return true;
@@ -296,7 +307,7 @@ bool TestScanner::testComment()
 		int col = 0;
 		Token ret = FiniteStateAutomaton::comment(&ss, line, col);
 
-		assert(ret.getLexeme().getType() == Lexeme::MP_INVALID);
+		assert(ret.getLexeme().getType() == LexemeResources::MP_INVALID);
 	}
 
 	//TestCase 2
@@ -309,7 +320,7 @@ bool TestScanner::testComment()
 	int col = 0;
 	Token ret = FiniteStateAutomaton::comment(&ss, line, col);
 
-	assert(ret.getLexeme().getType() == Lexeme::MP_RUN_COMMENT);
+	assert(ret.getLexeme().getType() == LexemeResources::MP_RUN_COMMENT);
 }
 
 	//TestCase 3
@@ -322,7 +333,7 @@ bool TestScanner::testComment()
 		int col = 0;
 		Token ret = FiniteStateAutomaton::comment(&ss, line, col);
 
-		assert(ret.getLexeme().getType() == Lexeme::MP_INVALID);
+		assert(ret.getLexeme().getType() == LexemeResources::MP_INVALID);
 	}
 		return true;
 }

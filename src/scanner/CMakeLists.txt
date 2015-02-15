@@ -8,23 +8,14 @@ FILE(GLOB MP_SCANNER_HEADERS *.h)
 FILE(GLOB MP_SCANNER_SOURCES *.cpp)
 
 
-
-
 add_library( mpscanner STATIC ${MP_SCANNER_SOURCES} ${MP_SCANNER_HEADERS} ) 
 
 install( TARGETS mpscanner DESTINATION lib)
 install( FILES MP_SCANNER_HEADERS DESTINATION include)
 
 
-include_directories(${CMAKE_SOURCE_DIR}) #source root
-include_directories(${CMAKE_BINARY_DIR}) #build root
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}) #source path
-include_directories(${CMAKE_CURRENT_BINARY_DIR}) #build path
-include_directories("${PROJECT_BINARY_DIR}/src")
-include_directories(${CORE_DIR})
-include_directories(${PRECOMPILED_INCLUDE_DIR})
-
-#include_directories(${CMAKE_CURRENT_SOURCE_DIR}/TestScanner) #source path
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 add_subdirectory(TestScanner)
 

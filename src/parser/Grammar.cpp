@@ -1,13 +1,17 @@
 #include "Grammar.h"
 
+using namespace std;
 
 
 bool Grammar::factor()
 {
-	switch (_lookAheadToken.)
-	{
-		case T
-	}
+	std::string value = _lookAheadToken.getLexeme().getValue();
+
+	
+	//switch (_lookAheadToken.getLexeme().getType())
+	//{
+	//	case Lexeme::
+	//}
 
 	return false;
 }
@@ -218,6 +222,13 @@ bool Grammar::procedureStatement()
 
 bool Grammar::program()
 {
+	if (!programHeading()){
+		return false;
+	}
+
+//check if the next if next is ;
+
+	//ce
 
 	return false;
 }

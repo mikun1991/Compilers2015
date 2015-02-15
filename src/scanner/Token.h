@@ -2,31 +2,35 @@
 #define TOKEN_H
 
 #include "Lexeme.h"
+#include "Resources.h"
 
 
-class Token {
-    
-    
+class Token
+{
+
 public:
 
-	Token ();
-	Token(Lexeme::LexemeType type, std::string name , int lineNumber, int columnNumber);
+	Token();
+	Token(LexemeResources::LexemeType type, std::string name, int lineNumber, int columnNumber);
 	Token(Lexeme lexeme, int lineNumber, int columnNumber);
-    
+
 	void setLexeme(Lexeme newLexeme);
-    Lexeme getLexeme();
+	Lexeme getLexeme() const;
 
-	bool hasValidLexeme();
+	bool hasValidLexeme() const;
 
-	int getLineNumber();
-	int getColumnNumber();
+	int getLineNumber() const;
+	int getColumnNumber() const;
+
+	LexemeResources::LexemeType getType() const;
+
 
 protected:
-    
-    int _lineNumber;
-    int _columnNumber;
-    
-    Lexeme _lexeme;
+
+	int _lineNumber;
+	int _columnNumber;
+
+	Lexeme _lexeme;
 };
 
 #endif //TOKEN_H
