@@ -39,8 +39,8 @@ namespace LexemeResources
 		"MP_REPEAT",
 		"MP_STRING",
 		"MP_THEN",
-		"MP_TRUE",
 		"MP_TO",
+		"MP_TRUE",
 		"MP_Type",
 		"MP_UNTIL",
 		"MP_VAR",
@@ -137,8 +137,8 @@ namespace LexemeResources
 		MP_REPEAT,
 		MP_STRING,
 		MP_THEN,
-		MP_TRUE,
 		MP_TO,
+		MP_TRUE,
 		MP_Type,
 		MP_UNTIL,
 		MP_VAR,
@@ -206,7 +206,8 @@ namespace LexemeResources
 		MP_WHITESPACE
 	};
 
-
+	//these have to be in alphabetic order for the
+	//binary serach to run correctly
 	static const char* ReservedWords[32] = {
 		"and",					//1
 		"begin",
@@ -232,8 +233,8 @@ namespace LexemeResources
 		"repeat",
 		"string",				//23
 		"then",
-		"true",					//25
-		"to",
+		"to",					//25
+		"true",					
 		"type",					//27
 		"until",
 		"var",					//29

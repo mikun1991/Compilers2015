@@ -36,8 +36,11 @@ int main(int argc, char * argv[])
 
 	do{
 		nextToken = inputScanner.getNextToken();
+		
+		//skip whitespace
 		if (nextToken.getLexeme().getType() == LexemeResources::MP_WHITESPACE)
 			continue;
+
 		string type = nextToken.getLexeme().typeToName();
 		string name = nextToken.getLexeme().getValue();
 		int line = nextToken.getLineNumber();

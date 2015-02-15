@@ -28,7 +28,7 @@ private:
 
 	//return -1 if it is not present
 	const int indexInReservedWords(const std::string&  name);
-	const int indexInReservedWordsHelper(const std::string&, int locaiton, int upperBound, int lowerBound) ;
+	const int indexInReservedWordsHelper(const std::string& name, int top, int middle, int bottom);
 
 	int _currentColumn;
 	int _currentRow;

@@ -129,39 +129,36 @@ void Scanner::checkReserved(Token& token)
 
 const int Scanner::indexInReservedWords(const std::string& name) 
 {
-	int index = -1;
-	for (int i = 0; i < 32; i++){
-		if (ReservedWords[i] == name){
-			return i;
-		}
-	}
-	return -1;
-
-	//return indexInReservedWordsHelper(name, 16, 32, 0);
+	//kick off the binary search of reserved words 
+	return indexInReservedWordsHelper(name, 33, 16, 0);
 }
 
-const int Scanner::indexInReservedWordsHelper(const std::string& name, int location, int upperBound, int lowerBound)
+const int Scanner::indexInReservedWordsHelper(const std::string& name, int top, int middle, int bottom)
 {
-	if (location >= upperBound){
+	if (middle >= top){
 		return -1;
 	}
-	if (location <= lowerBound){
-		return -1;
-	}
-	if (name == ReservedWords[location]){
-		return location;
+	//if (middle < bottom){
+	//	return -1;
+	//}
+
+	if (name == ReservedWords[middle]){
+		return middle;
 	}
 
-	if (name < ReservedWords[location]){
-		upperBound = location;
-		location -= ((upperBound - 1 - lowerBound) / 2);
+	if (name < ReservedWords[middle]){
+		top = middle;
 	}
 	else{
-		//name > reservedWords[location]
-		lowerBound = location;
-		location += ((upperBound + 1 - lowerBound) / 2) - 1;
+		//dont need to do this more than once
+		if (middle == bottom){
+			return -1;
+		}
+		bottom = middle;
 	}
+	
+	middle = (top - bottom) / 2  + bottom;
 
-	return indexInReservedWordsHelper(name, location, upperBound, lowerBound);
+	return indexInReservedWordsHelper(name, top, middle, bottom);
 }
 
