@@ -87,6 +87,9 @@ Token Scanner::scanNextToken()
 	nextToken = FiniteStateAutomaton::colon(_filePointer, _currentRow, _currentColumn);
 	if (nextToken.hasValidLexeme()) return nextToken;
 
+	nextToken = FiniteStateAutomaton::scolon(_filePointer, _currentRow, _currentColumn);
+	if (nextToken.hasValidLexeme()) return nextToken;
+
 	nextToken = FiniteStateAutomaton::comma(_filePointer, _currentRow, _currentColumn);
 	if (nextToken.hasValidLexeme()) return nextToken;
 
