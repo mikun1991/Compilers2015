@@ -3,6 +3,8 @@
 
 #include "Token.h"
 
+#include "Scanner.h"
+
 #include <string>
 
 
@@ -15,12 +17,14 @@ public:
 	std::string getError();
 
 private:
-	void match(Token matchToken);
+	bool match(LexemeResources::LexemeType type);
 	void error(int errorLine, int errorColumn);
 
 	std::string _errString;
 
 	Token _lookAheadToken;
+
+	Scanner _currentScanner;
 
 
 public:
@@ -69,6 +73,7 @@ public:
 	 bool readStatement(); 
 	 bool relationalOperator(); 
 	 bool repeatStatement(); 
+	 //last 20, Joe
 	 bool simpleExpression(); 
 	 bool statement(); 
 	 bool statementPart(); 

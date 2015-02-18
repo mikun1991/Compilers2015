@@ -1,23 +1,27 @@
 #include "Grammar.h"
 
+using namespace LexemeResources;
 using namespace std;
 
+Scanner _currentScanner;  //this will be constructed with a filepath
+Token _lookAheadToken = _currentScanner.getNextToken(); //this will be set by Scanner's getNextToken()
 
-Token _lookAheadToken; //this will be set by Scanner's getNextToken()
 
-
-void match(Token matchToken){
-	if (_lookAheadToken.getLexeme().getType() == matchToken.getLexeme().getType()){
-		return;
+bool match(LexemeType type){
+	if (_lookAheadToken.getLexeme().getType() == type){
+		_lookAheadToken = _currentScanner.getNextToken();
+		return true;
 	}
 	else {
 		error(_lookAheadToken.getLineNumber(), _lookAheadToken.getColumnNumber());
+		return false;
 	}
 }
 
 
 void error(int errorLine, int errorColumn){
 	//print error message
+	//recover
 }
 
 
@@ -295,8 +299,35 @@ bool Grammar::repeatStatement()
 
 bool Grammar::simpleExpression()
 {
-
+	switch (_lookAheadToken.getLexeme().getType()){
+	case LexemeType::MP_PLUS:
+		match(LexemeType::MP_PLUS);
+		break;
+	case LexemeType::MP_MINUS:
+		match(LexemeType::MP_MINUS);
+		break;
+	default:
+		if (term()){
+			return termTail();
+		}
+	}
 	return false;
+
+	/*  Possible alternate implementation?
+	
+	std::string value = _lookAheadToken.getLexeme().getValue();
+	if (value == "+"){
+		match(LexemeType::MP_PLUS);
+	}
+	else if (value == "-"){
+		match(LexemeType::MP_MINUS);
+	}
+	term();
+	while (value == "+"){
+		term();
+	}
+	
+	*/
 }
 
 bool Grammar::statement()
