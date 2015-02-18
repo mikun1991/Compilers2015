@@ -3,6 +3,24 @@
 using namespace std;
 
 
+Token _lookAheadToken; //this will be set by Scanner's getNextToken()
+
+
+void match(Token matchToken){
+	if (_lookAheadToken.getLexeme().getType() == matchToken.getLexeme().getType()){
+		return;
+	}
+	else {
+		error(_lookAheadToken.getLineNumber(), _lookAheadToken.getColumnNumber());
+	}
+}
+
+
+void error(int errorLine, int errorColumn){
+	//print error message
+}
+
+
 bool Grammar::factor()
 {
 	std::string value = _lookAheadToken.getLexeme().getValue();

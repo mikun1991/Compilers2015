@@ -15,8 +15,8 @@ public:
 	std::string getError();
 
 private:
-	void match(std::string msg = "");
-	void error(std::string errorMsg);
+	void match(Token matchToken);
+	void error(int errorLine, int errorColumn);
 
 	std::string _errString;
 
