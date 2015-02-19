@@ -19,6 +19,8 @@ public:
 
 	bool hasValidLexeme() const;
 
+	LexemeResources::LexemeType getType() const; 
+
 	int getLineNumber() const;
 	int getColumnNumber() const;
 

@@ -202,8 +202,8 @@ namespace LexemeResources
 		// Others - In reality these never make it out ofthe scanner
 		//-------------------------------
 
-
 		MP_WHITESPACE
+
 	};
 
 	//these have to be in alphabetic order for the
