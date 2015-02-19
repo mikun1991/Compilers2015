@@ -3,33 +3,38 @@
 using namespace LexemeResources;
 using namespace std;
 
-Scanner _currentScanner;  //this will be constructed with a filepath
-Token _lookAheadToken = _currentScanner.getNextToken(); //this will be set by Scanner's getNextToken()
 
-
-bool match(LexemeType type){
-	if (_lookAheadToken.getLexeme().getType() == type){
-		_lookAheadToken = _currentScanner.getNextToken();
-		return true;
-	}
-	else {
-		error(_lookAheadToken.getLineNumber(), _lookAheadToken.getColumnNumber());
-		return false;
-	}
+//this is only used to move ahead to the next token
+bool Grammar::match(){
+	return _currentTokens.moveAhead();
 }
 
 
-void error(int errorLine, int errorColumn){
-	//print error message
-	//recover
+void Grammar::error(string expectedTokenNames)
+{
+	//found
+	Token next;
+	_currentTokens.nextToken(next);
+
+	string found(LexemeNames[(int)next.getType()]);
+	int line = next.getLineNumber();
+	int column = next.getColumnNumber();
+
+	char buffer[200] = { 0 };
+	sprintf(buffer, "ERROR - Expected %s found %s, at line %d and column %d!!", expectedTokenNames.c_str(), found.c_str(), line, column);
+
+	_errString = string(buffer);
 }
 
+
+LexemeType Grammar::nextTokenType() const
+{
+	return _currentTokens.nextTokenType();
+}
 
 bool Grammar::factor()
 {
-	std::string value = _lookAheadToken.getLexeme().getValue();
 
-	
 	//switch (_lookAheadToken.getLexeme().getType())
 	//{
 	//	case Lexeme::
@@ -378,6 +383,20 @@ bool Grammar::termTail()
 
 bool Grammar::type()
 {
+
+	switch (nextTokenType())
+	{
+	case MP_INTEGER:
+	case MP_BOOLEAN:
+	case MP_FLOAT:
+	case MP_STRING:
+		//all of the above cases fall through to accept
+		return match();
+
+	default:
+		//Everythng else fails
+		error("Type");
+	}
 
 	return false;
 }

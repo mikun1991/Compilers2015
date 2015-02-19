@@ -2,30 +2,32 @@
 #define GRAMMAR_H
 
 #include "Token.h"
-
-#include "Scanner.h"
+#include "TokenStream.h"
+#include "Resources.h"
 
 #include <string>
-
 
 class Grammar
 {
 
 public:
 
-
 	std::string getError();
 
 private:
-	bool match(LexemeResources::LexemeType type);
-	void error(int errorLine, int errorColumn);
+	bool match();
+
+	//dont need to pass any other info as we can get it from the 
+	//current token, just give what the expected token should have been
+	void error(std::string expectedTokenNames); 
 
 	std::string _errString;
 
-	Token _lookAheadToken;
+	//the list of current tokens
+	TokenStream _currentTokens;
 
-	Scanner _currentScanner;
-
+	//Syntactic Sugar... mmmhhhmm
+	LexemeResources::LexemeType nextTokenType() const;
 
 public:
 

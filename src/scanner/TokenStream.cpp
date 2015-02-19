@@ -1,0 +1,31 @@
+#include "TokenStream.h"
+
+using namespace LexemeResources;
+
+bool TokenStream::moveAhead()
+{
+	if (_toRead.empty())
+		return false;
+	_toRead.pop();
+}
+
+bool TokenStream::nextToken(Token& next) const
+{
+	if (_toRead.empty())
+		return false;
+
+	next = _toRead.front();
+	return true;
+}
+
+LexemeType TokenStream::nextTokenType() const
+{
+	if (_toRead.empty())
+		return LexemeType::MP_ERROR;
+	return _toRead.front().getType();
+}
+
+void TokenStream::addToken(Token newToken)
+{
+	_toRead.push(newToken);
+}
