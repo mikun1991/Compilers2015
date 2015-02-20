@@ -24,7 +24,6 @@ public:
 	int getLineNumber() const;
 	int getColumnNumber() const;
 
-	LexemeResources::LexemeType getType() const;
 
 
 protected:
