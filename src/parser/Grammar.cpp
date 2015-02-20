@@ -358,9 +358,8 @@ bool Grammar::statement()
 	case MP_FOR:
 		return forStatement();
 	case MP_IDENTIFIER:
-		variableIdentifier();
-		functionIdentifier();
-		procedureIdentifier();
+		assignmentStatement();
+		procedureStatement();
 	default:
 		error("Begin, Read, Write, Writeln, If, While, Repeat, For, Identifier");
 	}
