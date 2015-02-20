@@ -307,30 +307,32 @@ bool Grammar::repeatStatement()
 	<SimpleExpression> -> [ Sign ] <Term> <TermTail> */
 bool Grammar::simpleExpression()
 {
-	switch (_lookAheadToken.getLexeme().getType()){
-	case LexemeType::MP_PLUS:
-		match(LexemeType::MP_PLUS);
-		term();
-		return termTail();
-		break;
-	case LexemeType::MP_MINUS:
-		match(LexemeType::MP_MINUS);
-		term();
-		return termTail();
-		break;
-	default:
-		term();
-		return termTail();
+	switch (nextTokenType())
+	{
+	case MP_PLUS:
+	case MP_MINUS:
+		match();
 	}
 
-	/*  Possible alternate implementation?  Need to change call to error
-	if (match(LexemeType::MP_PLUS));
-	else if (match(LexemeType::MP_MINUS));
-	term();
-	termTail();
+	switch (nextTokenType())
+	{
+	case MP_INTEGER_LIT:
+	case MP_FLOAT_LIT:
+	case MP_STRING_LIT:
+	case MP_BOOLEAN:
+	case MP_NOT:
+	case MP_LPAREN:
+	case MP_IDENTIFIER:
+		//all of the above cases fall through to parse <Term> <TermTail>
+		term();
+		return termTail();
+
+	default:
+		//Everythng else fails
+		error("Sign or <Term>");
+		return false;
 	}
-	
-	*/
+
 }
 
 bool Grammar::statement()
