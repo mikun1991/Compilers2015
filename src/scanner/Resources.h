@@ -18,7 +18,7 @@ namespace LexemeResources
 		"MP_AND",
 		"MP_BEGIN",
 		"MP_BOOLEAN",
-		"MP_DIV",
+		"MP_DIV", // /
 		"MP_DO",
 		"MP_DOWNTO",
 		"MP_ELSE",
@@ -30,7 +30,7 @@ namespace LexemeResources
 		"MP_FUNCTION",
 		"MP_IF",
 		"MP_INTEGER",
-		"MP_MOD",
+		"MP_MOD", //%
 		"MP_NOT",
 		"MP_OR",
 		"MP_PROCEDURE",
