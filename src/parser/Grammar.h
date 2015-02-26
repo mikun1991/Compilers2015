@@ -19,7 +19,8 @@ private:
 
 	//dont need to pass any other info as we can get it from the 
 	//current token, just give what the expected token should have been
-	void error(std::string expectedTokenNames); 
+	void error(std::string expectedTokenNames);
+	void error(LexemeResources::TypeList espectedTypes);
 
 	std::string _errString;
 
@@ -31,18 +32,18 @@ private:
 
 public:
 
-
+	 //aidan
 	 bool factor();
 	 bool forStatement(); 
 	 bool multiplyingOperator(); 
 	 bool actualParameter(); 
 	 bool actualParameterTail(); 
 	 bool addingOperator(); 
-	 bool assignmentStatement(); 
+	 bool assignmentStatement(); //<-
 	 bool block(); 
 	 bool booleanExpression(); 
 	 bool compoundStatement(); 
-	 bool controlVariable(); 
+	 bool controlVariable(); //<- 
 	 bool emptyStatement(); 
 	 bool expression(); 
 	 bool factorTail(); 
@@ -54,7 +55,8 @@ public:
 	 bool functionIdentifier(); 
 	 bool identifierList(); 
 	 bool identifierTail(); 
-	 bool ifStatement(); 
+	 bool ifStatement();
+	 //agata
 	 bool initialValue(); 
 	 bool optionalActualParameterList(); 
 	 bool optionalElsePart(); 

@@ -2,6 +2,9 @@
 #ifndef LEXEME_RESOURCES
 #define LEXEME_RESOURCES
 
+#include <string>
+#include <list>
+
 /******************************************
 **  Keep all of the static data here, such as 
 **  the token/lexeme types , the reserved words
@@ -10,6 +13,7 @@
 
 namespace LexemeResources
 {
+
 	static const char* LexemeNames[60] = {
 		//--------------------------------
 		// Reserved Words
@@ -242,6 +246,51 @@ namespace LexemeResources
 		"write",				//31
 		"writeln" };
 
+
+	//Some nice helper functions/structs
+	static const std::string asStr(LexemeType type)
+	{
+		return std::string(LexemeNames[type]);
+	}
+
+	class TypeList
+	{
+	public:
+		TypeList() { ; }
+		TypeList(std::initializer_list<LexemeType> types)
+		{
+			for (LexemeType t : types){
+				_types.push_back(t);
+			}
+		}
+
+		std::string asStr()
+		{
+			std::string listString;
+			bool first = true;
+			for (LexemeType t : _types){
+				listString += LexemeResources::asStr(t);
+				if (first){
+					first = false;
+				}
+				else{
+					listString += ", ";
+				}
+			}
+			return listString;
+		}
+
+		TypeList operator<<(LexemeType type)
+		{
+			_types.push_back(type);
+			return *this;
+		}
+		//things that could be useful:
+		//	contains()
+		//  append()
+	private:
+		std::list<LexemeType> _types;
+	};
 };
 
 #endif //LEXEME_RESOURCES

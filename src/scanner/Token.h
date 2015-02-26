@@ -24,8 +24,6 @@ public:
 	int getLineNumber() const;
 	int getColumnNumber() const;
 
-
-
 protected:
 
 	int _lineNumber;
