@@ -78,7 +78,7 @@ public:
 	 bool readStatement(); 
 	 bool relationalOperator(); 
 	 bool repeatStatement(); 
-	 //last 20, Joe
+	 //joe
 	 bool simpleExpression(); 
 	 bool statement(); 
 	 bool statementPart(); 
