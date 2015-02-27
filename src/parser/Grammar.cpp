@@ -26,9 +26,9 @@ void Grammar::error(string expectedTokenNames)
 	_errString = string(buffer);
 }
 
-void Grammar::error(TypeList espectedTypes)
+void Grammar::error(TypeList expectedTypes)
 {
-	return error(espectedTypes.asStr());
+	return error(expectedTypes.asStr());
 }
 
 LexemeType Grammar::nextTokenType() const
@@ -831,7 +831,7 @@ bool Grammar::simpleExpression()
 
 	default:
 		//Everythng else fails
-		error("Sign Integer Float String Boolean Not LParen Identifier");
+		error(TypeList() << MP_PLUS << MP_MINUS << MP_INTEGER_LIT<<MP_FLOAT_LIT<<MP_STRING_LIT<<MP_BOOLEAN<<MP_NOT<<MP_LPAREN<<MP_IDENTIFIER);
 		return false;
 	}
 
