@@ -1,4 +1,6 @@
 #include "Grammar.h"
+#define	LOG( RULE , LOGGED) \
+if (!LOGGED) logRule(RULE); LOGGED = true;
 
 using namespace LexemeResources;
 using namespace std;
@@ -9,6 +11,9 @@ bool Grammar::match(){
 	return _currentTokens.moveAhead();
 }
 
+void Grammar::logRule(int rule){
+	//save rule in a text file
+}
 
 void Grammar::error(string expectedTokenNames)
 {
@@ -816,18 +821,29 @@ bool Grammar::simpleExpression()
 		optionalSign();
 	}
 
+	bool log = false;
 	switch (nextTokenType())
 	{
 	case MP_INTEGER_LIT:
+		LOG(82, log);
 	case MP_FLOAT_LIT:
+		LOG(82, log);
 	case MP_STRING_LIT:
+		LOG(82, log);
 	case MP_BOOLEAN:
+		LOG(82, log);
 	case MP_NOT:
+		LOG(82, log);
 	case MP_LPAREN:
+		LOG(82, log);
 	case MP_IDENTIFIER:
+		LOG(82, log);
+		
 		//all of the above cases fall through to parse <Term> <TermTail>
 		term();
-		return termTail();
+		termTail();
+	
+		return true;
 
 	default:
 		//Everythng else fails
