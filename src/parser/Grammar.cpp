@@ -814,13 +814,6 @@ bool Grammar::repeatStatement()
 	<SimpleExpression> -> [ OptionalSign ] <Term> <TermTail>   */
 bool Grammar::simpleExpression()
 {
-	switch (nextTokenType())
-	{
-	case MP_PLUS:
-	case MP_MINUS:
-		optionalSign();
-	}
-
 	bool log = false;
 	switch (nextTokenType())
 	{
@@ -840,6 +833,7 @@ bool Grammar::simpleExpression()
 		LOG(82, log);
 		
 		//all of the above cases fall through to parse <Term> <TermTail>
+		optionalSign();
 		term();
 		termTail();
 	

@@ -16,7 +16,7 @@ public:
 
 private:
 	bool match();
-	void logRule();
+	void logRule(int rule);
 
 	//dont need to pass any other info as we can get it from the 
 	//current token, just give what the expected token should have been
