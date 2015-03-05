@@ -196,7 +196,7 @@ bool Grammar::assignmentStatement()
 	case MP_IDENTIFIER:
 		variableIdentifier();
 		if (nextTokenType() != MP_ASSIGN){
-			error(TypeList{MP_ASSIGN }.asStr());
+			error(TypeList() << MP_ASSIGN );
 		}
 		match();
 		return expression();

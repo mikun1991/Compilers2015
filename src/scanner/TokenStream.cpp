@@ -21,7 +21,7 @@ bool TokenStream::nextToken(Token& next) const
 LexemeType TokenStream::nextTokenType() const
 {
 	if (_toRead.empty())
-		return LexemeType::MP_ERROR;
+		return MP_ERROR;
 	return _toRead.front().getType();
 }
 

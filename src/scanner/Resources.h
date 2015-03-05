@@ -2,6 +2,7 @@
 #ifndef LEXEME_RESOURCES
 #define LEXEME_RESOURCES
 
+#include <initializer_list>
 #include <string>
 #include <list>
 
@@ -257,12 +258,6 @@ namespace LexemeResources
 	{
 	public:
 		TypeList() { ; }
-		TypeList(std::initializer_list<LexemeType> types)
-		{
-			for (LexemeType t : types){
-				_types.push_back(t);
-			}
-		}
 
 		std::string asStr()
 		{
