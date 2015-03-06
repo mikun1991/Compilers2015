@@ -1,8 +1,9 @@
 #include "Scanner.h"
 #include "Token.h"
 #include "Lexeme.h"
-
+#include "TokenStream.h"
 #include "Resources.h"
+#include "Parser.h"
 
 #include "stdio.h"
 #include <iostream>
@@ -45,20 +46,28 @@ int main(int argc, char * argv[])
 		return 1;
 	}
 
-	Token nextToken;
 
+	TokenStream tokens;
+	Token nextToken;
 	do{
 		nextToken = inputScanner.getNextToken();
-		
-		string type = nextToken.getLexeme().typeToName();
-		string name = nextToken.getLexeme().getValue();
-		int line = nextToken.getLineNumber();
-		int column = nextToken.getColumnNumber();
-		
-		printf("Found \"%s\",", name.c_str());
-		printf("with type %s , line:%d , column:%d \n", type.c_str(), line, column);
+		tokens.addToken(nextToken);
+		//string type = nextToken.getLexeme().typeToName();
+		//string name = nextToken.getLexeme().getValue();
+		//int line = nextToken.getLineNumber();
+		//int column = nextToken.getColumnNumber();
+		//
+		//printf("Found \"%s\",", name.c_str());
+		//printf("with type %s , line:%d , column:%d \n", type.c_str(), line, column);
+
 	
 	} while (nextToken.getLexeme().getType() != LexemeResources::MP_EOF);
+
+
+	Parser parser(&tokens);
+	parser.parseTokens();
+
+	fprintf(stdout, parser.errMsgs().c_str());
 
 	return 0;
 }

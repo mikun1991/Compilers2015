@@ -5,11 +5,23 @@ if (!LOGGED) logRule(RULE); LOGGED = true;
 using namespace LexemeResources;
 using namespace std;
 
+void Grammar::setTokenStream(TokenStream* tokens)
+{
+	_currentTokens = tokens;
+}
 
+string Grammar::getError()
+{
+	string errors;
+	for (string err : _errStrings){
+		errors += err + "\n";
+	}
+	return errors;
+}
 
 //this is only used to move ahead to the next token
 bool Grammar::match(){
-	return _currentTokens.moveAhead();
+	return _currentTokens->moveAhead();
 }
 
 void Grammar::logRule(int rule){
@@ -20,7 +32,7 @@ void Grammar::error(string expectedTokenNames)
 {
 	//found
 	Token next;
-	_currentTokens.nextToken(next);
+	_currentTokens->nextToken(next);
 
 	string found(LexemeNames[(int)next.getType()]);
 	int line = next.getLineNumber();
@@ -29,7 +41,8 @@ void Grammar::error(string expectedTokenNames)
 	char buffer[200] = { 0 };
 	sprintf(buffer, "ERROR - Expected %s found %s, at line %d and column %d!!", expectedTokenNames.c_str(), found.c_str(), line, column);
 
-	_errString = string(buffer);
+
+	_errStrings.push_back(string(buffer));
 }
 
 void Grammar::error(TypeList expectedTypes)
@@ -39,7 +52,7 @@ void Grammar::error(TypeList expectedTypes)
 
 LexemeType Grammar::nextTokenType() const
 {
-	return _currentTokens.nextTokenType();
+	return _currentTokens->nextTokenType();
 }
 
 /*  Rule 99

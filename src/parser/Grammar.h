@@ -14,6 +14,8 @@ public:
 
 	std::string getError();
 
+	void setTokenStream(TokenStream* tokens);
+
 private:
 	bool match();
 	void logRule(int rule);
@@ -23,10 +25,10 @@ private:
 	void error(std::string expectedTokenNames);
 	void error(LexemeResources::TypeList espectedTypes);
 
-	std::string _errString;
+	std::list<std::string> _errStrings;
 
 	//the list of current tokens
-	TokenStream _currentTokens;
+	TokenStream* _currentTokens;
 
 	//Syntactic Sugar... mmmhhhmm
 	LexemeResources::LexemeType nextTokenType() const;
