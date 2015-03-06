@@ -1,0 +1,28 @@
+
+program AidansGreatTest;
+
+	var test : Integer
+	var test2, test3 : Float
+
+	
+	procedure JumpRope ( var numberOfJumps : Integer);
+
+		begin;
+
+		while numberOfJumps > 0 do
+			begin;
+				writeln("Jumping");
+				numerOfJumps := numberOfJumps - 1;
+			end;
+
+		end;
+
+
+	begin;
+	
+	writeln("THIS TEST IS THE BEST");
+		
+	end;
+.
+
+

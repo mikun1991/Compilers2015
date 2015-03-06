@@ -828,6 +828,7 @@ bool Grammar::programHeading()
 	switch (nextTokenType())
 	{
 	case MP_PROGRAM:
+		match();
 		return programIdentifier();
 	default:
 		error("Error");
