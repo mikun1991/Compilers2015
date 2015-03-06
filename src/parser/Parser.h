@@ -13,6 +13,8 @@ public:
 	void parseTokens();
 	std::string errMsgs();
 
+	void printLog();
+
 protected:
 	
 	TokenStream* _tokens;

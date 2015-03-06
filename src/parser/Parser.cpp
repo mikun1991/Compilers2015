@@ -28,3 +28,8 @@ string Parser::errMsgs()
 {
 	return _grammar->getError();
 }
+
+void Parser::printLog()
+{
+	_grammar->printLog();
+}

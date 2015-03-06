@@ -66,6 +66,7 @@ int main(int argc, char * argv[])
 
 	Parser parser(&tokens);
 	parser.parseTokens();
+	parser.printLog();
 
 	fprintf(stdout, parser.errMsgs().c_str());
 

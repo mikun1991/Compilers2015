@@ -974,21 +974,15 @@ bool Grammar::simpleExpression()
 	case MP_PLUS:
 	case MP_MINUS:
 	case MP_INTEGER_LIT:
-		LOG(82, log);
 	case MP_FLOAT_LIT:
-		LOG(82, log);
 	case MP_STRING_LIT:
-		LOG(82, log);
 	case MP_BOOLEAN:
-		LOG(82, log);
 	case MP_NOT:
-		LOG(82, log);
 	case MP_LPAREN:
-		LOG(82, log);
 	case MP_IDENTIFIER:
-		LOG(82, log);
 		
 		//all of the above cases fall through to parse <Term> <TermTail>
+		logRule(82);
 		optionalSign();
 		term();
 		termTail();
@@ -1118,6 +1112,7 @@ bool Grammar::systemGoal()
 	switch (nextTokenType())
 	{
 	case MP_PROGRAM:
+		logRule(1);
 		program();
 		if (nextTokenType() == MP_EOF)
 		{
