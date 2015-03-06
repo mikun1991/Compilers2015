@@ -832,15 +832,17 @@ bool Grammar::program()
 	case MP_PROGRAM:
 		logRule(2);
 		programHeading();
-		if (nextTokenType() == MP_SCOLON)
+		if (nextTokenType() != MP_SCOLON)
 		{
-			match();
-			block();
-			if (nextTokenType() == MP_PERIOD){
-				match();
-				return true;
-			}
+			error(TypeList() << MP_SCOLON);
 		}
+		match();
+		block();
+		if (nextTokenType() == MP_PERIOD){
+			error(TypeList() << MP_PERIOD);
+		}
+		match();
+		return true;
 
 	default:
 		error("Error");
