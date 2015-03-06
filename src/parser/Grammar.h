@@ -6,6 +6,8 @@
 #include "Resources.h"
 
 #include <string>
+#include <forward_list>
+#include <iostream>
 
 class Grammar
 {
@@ -15,6 +17,8 @@ public:
 	std::string getError();
 
 	void setTokenStream(TokenStream* tokens);
+
+	void printLog();
 
 private:
 	bool match();
@@ -33,8 +37,11 @@ private:
 	//Syntactic Sugar... mmmhhhmm
 	LexemeResources::LexemeType nextTokenType() const;
 
-public:
+	//a list of production rules logged while parsing
+	std::forward_list<int> _ruleLog;
 
+public:
+	 
 	 //aidan
 	 bool factor();
 	 bool forStatement(); 

@@ -24,8 +24,23 @@ bool Grammar::match(){
 	return _currentTokens->moveAhead();
 }
 
+//save a rule number in _ruleLog
 void Grammar::logRule(int rule){
-	//save rule in a text file
+
+	std::forward_list<int>::iterator it;
+
+	if (_ruleLog.empty()){
+		it = _ruleLog.insert_after(_ruleLog.before_begin(), rule);
+	}
+	else {
+		it = _ruleLog.insert_after(it, rule);
+	}
+}
+
+//print _ruleLog to std:out
+void Grammar::printLog(){
+	for (int& x : _ruleLog) std::cout << ' ' << x;
+	std::cout << '\n';
 }
 
 void Grammar::error(string expectedTokenNames)
