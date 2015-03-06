@@ -42,7 +42,7 @@ private:
 
 public:
 	 
-	 //aidan
+	 //travis
 	 bool factor();
 	 bool forStatement(); 
 	 bool multiplyingOperator(); 
@@ -58,7 +58,8 @@ public:
 	 bool expression(); 
 	 bool factorTail(); 
 	 bool finalValue(); 
-	 bool formalParameterSection(); 
+	 bool formalParameterSection();
+     //joe
 	 bool formalParameterSectionTail(); 
 	 bool functionDeclaration(); 
 	 bool functionHeading(); 
@@ -66,7 +67,6 @@ public:
 	 bool identifierList(); 
 	 bool identifierTail(); 
 	 bool ifStatement();
-	 //agata
 	 bool initialValue(); 
 	 bool optionalActualParameterList(); 
 	 bool optionalElsePart(); 
@@ -75,7 +75,8 @@ public:
 	 bool optionalSign(); 
 	 bool ordinalExpression(); 
 	 bool procedureAndFunctionDeclarationPart(); 
-	 bool procedureDeclaration(); 
+	 bool procedureDeclaration();
+     //aidan
 	 bool procedureHeading(); 
 	 bool procedureIdentifier(); 
 	 bool procedureStatement(); 
@@ -86,13 +87,13 @@ public:
 	 bool readParameterTail(); 
 	 bool readStatement(); 
 	 bool relationalOperator(); 
-	 bool repeatStatement(); 
-	 //joe
+	 bool repeatStatement();
 	 bool simpleExpression(); 
 	 bool statement(); 
 	 bool statementPart(); 
 	 bool statementSequence(); 
-	 bool statementTail(); 
+	 bool statementTail();
+     //agata
 	 bool stepValue(); 
 	 bool systemGoal(); 
 	 bool term(); 
