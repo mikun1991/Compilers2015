@@ -6,7 +6,7 @@
 #include "Resources.h"
 
 #include <string>
-#include <forward_list>
+#include <list>
 #include <iostream>
 
 class Grammar
@@ -38,7 +38,7 @@ private:
 	LexemeResources::LexemeType nextTokenType() const;
 
 	//a list of production rules logged while parsing
-	std::forward_list<int> _ruleLog;
+	std::list<int> _ruleLog;
 
 public:
 	 
