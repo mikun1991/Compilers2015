@@ -1,11 +1,11 @@
 
 program AidansGreatTest;
 
-	var test : Integer
-	var test2, test3 : Float
+	var test : Integer ;
+	test2, test3 : Float ;
 
 	
-	procedure JumpRope ( var numberOfJumps : Integer);
+	procedure JumpRope (var numberOfJumps : Integer)
 
 		begin;
 

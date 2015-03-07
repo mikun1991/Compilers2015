@@ -4,6 +4,14 @@
 
 using namespace std;
 
+struct ParseException : public std::runtime_error
+{
+	ParseException(std::string const& message)
+		: std::runtime_error(message)
+	{
+	}
+};
+
 Parser::Parser(TokenStream* tokens, Grammar* grammar)
 	:_tokens(tokens)
 {
@@ -21,7 +29,12 @@ Parser::~Parser()
 void Parser::parseTokens()
 {
 	_grammar->setTokenStream(_tokens);
-	_grammar->systemGoal();
+	try{
+		_grammar->systemGoal();
+	}
+	catch (ParseException parseErrors){
+
+	}
 }
 
 string Parser::errMsgs()
