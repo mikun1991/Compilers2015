@@ -1356,6 +1356,7 @@ bool Grammar::term()
 	case MP_LPAREN:
 	case MP_IDENTIFIER:
 		//all of the above cases fall through to parse <Factor> <FactorTail>
+		logRule(91);
 		factor();
 		return factorTail();
 
@@ -1376,11 +1377,30 @@ bool Grammar::termTail()
 	case MP_PLUS:
 	case MP_MINUS:
 	case MP_OR:
+		logRule(83);
 		addingOperator();
 		term();
 		return termTail();
+	case MP_DO: //do
+	case MP_DOWNTO: //downto
+	case MP_ELSE: //else
+	case MP_END://end
+	case MP_THEN: //then
+	case MP_TO: //to
+	case MP_UNTIL: //until
+	case MP_COMMA: //","
+	case MP_SCOLON: //";"
+	case MP_RPAREN:	//")"
+	case MP_EQUAL:	//"="
+	case MP_LTHAN:	//"<"
+	case MP_GTHAN:	//">"
+	case MP_LEQUAL:	//"<="
+	case MP_GEQUAL:	//">="
+	case MP_NEQUAL:	//"<>"
+		logRule(84);
+		return true;
 	default:
-		error(TypeList() << MP_PLUS << MP_MINUS << MP_OR);
+		error(TypeList() << MP_PLUS << MP_MINUS << MP_OR << MP_DO << MP_DOWNTO << MP_ELSE << MP_END << MP_THEN << MP_TO << MP_UNTIL << MP_COMMA << MP_SCOLON << MP_RPAREN << MP_EQUAL << MP_LTHAN << MP_GTHAN << MP_LEQUAL << MP_GEQUAL << MP_NEQUAL);
 	}
 	return false;
 }
