@@ -98,7 +98,7 @@ public:
 	 bool systemGoal(); 
 	 bool term(); 
 	 bool termTail(); 
-	 bool type(); //checked
+	 bool type(); 
 	 bool valueParameterSection(); 
 	 bool variableDeclaration(); 
 	 bool variableDeclarationPart(); 
