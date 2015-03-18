@@ -118,11 +118,9 @@ bool Grammar::factor()
 			logRule(116);
 			variableIdentifier();
 			return true;
-	}
-	
-	default:
-		error(TypeList() << MP_INTEGER << MP_FLOAT << MP_STRING << MP_TRUE << MP_FALSE
-		<< MP_NOT << MP_LPAREN << MP_IDENTIFIER);
+		default:
+			error(TypeList() << MP_INTEGER << MP_FLOAT << MP_STRING << MP_TRUE << MP_FALSE
+			<< MP_NOT << MP_LPAREN << MP_IDENTIFIER);
 	}
 	return false;
 }
@@ -137,7 +135,9 @@ bool Grammar::forStatement()
 	case MP_FOR:
 		match();
 		controlVariable();
-		assignmentStatement();
+		if(){
+		
+		}
 		initialValue();
 		stepValue();
 		finalValue();
