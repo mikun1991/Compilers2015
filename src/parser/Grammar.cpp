@@ -1446,9 +1446,16 @@ bool Grammar::type()
 	switch (nextTokenType())
 	{
 	case MP_INTEGER:
+		logRule(10);
+		return match();
 	case MP_BOOLEAN:
+		logRule(13);
+		return match();
 	case MP_FLOAT:
+		logRule(11);
+		return match();
 	case MP_STRING:
+		logRule(12);
 		//all of the above cases fall through to accept
 		return match();
 
@@ -1468,9 +1475,11 @@ bool Grammar::valueParameterSection()
 	switch (nextTokenType())
 	{
 	case MP_IDENTIFIER:
+		logRule(27);
 		identifierList();
 		if (nextTokenType() == MP_COLON)
 		{
+			match();
 			return type();
 		}
 		else {
