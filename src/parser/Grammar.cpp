@@ -446,12 +446,14 @@ bool Grammar::formalParameterSectionTail()
 	{
 		//24
 		case MP_SCOLON:
+			logRule(24);
 			formalParameterSection();
 			formalParameterSectionTail();
 
 			return true;
 		//25
 		case MP_RPAREN:
+			logRule(25);
 			return true; //epsilon
 
 	default:
@@ -467,9 +469,25 @@ bool Grammar::functionDeclaration()
 {
 	switch (nextTokenType())
 	{
-
+	case MP_FUNCTION:
+		logRule(18);
+		functionHeading();
+		if (nextTokenType() != MP_SCOLON){
+			error(TypeList() << MP_SCOLON);
+		}
+		else{
+			match();
+			block();
+			if (nextTokenType() != MP_SCOLON){
+				error(TypeList() << MP_SCOLON);
+			}
+			else {
+				match();
+				return true;
+			}
+		}
 	default:
-		error(TypeList());
+		error(TypeList() << MP_FUNCTION);
 	}
 	return false;
 }
@@ -483,6 +501,7 @@ bool Grammar::functionHeading()
 	{
 		//20
 	case MP_FUNCTION:
+		logRule(20);
 		match();
 		functionIdentifier();
 		optionalFormalParameterList();
@@ -510,6 +529,7 @@ bool Grammar::functionIdentifier()
 	{
 	//110
 	case MP_IDENTIFIER:
+		logRule(110);
 		match();
 		return true;
 	default:
@@ -528,6 +548,7 @@ bool Grammar::identifierList()
 	{
 	//113
 	case MP_IDENTIFIER:
+		logRule(113);
 		match();
 		identifierTail();
 		return true;
@@ -547,6 +568,7 @@ bool Grammar::identifierTail()
 	{
 		//114
 	case MP_COMMA:
+		logRule(114);
 		match();
 		if (nextTokenType() != MP_IDENTIFIER){
 			error(TypeList() << MP_IDENTIFIER);
@@ -557,10 +579,11 @@ bool Grammar::identifierTail()
 
 		//epsilon - 115
 	case MP_COLON:
+		logRule(115);
 		return true;
 
 	default:
-		error(TypeList());
+		error(TypeList() << MP_COMMA << MP_COLON);
 	}
 	return false;
 }
@@ -574,6 +597,7 @@ bool Grammar::ifStatement()
 	{
 		//56
 	case MP_IF:
+		logRule(56);
 		match();
 		booleanExpression();
 		if (nextTokenType() != MP_THEN){
@@ -599,9 +623,19 @@ bool Grammar::initialValue()
 	{
 	case MP_PLUS:
 	case MP_MINUS:
-		return ordinalExpression();
+	case MP_LPAREN:
+	case MP_FALSE:
+	case MP_TRUE:
+	case MP_IDENTIFIER:
+	case MP_NOT:
+	case MP_STRING_LIT:
+	case MP_FLOAT_LIT:
+	case MP_INTEGER_LIT:
+		logRule(63);
+		ordinalExpression();
+		return true;
 	default:
-		error("Error");
+		error(TypeList() << MP_PLUS << MP_MINUS << MP_LPAREN << MP_FALSE << MP_TRUE << MP_IDENTIFIER << MP_NOT << MP_STRING_LIT << MP_FLOAT_LIT << MP_INTEGER_LIT);
 	}
 	return false;
 }
@@ -1003,7 +1037,7 @@ bool Grammar::repeatStatement()
 			error(TypeList() << MP_UNTIL);
 		}
 		match();
-		booleanExpression;
+		booleanExpression();
 		return true;
 		break;
 	default:
