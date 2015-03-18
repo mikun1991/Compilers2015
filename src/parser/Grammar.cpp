@@ -1500,6 +1500,7 @@ bool Grammar::variableDeclaration()
 	switch (nextTokenType())
 	{
 	case MP_IDENTIFIER:
+		logRule(9);
 		identifierList();
 		if (nextTokenType() != MP_COLON){
 			error(TypeList() << MP_COLON);
@@ -1521,6 +1522,7 @@ bool Grammar::variableDeclarationPart()
 	switch (nextTokenType())
 	{
 	case MP_VAR:
+		logRule(5);
 		match();
 		variableDeclaration();
 		if (nextTokenType() != MP_SCOLON){
@@ -1529,8 +1531,14 @@ bool Grammar::variableDeclarationPart()
 		match();
 		variableDeclarationTail();
 		return true;
-	default:  // epsilon
+
+	case MP_BEGIN:
+	case MP_FUNCTION: 
+	case MP_PROCEDURE:
+		logRule(6);
 		return true;
+	default:  // epsilon
+		error(TypeList() << MP_VAR << MP_BEGIN << MP_FUNCTION << MP_PROCEDURE);
 	}
 }
 
