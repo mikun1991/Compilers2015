@@ -2,7 +2,7 @@
 
 
 cmake_minimum_required(VERSION 3.0)
- 
+
 
 FILE(GLOB MP_PARSER_HEADERS *.h)
 FILE(GLOB MP_PARSER_SOURCES *.cpp)
