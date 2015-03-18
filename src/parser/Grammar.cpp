@@ -1245,8 +1245,13 @@ bool Grammar::stepValue()
 	switch (nextTokenType())
 	{
 	case MP_TO:
-	case MP_DOWNTO:
+		logRule(64);
 		return match();
+		break;
+	case MP_DOWNTO:
+		logRule(65);
+		return match();
+		break;
 	default:
 		error(TypeList() << MP_TO << MP_DOWNTO );
 	}
