@@ -5,9 +5,9 @@ program AidansGreatTest;
 	test2, test3 : Float ;
 
 	
-	procedure JumpRope (var numberOfJumps : Integer)
+	procedure JumpRope (var numberOfJumps : Integer);
 
-		begin;
+		begin
 
 		while numberOfJumps > 0 do
 			begin;

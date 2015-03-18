@@ -45,8 +45,8 @@ void Grammar::error(string expectedTokenNames)
 	int line = next.getLineNumber();
 	int column = next.getColumnNumber();
 
-	char buffer[200] = { 0 };
-	sprintf(buffer, "ERROR - Expected %s found %s, at line %d and column %d!!", expectedTokenNames.c_str(), found.c_str(), line, column);
+	char buffer[2048] = { 0 };
+	sprintf(buffer, "ERROR - Found %s, expected %s, at line %d and column %d!!", found.c_str(), expectedTokenNames.c_str(), line, column);
 
 
 	_errStrings.push_back(string(buffer));
@@ -940,6 +940,8 @@ bool Grammar::procedureHeading()
 		match(); //match "procedure"
 		procedureIdentifier();
 		optionalFormalParameterList();
+		return true;
+
 	default:
 		error(TypeList() << MP_PROCEDURE);
 	}
