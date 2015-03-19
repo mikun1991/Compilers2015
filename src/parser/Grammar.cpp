@@ -106,18 +106,22 @@ bool Grammar::factor()
 			match();
 			return true;
 			
-	/* DANGER, WILL ROBINSON! DANGER! */
-	// conflict with next two cases, rules 106 and 116 both go to the same thing
+	/* DANGER, WILL ROBINSON! DANGER!
+	conflict with next two cases, rules 106 and 116 both go to the same thing
+	we chose rule 106 accepting <FunctionIdentifier> <OptionalActualParameterList>
+	NOT rule 116 for <VariableIdentifier> */
 	
 		case MP_IDENTIFIER:
 			logRule(106);
 			functionIdentifier();
 			optionalActualParameterList();
 			return true;
+		/*
 		case MP_IDENTIFIER:
 			logRule(116);
 			variableIdentifier();
 			return true;
+		*/
 		default:
 			error(TypeList() << MP_INTEGER << MP_FLOAT << MP_STRING << MP_TRUE << MP_FALSE
 			<< MP_NOT << MP_LPAREN << MP_IDENTIFIER);
@@ -135,19 +139,20 @@ bool Grammar::forStatement()
 	case MP_FOR:
 		match();
 		controlVariable();
-		if(){
-		
+		if (nextTokenType() != MP_ASSIGN){
+				error(TypeList() << MP_ASSIGN);
 		}
 		initialValue();
 		stepValue();
 		finalValue();
 		if (!(nextTokenType() == MP_DO)){
-			error(asStr(MP_DO));
+			error(TypeList() << MP_DO);
 		}
 		match();
-		return statement();
+		statement();
+		return true;
 	default:
-		error(asStr(MP_FOR));
+		error(TypeList() << MP_FOR);
 	}
 	return false;
 }
