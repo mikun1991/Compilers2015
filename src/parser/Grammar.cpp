@@ -821,18 +821,14 @@ bool Grammar::formalParameterSectionTail()
 {
 	switch (nextTokenType())
 	{
-		//24
-		case MP_SCOLON:
-			logRule(24);
-			formalParameterSection();
-			formalParameterSectionTail();
-
-			return true;
-		//25
-		case MP_RPAREN:
-			logRule(25);
-			return true; //epsilon
-
+	case MP_SCOLON:
+		logRule(23);
+		formalParameterSection();
+		formalParameterSectionTail();
+		return true;
+	case MP_RPAREN:
+		logRule(24);
+		return true;
 	default:
 		error(TypeList() << MP_RPAREN << MP_SCOLON);
 	}
@@ -1762,7 +1758,8 @@ bool Grammar::term()
 	case MP_INTEGER_LIT:
 	case MP_FLOAT_LIT:
 	case MP_STRING_LIT:
-	case MP_BOOLEAN:
+	case MP_TRUE:
+	case MP_FALSE:
 	case MP_NOT:
 	case MP_LPAREN:
 	case MP_IDENTIFIER:
@@ -1773,7 +1770,7 @@ bool Grammar::term()
 
 	default:
 		//Everythng else fails
-		error(TypeList() << MP_INTEGER << MP_FLOAT << MP_STRING << MP_BOOLEAN << MP_NOT << MP_LPAREN << MP_IDENTIFIER);
+		error(TypeList() << MP_INTEGER << MP_FLOAT << MP_STRING << MP_TRUE << MP_FALSE << MP_NOT << MP_LPAREN << MP_IDENTIFIER);
 		return false;
 	}
 }
@@ -1976,6 +1973,7 @@ bool Grammar::variableParameterSection()
 	switch (nextTokenType())
 	{
 	case MP_VAR:
+		logRule(28);
 		match();
 		identifierList();
 		if (nextTokenType() != MP_COLON){

@@ -1,0 +1,5 @@
+program helloWorld;
+  var cat:String;
+  function monkey(var dog:Boolean):Boolean;
+    begin
+      if True
