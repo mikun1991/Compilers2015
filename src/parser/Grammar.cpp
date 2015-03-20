@@ -771,8 +771,8 @@ bool Grammar::functionHeading()
 		match();
 		functionIdentifier();
 		optionalFormalParameterList();
-		if (nextTokenType() != MP_SCOLON){
-			error(TypeList() << MP_SCOLON);
+		if (nextTokenType() != MP_COLON){
+			error(TypeList() << MP_COLON);
 		}
 		match();
 		type();
@@ -1659,7 +1659,8 @@ bool Grammar::term()
 		//all of the above cases fall through to parse <Factor> <FactorTail>
 		logRule(91);
 		factor();
-		return factorTail();
+		factorTail();
+		return true;
 
 	default:
 		//Everythng else fails
@@ -1892,6 +1893,7 @@ bool Grammar::whileStatement()
 	switch (nextTokenType())
 	{
 	case MP_WHILE:
+		logRule(60);
 		match();
 		booleanExpression();
 		if (nextTokenType() != MP_DO){
