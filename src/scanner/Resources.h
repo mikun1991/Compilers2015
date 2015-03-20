@@ -264,13 +264,13 @@ namespace LexemeResources
 			std::string listString;
 			bool first = true;
 			for (LexemeType t : _types){
-				listString += LexemeResources::asStr(t);
 				if (first){
 					first = false;
 				}
 				else{
 					listString += ", ";
 				}
+				listString += LexemeResources::asStr(t);
 			}
 			return listString;
 		}
