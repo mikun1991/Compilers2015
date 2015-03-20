@@ -266,7 +266,7 @@ bool Grammar::actualParameterTail()
 		return true;
 	case MP_RPAREN://71 Not totally sure if I did this part correctly
 		logRule(71);
-		match();
+		match();  // no need to match if expanding epsilon - joe
 		return true; //follow set character
 	default:
 		error(TypeList() << MP_COMMA << MP_RPAREN );
@@ -481,9 +481,11 @@ bool Grammar::emptyStatement()
 	case MP_END:
 	case MP_UNTIL:
 	case MP_SCOLON:
+	case MP_ELSE:
+		logRule(44);
 		return true; //Epsilon...
 	default:
-		error(TypeList() << MP_END << MP_UNTIL << MP_SCOLON);
+		error(TypeList() << MP_END << MP_UNTIL << MP_SCOLON << MP_ELSE);
 	}
 	return false;
 }
@@ -583,27 +585,21 @@ bool Grammar::factorTail()
 		factorTail();
 		return true;
 	case MP_FLOAT_DIVIDE:
-		match();
+		match();  //don't think you need to match(), should do it in multiplyingOperator()
 		logRule(92);
 		multiplyingOperator();
 		factor();
 		factorTail();
 		return true;
 	case MP_TIMES:
-		match();
-		logRule(92);
-		multiplyingOperator();
-		factor();
-		factorTail();
-		return true;
-	case MP_DIV:
+		match();  //don't need
 		logRule(92);
 		multiplyingOperator();
 		factor();
 		factorTail();
 		return true;
 	case MP_DO:
-		logRule(93);
+		logRule(93);  //for all Rule 93's, they will produce E, so all you need to do is logRule(93) and return true
 		multiplyingOperator();
 		factor();
 		factorTail();
