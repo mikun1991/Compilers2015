@@ -264,9 +264,8 @@ bool Grammar::actualParameterTail()
 		actualParameter();
 		actualParameterTail();
 		return true;
-	case MP_RPAREN://71 Not totally sure if I did this part correctly
+	case MP_RPAREN://71 
 		logRule(71);
-		match();  // no need to match if expanding epsilon - joe
 		return true; //follow set character
 	default:
 		error(TypeList() << MP_COMMA << MP_RPAREN );
@@ -585,143 +584,37 @@ bool Grammar::factorTail()
 		factorTail();
 		return true;
 	case MP_FLOAT_DIVIDE:
-		match();  //don't think you need to match(), should do it in multiplyingOperator()
 		logRule(92);
 		multiplyingOperator();
 		factor();
 		factorTail();
 		return true;
 	case MP_TIMES:
-		match();  //don't need
 		logRule(92);
 		multiplyingOperator();
 		factor();
 		factorTail();
 		return true;
 	case MP_DO:
-		logRule(93);  //for all Rule 93's, they will produce E, so all you need to do is logRule(93) and return true
-		multiplyingOperator();
-		factor();
-		factorTail();
-		return true;
 	case MP_DOWNTO:
-		logRule(93);
-		multiplyingOperator();
-		factor();
-		factorTail();
-		return true;
 	case MP_ELSE:
-		logRule(93);
-		multiplyingOperator();
-		factor();
-		factorTail();
-		return true;
 	case MP_END:
-		logRule(93);
-		multiplyingOperator();
-		factor();
-		factorTail();
-		return true;
 	case MP_OR:
-		logRule(93);
-		multiplyingOperator();
-		factor();
-		factorTail();
-		return true;
 	case MP_THEN:
-		logRule(93);
-		multiplyingOperator();
-		factor();
-		factorTail();
-		return true;
 	case MP_TO:
-		logRule(93);
-		multiplyingOperator();
-		factor();
-		factorTail();
-		return true;
 	case MP_UNTIL:
-		logRule(93);
-		multiplyingOperator();
-		factor();
-		factorTail();
-		return true;
 	case MP_COMMA:
-		match();
-		logRule(93);
-		multiplyingOperator();
-		factor();
-		factorTail();
-		return true;
 	case MP_SCOLON:
-		match();
-		logRule(93);
-		multiplyingOperator();
-		factor();
-		factorTail();
-		return true;
 	case MP_RPAREN:
-		match();
-		logRule(93);
-		multiplyingOperator();
-		factor();
-		factorTail();
-		return true;
 	case MP_EQUAL:
-		match();
-		logRule(93);
-		multiplyingOperator();
-		factor();
-		factorTail();
-		return true;
 	case MP_GTHAN:
-		match();
-		logRule(93);
-		multiplyingOperator();
-		factor();
-		factorTail();
-		return true;
 	case MP_LTHAN:
-		match();
-		logRule(93);
-		multiplyingOperator();
-		factor();
-		factorTail();
-		return true;
 	case MP_GEQUAL:
-		match();
-		logRule(93);
-		multiplyingOperator();
-		factor();
-		factorTail();
-		return true;
 	case MP_LEQUAL:
-		match();
-		logRule(93);
-		multiplyingOperator();
-		factor();
-		factorTail();
-		return true;
 	case MP_NEQUAL:
-		match();
-		logRule(93);
-		multiplyingOperator();
-		factor();
-		factorTail();
-		return true;
 	case MP_PLUS:
-		match();
-		logRule(93);
-		multiplyingOperator();
-		factor();
-		factorTail();
-		return true;
 	case MP_MINUS:
-		match();
 		logRule(93);
-		multiplyingOperator();
-		factor();
-		factorTail();
 		return true;
 
 	default:
