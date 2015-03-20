@@ -47,16 +47,16 @@ public:
 	 bool forStatement(); 
 	 bool multiplyingOperator(); 
 	 bool actualParameter(); 
-	 bool actualParameterTail(); 
+	 bool actualParameterTail();  //not sure if i did the E part right
 	 bool addingOperator(); 
-	 bool assignmentStatement(); //<-
+	 bool assignmentStatement();
 	 bool block(); 
 	 bool booleanExpression(); 
 	 bool compoundStatement(); 
-	 bool controlVariable(); //<- 
-	 bool emptyStatement(); 
+	 bool controlVariable();
+	 bool emptyStatement(); //didn't know how to do this one
 	 bool expression(); 
-	 bool factorTail(); 
+	 bool factorTail(); //E again
 	 bool finalValue(); 
 	 bool formalParameterSection();
      //joe
