@@ -71,26 +71,31 @@ bool Grammar::factor()
 
 	switch (nextTokenType())
 	{
-		case MP_INTEGER:
+		case MP_INTEGER_LIT:
 			logRule(99);
 			match();
 			return true;
-		case MP_FLOAT:
+
+		case MP_FLOAT_LIT:
 			logRule(100);
 			match();
 			return true;
-		case MP_STRING:
+
+		case MP_STRING_LIT:
 			logRule(101);
 			match();
 			return true;
+
 		case MP_TRUE:
 			logRule(102);
 			match();
 			return true;
+
 		case MP_FALSE:
 			logRule(103);
 			match();
 			return true;
+
 		case MP_NOT:
 			logRule(104);
 			match();
@@ -123,7 +128,7 @@ bool Grammar::factor()
 			return true;
 		*/
 		default:
-			error(TypeList() << MP_INTEGER << MP_FLOAT << MP_STRING << MP_TRUE << MP_FALSE
+			error(TypeList() << MP_INTEGER << MP_FLOAT_LIT << MP_STRING_LIT << MP_TRUE << MP_FALSE
 			<< MP_NOT << MP_LPAREN << MP_IDENTIFIER);
 	}
 	return false;
