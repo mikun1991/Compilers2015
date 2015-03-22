@@ -1,0 +1,15 @@
+
+program AddingNumbers;
+
+var isum : Integer;
+function CalculateSum : Integer; 
+ 
+	begin 
+		for i:= 1 to 10 
+		do 
+			isum:= isum + i; 
+	end;
+
+begin 
+	isum:= CalculateSum 
+end .
