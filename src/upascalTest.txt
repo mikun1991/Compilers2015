@@ -1,7 +1,21 @@
 program helloWorld;
-  var cat:String;
-  function monkey(var dog:Boolean):Boolean;
-    begin
-      if True 
-	  then 
-		while False do 
+	var cat:String;
+	myBool:Boolean;
+  
+	function monkey(var dog:Boolean):Boolean;
+		var monkeyBool:Boolean;
+		begin
+			dog := true;
+			if dog 
+			then 
+				while dog 
+				do
+					begin
+						cat := true;
+						dog := false
+					end
+		end
+	;
+	begin
+	end
+.

@@ -1240,7 +1240,7 @@ bool Grammar::program()
 		}
 		match();
 		block();
-		if (nextTokenType() == MP_PERIOD){
+		if (nextTokenType() != MP_PERIOD){
 			error(TypeList() << MP_PERIOD);
 		}
 		match();
@@ -1597,7 +1597,8 @@ bool Grammar::statementTail()
 	case MP_END://follow set of epsilon
 	case MP_UNTIL:
 		LOG(33, logged);
-	
+		return true;
+
 	default:
 		error(TypeList() << MP_SCOLON << MP_END << MP_UNTIL);
 	}
