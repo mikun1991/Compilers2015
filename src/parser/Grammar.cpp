@@ -147,10 +147,11 @@ bool Grammar::forStatement()
 		if (nextTokenType() != MP_ASSIGN){
 				error(TypeList() << MP_ASSIGN);
 		}
+		match();
 		initialValue();
 		stepValue();
 		finalValue();
-		if (!(nextTokenType() == MP_DO)){
+		if (nextTokenType() != MP_DO){
 			error(TypeList() << MP_DO);
 			return false;	//this step is to avoid logging the rule
 		}
@@ -502,19 +503,16 @@ bool Grammar::expression()
 	switch (nextTokenType())
 	{
 	case MP_PLUS:
-		match();
 		logRule(73);
 		simpleExpression();
 		optionalRelationalPart();
 		return true;
 	case MP_MINUS:
-		match();
 		logRule(73);
 		simpleExpression();
 		optionalRelationalPart();
 		return true;
 	case MP_LPAREN:
-		match();
 		logRule(73);
 		simpleExpression();
 		optionalRelationalPart();
@@ -539,6 +537,7 @@ bool Grammar::expression()
 		simpleExpression();
 		optionalRelationalPart();
 		return true;
+	case MP_INTEGER_LIT:
 	case MP_TRUE:
 		logRule(73);
 		simpleExpression();
@@ -556,7 +555,7 @@ bool Grammar::expression()
 		return true;
 	default:
 		error(TypeList() << MP_PLUS << MP_MINUS << MP_LPAREN << MP_STRING_LIT << 
-		MP_IDENTIFIER << MP_FIXED_LIT << MP_FLOAT_LIT << MP_TRUE << MP_NOT << MP_FALSE);
+		MP_IDENTIFIER << MP_FIXED_LIT << MP_FLOAT_LIT << MP_INTEGER_LIT << MP_TRUE << MP_NOT << MP_FALSE);
 	}
 	return false;
 }
