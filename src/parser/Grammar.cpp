@@ -1507,7 +1507,7 @@ bool Grammar::statement()
 	case MP_WRITELN:
 	case MP_WRITE:
 		LOG(37, logged);
-		return forStatement();
+		return writeStatement();
 		break;
 
 	case MP_IDENTIFIER:  // AMBIGUITY IN LL1 TABLE 38 or 43
