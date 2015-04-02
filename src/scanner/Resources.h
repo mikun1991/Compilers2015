@@ -248,6 +248,18 @@ namespace LexemeResources
 		"writeln" };
 
 
+	enum DataType
+	{
+		IntData,
+		StringData,
+		FloatData,
+		VoidData,
+
+
+		UnknownData		//others ?
+	};
+
+
 	//Some nice helper functions/structs
 	static const std::string asStr(LexemeType type)
 	{

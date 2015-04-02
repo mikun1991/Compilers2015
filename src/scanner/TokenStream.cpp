@@ -7,6 +7,7 @@ bool TokenStream::moveAhead()
 	if (_toRead.empty())
 		return false;
 	_toRead.pop();
+	return true;
 }
 
 bool TokenStream::nextToken(Token& next) const

@@ -3,34 +3,38 @@
 
 #include "Symbol.h"
 
+#include "Resources.h"
+
 #include <string>
-#include <hash_map>
+#include <unordered_map>
 #include <list>
 
 class SymbolTable : public Symbol
 {
 
 public:
-	SymbolTable();
+	SymbolTable(Lexeme lexeme,  LexemeResources::DataType type, int level, SymbolTable* parent = NULL);
 	~SymbolTable();
 
-	void createSubTable();
-	bool collapseSubTable();
+	//create a new table and return 
+	// a pointer to the child table
+	SymbolTable* createTable(Lexeme lexeme, LexemeResources::DataType type);
 
-	void insert(Symbol newSymbol);
-	Symbol lookup(std::string name );
+	//close the current table and return
+	// a pointer to the parent table
+	SymbolTable* closeTable();
 
-	Symbol attributes();
+	void insert(Lexeme lex,  DataType type);
 
-
+	const Symbol lookup(const std::string name, bool& outFound);
 
 private:
-	//type
-	
-	//Lexemes and their attributes
-	std::list<Symbol> symbolList;
+	int _currentOffset;
 
-	std::hash_map<std::string, int> _symbolLookup;
+	SymbolTable * _parentTable;
+	SymbolTable * _activeChildTable;
+
+	std::unordered_map<std::string, Symbol> _symbolLookup;
 };
 
 

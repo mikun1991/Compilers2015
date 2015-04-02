@@ -4,6 +4,7 @@
 #include "Token.h"
 #include "TokenStream.h"
 #include "Resources.h"
+#include "SemanticAnalyzer.h"
 
 #include <string>
 #include <list>
@@ -21,6 +22,8 @@ public:
 	void printLog();
 
 private:
+	SemanticAnalyser _semanticAnalyser;
+
 	bool match();
 	void logRule(int rule);
 
