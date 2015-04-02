@@ -5,7 +5,7 @@ using namespace std;
 
 
 Symbol::Symbol()
-	: _dataType(Unknown), _level(-1), _offset(-1), _size(-1)
+	: _dataType(UnknownData), _level(-1), _offset(-1), _size(-1)
 {
 }
 

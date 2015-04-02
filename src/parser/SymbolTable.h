@@ -14,7 +14,6 @@ class SymbolTable : public Symbol
 
 public:
 	SymbolTable(Lexeme lexeme,  LexemeResources::DataType type, int level, SymbolTable* parent = NULL);
-	~SymbolTable();
 
 	//create a new table and return 
 	// a pointer to the child table
@@ -24,7 +23,7 @@ public:
 	// a pointer to the parent table
 	SymbolTable* closeTable();
 
-	void insert(Lexeme lex,  DataType type);
+	void insert(Lexeme lex,  LexemeResources::DataType type);
 
 	const Symbol lookup(const std::string name, bool& outFound);
 
