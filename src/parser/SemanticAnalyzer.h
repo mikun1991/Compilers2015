@@ -5,6 +5,8 @@
 #include "Token.h"
 #include "Symbol.h"
 #include "SymbolTable.h"
+#include "SemanticRecord.h"
+
 
 //this class will keep track of 
 //the current instance of the symbol table
@@ -29,6 +31,8 @@ public:
 
 
 	std::string errorMsg();
+
+	void printCurrentTable();
 
 private:
 	void symbolCollisionError(const Token lex);

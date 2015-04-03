@@ -103,3 +103,8 @@ void SemanticAnalyser::symbolCollisionError(const Token token)
 	_errList.push_back(err);
 }
 
+void SemanticAnalyser::printCurrentTable()
+{
+	_currentTable->printTable();
+}
+

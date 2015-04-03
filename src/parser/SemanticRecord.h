@@ -9,8 +9,8 @@
 
 class SemanticRecord{
 
-protected:
-	void addId(Token);
+public:
+	void addId(Lexeme);
 	void setType(LexemeResources::DataType);
 
 	Token getNextId();

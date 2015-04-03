@@ -73,3 +73,13 @@ const Symbol SymbolTable::lookup(const string name, bool& outFound)
 		}
 	}
 }
+
+void SymbolTable::printTable()
+{
+	std::cout
+		<< "\nCurrent Table Name: " << lexeme().getValue()
+		<< "\nCurrent Table Level: " << level()
+		<< "\nCurrent Table Size : " << size()
+		<< "\nCurrent Table Offset: " << offset()
+		<< "\n";
+}

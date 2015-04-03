@@ -8,6 +8,7 @@
 #include <string>
 #include <unordered_map>
 #include <list>
+#include <iostream>
 
 class SymbolTable : public Symbol
 {
@@ -26,6 +27,8 @@ public:
 	void insert(Lexeme lex,  LexemeResources::DataType type);
 
 	const Symbol lookup(const std::string name, bool& outFound);
+
+	void printTable();
 
 private:
 	int _currentOffset;

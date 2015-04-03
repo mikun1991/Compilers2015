@@ -26,6 +26,15 @@ LexemeType TokenStream::nextTokenType() const
 	return _toRead.front().getType();
 }
 
+Lexeme TokenStream::currentLexeme()
+{
+	if (_toRead.empty())
+	{
+		return Lexeme();
+	}
+	return _toRead.front().getLexeme();
+}
+
 void TokenStream::addToken(Token newToken)
 {
 	_toRead.push(newToken);

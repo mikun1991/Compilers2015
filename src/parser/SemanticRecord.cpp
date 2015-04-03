@@ -3,9 +3,11 @@
 using namespace LexemeResources;
 using namespace std;
 
-void SemanticRecord::addId(Token id)
+void SemanticRecord::addId(Lexeme id)
 {
-	_identifiers.push_back(id);
+	Token newToken;
+	newToken.setLexeme(id);
+	_identifiers.push_back(newToken);
 }
 
 void SemanticRecord::setType(DataType type)

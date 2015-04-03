@@ -5,6 +5,8 @@
 #include "TokenStream.h"
 #include "Resources.h"
 #include "SemanticAnalyzer.h"
+#include "SemanticRecord.h"
+#include "Lexeme.h"
 
 #include <string>
 #include <list>
@@ -42,6 +44,9 @@ private:
 
 	//a list of production rules logged while parsing
 	std::list<int> _ruleLog;
+
+	//access to the current Token's lexeme for semantic records
+	Lexeme currentLexeme();
 
 public:
 	 
@@ -81,8 +86,8 @@ public:
 	 bool procedureIdentifier(); 
 	 bool procedureStatement(); 
 	 bool program(); 
-	 bool programHeading(); 
-	 bool programIdentifier(); 
+	 bool programHeading();  //Create first SymbolTable here
+	 SemanticRecord programIdentifier(); 
 	 bool readParameter(); 
 	 bool readParameterTail(); 
 	 bool readStatement(); 
