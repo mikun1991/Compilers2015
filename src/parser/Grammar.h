@@ -45,24 +45,22 @@ private:
 
 public:
 	 
-	 //travis
 	 bool factor();
 	 bool forStatement(); 
 	 bool multiplyingOperator(); 
 	 bool actualParameter(); 
-	 bool actualParameterTail();  //not sure if i did the E part right
+	 bool actualParameterTail();
 	 bool addingOperator(); 
 	 bool assignmentStatement();
 	 bool block(); 
 	 bool booleanExpression(); 
 	 bool compoundStatement(); 
 	 bool controlVariable();
-	 bool emptyStatement(); //didn't know how to do this one 
+	 bool emptyStatement(); 
 	 bool expression(); 
-	 bool factorTail(); //E again
+	 bool factorTail(); 
 	 bool finalValue(); 
 	 bool formalParameterSection();
-     //joe
 	 bool formalParameterSectionTail(); 
 	 bool functionDeclaration(); 
 	 bool functionHeading(); 
@@ -70,7 +68,7 @@ public:
 	 bool identifierList(); 
 	 bool identifierTail(); 
 	 bool ifStatement();
-	 bool initialValue();  //done-joe
+	 bool initialValue();  
 	 bool optionalActualParameterList();  
 	 bool optionalElsePart(); 
 	 bool optionalFormalParameterList(); 
@@ -79,7 +77,6 @@ public:
 	 bool ordinalExpression(); 
 	 bool procedureAndFunctionDeclarationPart(); 
 	 bool procedureDeclaration();
-     //aidan
 	 bool procedureHeading(); 
 	 bool procedureIdentifier(); 
 	 bool procedureStatement(); 
@@ -96,7 +93,6 @@ public:
 	 bool statementPart(); 
 	 bool statementSequence(); 
 	 bool statementTail();
-     //agata
 	 bool stepValue(); 
 	 bool systemGoal(); 
 	 bool term(); 

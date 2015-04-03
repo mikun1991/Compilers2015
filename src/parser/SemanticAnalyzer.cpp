@@ -13,7 +13,7 @@ SemanticAnalyser::SemanticAnalyser()
 bool SemanticAnalyser::createTable(const Token token, DataType type)
 {
 	//make sure that the table has been initialized
-	if (_currentTable){
+	if (!_currentTable){
 		_currentTable = new SymbolTable(token.getLexeme(), type, 0);
 		return true;
 	}
