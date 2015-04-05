@@ -31,3 +31,9 @@ DataType SemanticRecord::getType()
 {
 	return _type;
 }
+
+
+int SemanticRecord::size()
+{
+	return _identifiers.size();
+}

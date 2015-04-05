@@ -27,6 +27,7 @@ public:
 	//the lexeme (at least some of the time)
 	bool insertSymbol(const Token token);
 	bool insertSymbol(const Token token, LexemeResources::DataType type);
+	bool insertSymbol(SemanticRecord& record);
 	const Symbol lookupSymbol(std::string name, bool& found);
 
 

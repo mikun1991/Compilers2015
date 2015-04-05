@@ -70,8 +70,8 @@ public:
 	 bool functionDeclaration(); 
 	 bool functionHeading(); 
 	 bool functionIdentifier(); 
-	 bool identifierList(); 
-	 bool identifierTail(); 
+	 bool identifierList(SemanticRecord& identifierList_rec); 
+	 bool identifierTail(SemanticRecord& identifierTail_rec); 
 	 bool ifStatement();
 	 bool initialValue();  
 	 bool optionalActualParameterList();  
@@ -102,9 +102,9 @@ public:
 	 bool systemGoal(); 
 	 bool term(); 
 	 bool termTail(); 
-	 bool type(); 
+	 bool type(SemanticRecord& type_rec); 
 	 bool valueParameterSection(); 
-	 bool variableDeclaration(); 
+	 bool variableDeclaration();   // add symbols to current symbol tables
 	 bool variableDeclarationPart(); 
 	 bool variableDeclarationTail(); 
 	 bool variableIdentifier(); 

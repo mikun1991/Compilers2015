@@ -16,6 +16,8 @@ public:
 	Token getNextId();
 	LexemeResources::DataType getType();
 
+	int size();
+
 private:
 	std::list<Token> _identifiers;
 	LexemeResources::DataType _type;

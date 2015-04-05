@@ -85,6 +85,16 @@ bool SemanticAnalyser::insertSymbol(const Token token, DataType type)
 	return true;
 }
 
+bool SemanticAnalyser::insertSymbol(SemanticRecord& record)
+{
+	for (int i = 0; i < record.size(); i++)
+	{
+		insertSymbol(record.getNextId(), record.getType());
+	}
+
+	return true;
+}
+
 const Symbol SemanticAnalyser::lookupSymbol(string name, bool& found)
 {
 	if (!_currentTable){

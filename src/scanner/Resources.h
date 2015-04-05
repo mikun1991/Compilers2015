@@ -253,6 +253,7 @@ namespace LexemeResources
 		IntData,
 		StringData,
 		FloatData,
+		BoolData,
 		VoidData,
 
 
