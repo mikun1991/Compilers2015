@@ -82,4 +82,9 @@ void SymbolTable::printTable()
 		<< "\nCurrent Table Size : " << size()
 		<< "\nCurrent Table Offset: " << offset()
 		<< "\n";
+
+	std::cout << "\nSymbol Name:\tDataType: \tOffset: \n";
+
+	for (auto& x : _symbolLookup)
+		std::cout << x.first << "\t\t" << x.second.dataType() << "\t\t" << x.second.offset() << "\t\t" << std::endl;
 }
