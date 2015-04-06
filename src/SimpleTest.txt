@@ -1,0 +1,16 @@
+
+program AidansGreatTest;
+
+	var test1, test2 : Integer ;
+
+	begin
+	
+	test1 := 1
+	test2 := 1
+	
+	test1 := test1 + test2
+		
+	end
+.
+
+

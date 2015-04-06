@@ -4,6 +4,7 @@
 #include "Token.h"
 #include "TokenStream.h"
 #include "Resources.h"
+#include "SemanticRecord.h"
 #include "SemanticAnalyzer.h"
 
 #include <string>
@@ -22,7 +23,7 @@ public:
 	void printLog();
 
 private:
-	SemanticAnalyser _semanticAnalyser;
+	SemanticOrganizer* _semanticAnalyser;
 
 	bool match();
 	void logRule(int rule);
@@ -39,6 +40,7 @@ private:
 
 	//Syntactic Sugar... mmmhhhmm
 	LexemeResources::LexemeType nextTokenType() const;
+	Token  nextToken() const;
 
 	//a list of production rules logged while parsing
 	std::list<int> _ruleLog;

@@ -5,6 +5,7 @@
 #include "Token.h"
 #include "Symbol.h"
 #include "SymbolTable.h"
+#include "Operand.h"
 
 //this class will keep track of 
 //the current instance of the symbol table
@@ -20,23 +21,35 @@ public:
 	bool createTable(const Token token, LexemeResources::DataType type);
 	void closeTable();
 
-
 	//i think we should be able to figure out the type from the 
 	//the lexeme (at least some of the time)
 	bool insertSymbol(const Token token);
 	bool insertSymbol(const Token token, LexemeResources::DataType type);
 	const Symbol lookupSymbol(std::string name, bool& found);
 
-
 	std::string errorMsg();
 
-private:
-	void symbolCollisionError(const Token lex);
 
+	void defineInt();
+	void defineFloat();
+	void defineString();
+
+	void add();
+	void sub();
+	void multiply();
+	void divide();
+	void modulus();
+
+
+private:
+
+	//for namespace collisions
+	void symbolCollisionError(const Token lex);
 	std::list<std::string> _errList;
 	
 	SymbolTable * _currentTable;
 };
+
 
 
 #endif //SEMANTICANALYSER_H

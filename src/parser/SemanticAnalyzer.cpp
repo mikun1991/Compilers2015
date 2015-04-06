@@ -8,6 +8,7 @@ using namespace LexemeResources;
 SemanticAnalyser::SemanticAnalyser()
 {
 	_currentTable = NULL;
+	_currentRecord = NULL;
 }
 
 bool SemanticAnalyser::createTable(const Token token, DataType type)
@@ -96,10 +97,8 @@ const Symbol SemanticAnalyser::lookupSymbol(string name, bool& found)
 	return _currentTable->lookup(name, found);
 }
 
-
 void SemanticAnalyser::symbolCollisionError(const Token token)
 {
 	string err = "This variable has already been used: " + token.getLexeme().getValue() + " \nline:" + to_string(token.getLineNumber()) + " \ncol:" + to_string(token.getColumnNumber())+"!!.\n";
 	_errList.push_back(err);
 }
-
