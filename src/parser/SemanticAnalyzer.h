@@ -5,12 +5,9 @@
 #include "Token.h"
 #include "Symbol.h"
 #include "SymbolTable.h"
-<<<<<<< HEAD
-#include "Operand.h"
-=======
-#include "SemanticRecord.h"
 
->>>>>>> origin/master
+#include "Operand.h"
+#include "SemanticRecord.h"
 
 //this class will keep track of 
 //the current instance of the symbol table
@@ -35,8 +32,6 @@ public:
 
 	std::string errorMsg();
 
-<<<<<<< HEAD
-
 	void defineInt();
 	void defineFloat();
 	void defineString();
@@ -47,9 +42,7 @@ public:
 	void divide();
 	void modulus();
 
-=======
 	void printCurrentTable();
->>>>>>> origin/master
 
 private:
 

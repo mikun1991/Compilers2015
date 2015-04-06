@@ -8,7 +8,6 @@ using namespace LexemeResources;
 SemanticAnalyser::SemanticAnalyser()
 {
 	_currentTable = NULL;
-	_currentRecord = NULL;
 }
 
 bool SemanticAnalyser::createTable(const Token token, DataType type)
@@ -112,12 +111,9 @@ void SemanticAnalyser::symbolCollisionError(const Token token)
 	string err = "This variable has already been used: " + token.getLexeme().getValue() + " \nline:" + to_string(token.getLineNumber()) + " \ncol:" + to_string(token.getColumnNumber())+"!!.\n";
 	_errList.push_back(err);
 }
-<<<<<<< HEAD
-=======
 
 void SemanticAnalyser::printCurrentTable()
 {
 	_currentTable->printTable();
 }
 
->>>>>>> origin/master

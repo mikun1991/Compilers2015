@@ -25,7 +25,10 @@ public:
 	void printLog();
 
 private:
-	SemanticOrganizer* _semanticAnalyser;
+	//TODO: need to decide if we will use this
+	//SemanticOrganizer* _semanticOrganizer;
+
+	SemanticAnalyser* _semanticAnalyser;
 
 	bool match();
 	void logRule(int rule);
