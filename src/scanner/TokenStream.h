@@ -18,6 +18,8 @@ public:
 	
 	void addToken(Token newToken);
 
+	Lexeme currentLexeme();  //used in generating semantic records
+
 protected:
 
 	std::queue<Token> _toRead;

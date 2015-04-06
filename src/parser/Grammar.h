@@ -6,6 +6,8 @@
 #include "Resources.h"
 #include "SemanticRecord.h"
 #include "SemanticAnalyzer.h"
+#include "SemanticRecord.h"
+#include "Lexeme.h"
 
 #include <string>
 #include <list>
@@ -45,34 +47,35 @@ private:
 	//a list of production rules logged while parsing
 	std::list<int> _ruleLog;
 
+	//access to the current Token's lexeme for semantic records
+	Lexeme currentLexeme();
+
 public:
 	 
-	 //travis
 	 bool factor();
 	 bool forStatement(); 
 	 bool multiplyingOperator(); 
 	 bool actualParameter(); 
-	 bool actualParameterTail();  //not sure if i did the E part right
+	 bool actualParameterTail();
 	 bool addingOperator(); 
 	 bool assignmentStatement();
 	 bool block(); 
 	 bool booleanExpression(); 
 	 bool compoundStatement(); 
 	 bool controlVariable();
-	 bool emptyStatement(); //didn't know how to do this one 
+	 bool emptyStatement(); 
 	 bool expression(); 
-	 bool factorTail(); //E again
+	 bool factorTail(); 
 	 bool finalValue(); 
 	 bool formalParameterSection();
-     //joe
 	 bool formalParameterSectionTail(); 
 	 bool functionDeclaration(); 
 	 bool functionHeading(); 
 	 bool functionIdentifier(); 
-	 bool identifierList(); 
-	 bool identifierTail(); 
+	 bool identifierList(SemanticRecord& identifierList_rec); 
+	 bool identifierTail(SemanticRecord& identifierTail_rec); 
 	 bool ifStatement();
-	 bool initialValue();  //done-joe
+	 bool initialValue();  
 	 bool optionalActualParameterList();  
 	 bool optionalElsePart(); 
 	 bool optionalFormalParameterList(); 
@@ -81,13 +84,12 @@ public:
 	 bool ordinalExpression(); 
 	 bool procedureAndFunctionDeclarationPart(); 
 	 bool procedureDeclaration();
-     //aidan
 	 bool procedureHeading(); 
 	 bool procedureIdentifier(); 
 	 bool procedureStatement(); 
 	 bool program(); 
-	 bool programHeading(); 
-	 bool programIdentifier(); 
+	 bool programHeading();  //Create first SymbolTable here
+	 SemanticRecord programIdentifier(); 
 	 bool readParameter(); 
 	 bool readParameterTail(); 
 	 bool readStatement(); 
@@ -98,14 +100,13 @@ public:
 	 bool statementPart(); 
 	 bool statementSequence(); 
 	 bool statementTail();
-     //agata
 	 bool stepValue(); 
 	 bool systemGoal(); 
 	 bool term(); 
 	 bool termTail(); 
-	 bool type(); 
+	 bool type(SemanticRecord& type_rec); 
 	 bool valueParameterSection(); 
-	 bool variableDeclaration(); 
+	 bool variableDeclaration();   // add symbols to current symbol tables
 	 bool variableDeclarationPart(); 
 	 bool variableDeclarationTail(); 
 	 bool variableIdentifier(); 

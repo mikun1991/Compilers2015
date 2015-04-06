@@ -5,7 +5,12 @@
 #include "Token.h"
 #include "Symbol.h"
 #include "SymbolTable.h"
+<<<<<<< HEAD
 #include "Operand.h"
+=======
+#include "SemanticRecord.h"
+
+>>>>>>> origin/master
 
 //this class will keep track of 
 //the current instance of the symbol table
@@ -25,10 +30,12 @@ public:
 	//the lexeme (at least some of the time)
 	bool insertSymbol(const Token token);
 	bool insertSymbol(const Token token, LexemeResources::DataType type);
+	bool insertSymbol(SemanticRecord& record);
 	const Symbol lookupSymbol(std::string name, bool& found);
 
 	std::string errorMsg();
 
+<<<<<<< HEAD
 
 	void defineInt();
 	void defineFloat();
@@ -40,6 +47,9 @@ public:
 	void divide();
 	void modulus();
 
+=======
+	void printCurrentTable();
+>>>>>>> origin/master
 
 private:
 

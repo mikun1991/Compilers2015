@@ -14,7 +14,7 @@ SemanticAnalyser::SemanticAnalyser()
 bool SemanticAnalyser::createTable(const Token token, DataType type)
 {
 	//make sure that the table has been initialized
-	if (_currentTable){
+	if (!_currentTable){
 		_currentTable = new SymbolTable(token.getLexeme(), type, 0);
 		return true;
 	}
@@ -86,6 +86,16 @@ bool SemanticAnalyser::insertSymbol(const Token token, DataType type)
 	return true;
 }
 
+bool SemanticAnalyser::insertSymbol(SemanticRecord& record)
+{
+	for (int i = 0; i < record.size(); i++)
+	{
+		insertSymbol(record.getNextId(), record.getType());
+	}
+
+	return true;
+}
+
 const Symbol SemanticAnalyser::lookupSymbol(string name, bool& found)
 {
 	if (!_currentTable){
@@ -102,3 +112,12 @@ void SemanticAnalyser::symbolCollisionError(const Token token)
 	string err = "This variable has already been used: " + token.getLexeme().getValue() + " \nline:" + to_string(token.getLineNumber()) + " \ncol:" + to_string(token.getColumnNumber())+"!!.\n";
 	_errList.push_back(err);
 }
+<<<<<<< HEAD
+=======
+
+void SemanticAnalyser::printCurrentTable()
+{
+	_currentTable->printTable();
+}
+
+>>>>>>> origin/master
