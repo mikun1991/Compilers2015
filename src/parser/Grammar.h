@@ -23,12 +23,12 @@ public:
 	void setTokenStream(TokenStream* tokens);
 
 	void printLog();
+	SemanticAnalyser* _semanticAnalyser;
 
 private:
 	//TODO: need to decide if we will use this
 	//SemanticOrganizer* _semanticOrganizer;
 
-	SemanticAnalyser* _semanticAnalyser;
 
 	bool match();
 	void logRule(int rule);

@@ -68,8 +68,8 @@
 class SemanticRecord{
 
 public:
-	void addId(Lexeme);
-	void setType(LexemeResources::DataType);
+	void addId(Lexeme id);
+	void setType(LexemeResources::DataType dataType);
 
 	Token getNextId();
 	LexemeResources::DataType getType();

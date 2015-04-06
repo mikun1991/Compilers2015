@@ -28,6 +28,7 @@ Parser::~Parser()
 
 void Parser::parseTokens()
 {
+	_grammar->_semanticAnalyser = new SemanticAnalyser();
 	_grammar->setTokenStream(_tokens);
 	try{
 		_grammar->systemGoal();

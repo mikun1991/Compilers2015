@@ -31,10 +31,9 @@ void Grammar::logRule(int rule){
 
 //print _ruleLog to std:out
 void Grammar::printLog(){
+	std::cout << "\nRULE LOG\n";
 	for (int& x : _ruleLog) std::cout << ' ' << x;
 	std::cout << '\n';
-
-	_semanticAnalyser.printCurrentTable();
 }
 
 void Grammar::error(string expectedTokenNames)
@@ -1103,7 +1102,8 @@ bool Grammar::program()
 			error(TypeList() << MP_PERIOD);
 		}
 		match();
-		_semanticAnalyser.closeTable();
+		_semanticAnalyser->printCurrentTable();
+		_semanticAnalyser->closeTable();
 		return true;
 
 	default:
@@ -1122,15 +1122,14 @@ bool Grammar::programHeading()
 	bool logged = false;
 	switch (nextTokenType())
 	{
-	case MP_PROGRAM:
-		LOG(3, logged);
-		match();
+	case MP_PROGRAM:{
+						LOG(3, logged);
+						match();
+						Token next = nextToken();
+						programHeading_rec = programIdentifier();
+						_semanticAnalyser->createTable(next, programHeading_rec.getType());
 
-		programIdentifier();
-		programHeading_rec = programIdentifier();
-		_semanticAnalyser.createTable(nextToken(), programHeading_rec.getType());
-
-		return true;
+						return true; }
 	default:
 		error(TypeList() << MP_PROGRAM);
 	}
@@ -1651,7 +1650,7 @@ bool Grammar::variableDeclaration()
 		}
 		match();
 		type(varDeclaration_rec);
-		_semanticAnalyser.insertSymbol(varDeclaration_rec);
+		_semanticAnalyser->insertSymbol(varDeclaration_rec);
 		return true;
 	default:
 		error(TypeList() << MP_IDENTIFIER);
