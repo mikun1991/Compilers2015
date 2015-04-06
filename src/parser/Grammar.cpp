@@ -89,27 +89,22 @@ bool Grammar::factor()
 			logRule(99);
 			match();
 			return true;
-
 		case MP_FLOAT_LIT:
 			logRule(100);
 			match();
 			return true;
-
 		case MP_STRING_LIT:
 			logRule(101);
 			match();
 			return true;
-
 		case MP_TRUE:
 			logRule(102);
 			match();
 			return true;
-
 		case MP_FALSE:
 			logRule(103);
 			match();
 			return true;
-
 		case MP_NOT:
 			logRule(104);
 			match();
@@ -220,45 +215,15 @@ bool Grammar::actualParameter()
 	switch (nextTokenType())
 	{
 	case MP_FALSE:
-		logRule(72);
-		match();
-		return true;
 	case MP_NOT:
-		logRule(72);
-		match();
-		return true;
 	case MP_TRUE:
-		logRule(72);
-		match();
-		return true;
 	case MP_IDENTIFIER:
-		logRule(72);
-		match();
-		return true;
 	case MP_INTEGER:
-		logRule(72);
-		match();
-		return true;
 	case MP_INTEGER_LIT:
-		logRule(72);
-		match();
-		return true;
 	case MP_FLOAT_LIT:
-		logRule(72);
-		match();
-		return true;
 	case MP_STRING_LIT:
-		logRule(72);
-		match();
-		return true;
 	case MP_LPAREN:
-		logRule(72);
-		match();
-		return true;
 	case MP_MINUS:
-		logRule(72);
-		match();
-		return true;
 	case MP_PLUS:
 		logRule(72);
 		match();
@@ -363,23 +328,8 @@ bool Grammar::block()
 	switch (nextTokenType())
 	{
 	case MP_BEGIN:
-		logRule(4);
-		variableDeclarationPart();
-		procedureAndFunctionDeclarationPart();
-		statementPart();
-		return true;
 	case MP_VAR:
-		logRule(4);
-		variableDeclarationPart();
-		procedureAndFunctionDeclarationPart();
-		statementPart();
-		return true;
 	case MP_FUNCTION:
-		logRule(4);
-		variableDeclarationPart();
-		procedureAndFunctionDeclarationPart();
-		statementPart();
-		return true;
 	case MP_PROCEDURE:
 		logRule(4);
 		variableDeclarationPart();
@@ -400,43 +350,17 @@ bool Grammar::booleanExpression()
 	switch (nextTokenType())
 	{
 	case MP_FALSE:
-		logRule(111);
-		expression();
-		return true;
 	case MP_NOT:
-		logRule(111);
-		expression();
-		return true;
 	case MP_TRUE:
-		logRule(111);
-		expression();
-		return true;
 	case MP_IDENTIFIER:
-		logRule(111);
-		expression();
-		return true;
 	case MP_INTEGER:
-		logRule(111);
-		expression();
-		return true;
 	case MP_FIXED_LIT:
-		logRule(111);
-		expression();
-		return true;
 	case MP_STRING_LIT:
 		logRule(111);
 		expression();
 		return true;
 	case MP_LPAREN:
-		match();
-		logRule(111);
-		expression();
-		return true;
 	case MP_MINUS:
-		match();
-		logRule(111);
-		expression();
-		return true;
 	case MP_PLUS:
 		match();
 		logRule(111);
@@ -517,51 +441,15 @@ bool Grammar::expression()
 	switch (nextTokenType())
 	{
 	case MP_PLUS:
-		logRule(73);
-		simpleExpression();
-		optionalRelationalPart();
-		return true;
 	case MP_MINUS:
-		logRule(73);
-		simpleExpression();
-		optionalRelationalPart();
-		return true;
 	case MP_LPAREN:
-		logRule(73);
-		simpleExpression();
-		optionalRelationalPart();
-		return true;
 	case MP_STRING_LIT:
-		logRule(73);
-		simpleExpression();
-		optionalRelationalPart();
-		return true;
 	case MP_IDENTIFIER:
-		logRule(73);
-		simpleExpression();
-		optionalRelationalPart();
-		return true;
 	case MP_FIXED_LIT:
-		logRule(73);
-		simpleExpression();
-		optionalRelationalPart();
-		return true;
 	case MP_FLOAT_LIT:
-		logRule(73);
-		simpleExpression();
-		optionalRelationalPart();
-		return true;
 	case MP_INTEGER_LIT:
 	case MP_TRUE:
-		logRule(73);
-		simpleExpression();
-		optionalRelationalPart();
-		return true;
 	case MP_NOT:
-		logRule(73);
-		simpleExpression();
-		optionalRelationalPart();
-		return true;
 	case MP_FALSE:
 		logRule(73);
 		simpleExpression();
@@ -582,31 +470,11 @@ bool Grammar::factorTail()
 {
 	switch (nextTokenType())
 	{
-	//could maybe do case MP_AND | MP_DIV... I'll try it when I get eclipse working
+	
 	case MP_AND:
-		logRule(92);
-		multiplyingOperator();
-		factor();
-		factorTail();
-		return true;
 	case MP_DIV:
-		logRule(92);
-		multiplyingOperator();
-		factor();
-		factorTail();
-		return true;
 	case MP_MOD:
-		logRule(92);
-		multiplyingOperator();
-		factor();
-		factorTail();
-		return true;
 	case MP_FLOAT_DIVIDE:
-		logRule(92);
-		multiplyingOperator();
-		factor();
-		factorTail();
-		return true;
 	case MP_TIMES:
 		logRule(92);
 		multiplyingOperator();
@@ -653,43 +521,17 @@ bool Grammar::finalValue()
 	switch (nextTokenType())
 	{
 	case MP_FALSE:
-		logRule(66);
-		ordinalExpression();
-		return true;
 	case MP_NOT:
-		logRule(66);
-		ordinalExpression();
-		return true;
 	case MP_TRUE:
-		logRule(66);
-		ordinalExpression();
-		return true;
 	case MP_IDENTIFIER:
-		logRule(66);
-		ordinalExpression();
-		return true;
 	case MP_INTEGER_LIT:
-		logRule(66);
-		ordinalExpression();
-		return true;
 	case MP_FLOAT_LIT:
 		logRule(66);
 		ordinalExpression();
 		return true;
 	case MP_STRING_LIT:
-		logRule(66);
-		ordinalExpression();
-		return true;
 	case MP_LPAREN:
-		match();
-		logRule(66);
-		ordinalExpression();
-		return true;
 	case MP_MINUS:
-		match();
-		logRule(66);
-		ordinalExpression();
-		return true;
 	case MP_PLUS:
 		match();
 		logRule(66);
@@ -1491,59 +1333,48 @@ bool Grammar::statement()
 		LOG(35, logged);
 		return compoundStatement();
 		break;
-
 	case MP_ELSE:
 	case MP_END:
 		LOG(36, logged);
 		return emptyStatement();
 		break;
-
 	case MP_FOR:
 		LOG(42, logged)
 		return forStatement();
 		break;
-
 	case MP_IF:
 		LOG(39, logged);
 		return ifStatement();
 		break;
-
 	case MP_PROCEDURE:
 		LOG(43, logged);
 		return procedureStatement();
 		break;
-
 	case MP_READ:
 		LOG(36, logged);
 		return readStatement();
 		break;
-
 	case MP_REPEAT:
 		LOG(41, logged);
 		return repeatStatement();
 		break;
-
 	case MP_UNTIL:
 		LOG(34, logged);
 		return emptyStatement();
 		break;
-
 	case MP_WHILE:
 		LOG(40, logged);
 		return whileStatement();
 		break;
-
 	case MP_WRITELN:
 	case MP_WRITE:
 		LOG(37, logged);
 		return writeStatement();
 		break;
-
 	case MP_IDENTIFIER:  // AMBIGUITY IN LL1 TABLE 38 or 43
 		LOG(38, logged);
 		return assignmentStatement();
 		break;
-
 	default:
 		error(TypeList() << MP_BEGIN << MP_ELSE << MP_END << MP_FOR << MP_IF << MP_PROCEDURE
 			<< MP_READ << MP_REPEAT << MP_UNTIL <<MP_WHILE << MP_WRITELN << MP_WRITE << MP_IDENTIFIER);
@@ -1974,7 +1805,6 @@ bool Grammar::writeParameter()
 	case MP_NOT:
 	case MP_LPAREN:
 	case MP_IDENTIFIER:
-
 	case MP_FALSE:
 	case MP_TRUE:
 		logRule(53);
@@ -2000,7 +1830,6 @@ bool Grammar::writeParameterTail()
 		writeParameter();
 		writeParameterTail();
 		return true;
-
 	case MP_RPAREN:
 		logRule(52);
 		return true;
