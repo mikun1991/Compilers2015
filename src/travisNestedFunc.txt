@@ -1,0 +1,19 @@
+program NestedFunctionsByTravis;
+
+	var x,y,z : Integer;
+	
+	procedure haveTwo;
+		begin
+			x:=2;
+			y:=2;
+			z:=addTwo;
+			
+			function addTwo(var x, y:Integer):Integer;
+				begin
+					var m:Integer;
+					m = x + y;
+				end
+		end
+	begin
+		writeln(x);
+	end.
