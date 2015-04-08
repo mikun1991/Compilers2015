@@ -56,6 +56,7 @@ public:
 
 private:
 	//file pointer
+	std::ofstream _outFile;
 
 
 	//for namespace collisions
