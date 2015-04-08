@@ -71,6 +71,7 @@ public:
 	void addId(Lexeme id);
 	void setType(LexemeResources::DataType dataType);
 
+	Lexeme getNextLexeme();
 	Token getNextId();  // use this to iterate through the list of Ids
 	Token showNextId(); // use this to return the first value but keep it in the list of Ids
 	LexemeResources::DataType getType();

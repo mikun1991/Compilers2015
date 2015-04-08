@@ -75,6 +75,12 @@ void SemanticRecord::setType(DataType type)
 	_type = type;
 }
 
+Lexeme SemanticRecord::getNextLexeme()
+{
+	Token nextToken = getNextId();
+	return nextToken.getLexeme();
+}
+
 Token SemanticRecord::getNextId()
 {
 	Token myToken;
