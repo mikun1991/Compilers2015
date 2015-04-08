@@ -121,3 +121,58 @@ void SemanticAnalyser::printCurrentTable()
 	_currentTable->printTable();
 }
 
+void SemanticAnalyser::add(SemanticRecord addRecords)
+{
+	
+}
+
+void SemanticAnalyser::sub(SemanticRecord subractRecords)
+{
+
+}
+
+void SemanticAnalyser::multiply(SemanticRecord multiplyRecords)
+{
+
+
+}
+
+void SemanticAnalyser::divide(SemanticRecord divideRecords)
+{
+
+}
+
+void SemanticAnalyser::modulus(SemanticRecord modRecords)
+{
+
+}
+
+void SemanticAnalyser::compGr(SemanticRecord compareRecords)
+{
+
+}
+
+void SemanticAnalyser::compGrEq(SemanticRecord compareRecords)
+{
+
+}
+
+void SemanticAnalyser::compLt(SemanticRecord compareRecords)
+{
+
+}
+
+void SemanticAnalyser::compLtEq(SemanticRecord compareRecords)
+{
+
+}
+
+void SemanticAnalyser::branchIfTrue()
+{
+
+}
+
+void SemanticAnalyser::
+{
+
+}

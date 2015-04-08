@@ -30,21 +30,30 @@ public:
 	bool insertSymbol(SemanticRecord& record);
 	const Symbol lookupSymbol(std::string name, bool& found);
 
-	std::string errorMsg();
-
-	void defineInt();
-	void defineFloat();
-	void defineString();
-
-	void add();
-	void sub();
-	void multiply();
-	void divide();
-	void modulus();
-
 	void printCurrentTable();
 
+	std::string errorMsg();
+
+	void assignment(SemanticRecord assigmentRecords);
+
+	void add(SemanticRecord addRecords);
+	void sub(SemanticRecord subtractRecords);
+	void multiply(SemanticRecord multiplyRecords);
+	void divide(SemanticRecord divideRecords);
+	void modulus(SemanticRecord modRecords);
+
+	void compGr(SemanticRecord compareRecords);
+	void compGrEq(SemanticRecord compareRecords);
+	void compLt(SemanticRecord compareRecords);
+	void compLtEq(SemanticRecord compareRecords);
+
+	void branchIfTrue();
+
+
 private:
+	//file pointer
+	
+
 
 	//for namespace collisions
 	void symbolCollisionError(const Token lex);
