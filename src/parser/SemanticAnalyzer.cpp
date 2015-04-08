@@ -139,8 +139,8 @@ void SemanticAnalyser::symbolCollisionError(const Token token)
 
 void SemanticAnalyser::printCurrentTable()
 {
-	if (!_currentTable)
-		return;
+	//if (!_currentTable)
+		//return;
 	_currentTable->printTable();
 }
 

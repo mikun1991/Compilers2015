@@ -1,6 +1,7 @@
 program helloWorld;
 	var cat, kitten:String;
 	myBool:Boolean;
+	counter:Integer;
   
 	function monkey(var dog:Boolean):Boolean;
 		var mBool:Boolean;
@@ -17,5 +18,14 @@ program helloWorld;
 		end
 	;
 	begin
+	
+		for counter:=0 to 9 do write(counter);
+	
+		while counter > 0 do
+			begin
+				writeln(counter);
+				counter := counter - 1
+			end
+	
 	end
 .

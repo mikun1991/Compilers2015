@@ -88,8 +88,8 @@ const Symbol SymbolTable::lookup(const string name, bool& outFound)
 
 void SymbolTable::printTable()
 {
-	if (_symbolLookup.empty())
-		return;
+	//if (_symbolLookup.empty())
+		//return;
 	std::cout
 		<< "\nCurrent Table Name: " << lexeme().getValue()
 		<< "\nCurrent Table Level: " << level();

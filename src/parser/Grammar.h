@@ -65,7 +65,7 @@ public:
 	 bool block(); 
 	 bool booleanExpression(); 
 	 bool compoundStatement(); 
-	 bool controlVariable();
+	 bool controlVariable(SemanticRecord&);
 	 bool emptyStatement(); 
 	 bool expression(); 
 	 bool factorTail(SemanticRecord&); 
@@ -112,7 +112,7 @@ public:
 	 bool variableDeclaration();   // add symbols to current symbol tables
 	 bool variableDeclarationPart(); 
 	 bool variableDeclarationTail(); 
-	 bool variableIdentifier(); 
+	 bool variableIdentifier(SemanticRecord&); 
 	 bool variableParameterSection(SemanticRecord&); 
 	 bool whileStatement(); 
 	 bool writeParameter(); 
