@@ -640,7 +640,7 @@ bool Grammar::functionHeading()
 		}
 		match();
 		type(functionHeading_rec);
-		//_semanticAnalyser->insertSymbol(functionHeading_rec); //NEED WAY TO ADD SYMBOL WITHOUT POPPING INFO IN SemanticRecord::getNextId()
+		_semanticAnalyser->insertSymbol(functionHeading_rec.showNextId(), functionHeading_rec.getType()); 
 		_semanticAnalyser->createTable(functionHeading_rec.getNextId(), functionHeading_rec.getType());
 		_semanticAnalyser->insertSymbol(optionalFormalParameterList_rec);
 		return true;

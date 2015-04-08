@@ -87,6 +87,17 @@ Token SemanticRecord::getNextId()
 	return myToken;
 }
 
+Token SemanticRecord::showNextId()
+{
+	Token myToken;
+
+	if (!_identifiers.empty()){
+		myToken = _identifiers.front();
+	}
+
+	return myToken;
+}
+
 DataType SemanticRecord::getType()
 {
 	return _type;

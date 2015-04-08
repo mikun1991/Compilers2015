@@ -20,11 +20,11 @@ bool SemanticAnalyser::createTable(const Token token, DataType type)
 
 	bool found = false;
 	const Symbol match = _currentTable->lookup(token.getLexeme().getValue(), found);
-	if (found){
+	/*if (found){		// I commented this out for now...need to create tables with the name of functions/procedures that are already on parent table
 		//there is already an entry with this name
 		symbolCollisionError(token);
 		return false;
-	}
+	}*/
 	_currentTable = _currentTable->createTable(token.getLexeme(), type);
 	return true;
 }
@@ -87,7 +87,9 @@ bool SemanticAnalyser::insertSymbol(const Token token, DataType type)
 
 bool SemanticAnalyser::insertSymbol(SemanticRecord& record)
 {
-	for (int i = 0; i < record.size(); i++)
+	int numIds = record.size();
+
+	for (int i = 0; i < numIds; i++)
 	{
 		insertSymbol(record.getNextId(), record.getType());
 	}

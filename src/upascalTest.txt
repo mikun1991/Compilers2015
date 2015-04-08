@@ -1,5 +1,5 @@
 program helloWorld;
-	var cat:String;
+	var cat, kitten:String;
 	myBool:Boolean;
   
 	function monkey(var dog:Boolean):Boolean;
