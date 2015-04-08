@@ -17,8 +17,11 @@ public:
 	int size() const;
 	int level() const;
 	int offset() const;
+	void setOffset(int offset);
 
 protected:
+
+
 	Lexeme _lexeme;
 	LexemeResources::DataType _dataType;
 

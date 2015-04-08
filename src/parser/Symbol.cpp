@@ -39,4 +39,9 @@ int Symbol::size() const
 	return _size;
 }
 
+void Symbol::setOffset(int offset)
+{
+	_offset = offset;
+}
+
 

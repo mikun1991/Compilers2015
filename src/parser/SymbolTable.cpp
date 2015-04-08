@@ -63,6 +63,8 @@ void SymbolTable::insert(Lexeme lex,  DataType type)
 
 void SymbolTable::insert(Symbol tableSymbol)
 {
+	tableSymbol.setOffset(_currentOffset);
+	_currentOffset += tableSymbol.size();
 	_symbolLookup[tableSymbol.lexeme().getValue()] = tableSymbol;
 }
 
@@ -92,13 +94,13 @@ void SymbolTable::printTable()
 		//return;
 	std::cout
 		<< "\nCurrent Table Name: " << lexeme().getValue()
-		<< "\nCurrent Table Level: " << level();
-		//<< "\nCurrent Table Size : " << size()
+		<< "\nCurrent Table Level: " << level()
+		<< "\nCurrent Table Size : " << size();
 		//<< "\nCurrent Table Offset: " << offset()
 		//<< "\n";
 
-	std::cout << "\nSymbol Name:\tDataType: \tOffset: \n";
+	std::cout << "\nSymbol Name:\tDataType: \tOffset: \tSize: \n";
 
 	for (auto& x : _symbolLookup)
-		std::cout << x.first << "\t\t" << x.second.dataType() << "\t\t" << x.second.offset() << "\t\t" << std::endl;
+		std::cout << x.first << "\t\t" << x.second.dataType() << "\t\t" << x.second.offset() << "\t\t" << x.second.size() << std::endl;
 }
