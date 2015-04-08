@@ -55,7 +55,7 @@ private:
 
 public:
 	 
-	 bool factor();
+	 bool factor(SemanticRecord&);
 	 bool forStatement(); 
 	 bool multiplyingOperator(); 
 	 bool actualParameter(); 
@@ -68,20 +68,20 @@ public:
 	 bool controlVariable();
 	 bool emptyStatement(); 
 	 bool expression(); 
-	 bool factorTail(); 
+	 bool factorTail(SemanticRecord&); 
 	 bool finalValue(); 
-	 bool formalParameterSection();
-	 bool formalParameterSectionTail(); 
-	 bool functionDeclaration(); 
-	 bool functionHeading(); 
-	 bool functionIdentifier(); 
-	 bool identifierList(SemanticRecord& identifierList_rec); 
-	 bool identifierTail(SemanticRecord& identifierTail_rec); 
+	 bool formalParameterSection(SemanticRecord&);
+	 bool formalParameterSectionTail(SemanticRecord&); 
+	 bool functionDeclaration();  // close function SymbolTable  
+	 bool functionHeading();   // create function SymbolTable, add function parameters symbols
+	 bool functionIdentifier(SemanticRecord&); 
+	 bool identifierList(SemanticRecord&); 
+	 bool identifierTail(SemanticRecord&); 
 	 bool ifStatement();
 	 bool initialValue();  
 	 bool optionalActualParameterList();  
 	 bool optionalElsePart(); 
-	 bool optionalFormalParameterList(); 
+	 bool optionalFormalParameterList(SemanticRecord&); 
 	 bool optionalRelationalPart(); 
 	 bool optionalSign(); 
 	 bool ordinalExpression(); 
@@ -90,9 +90,9 @@ public:
 	 bool procedureHeading(); 
 	 bool procedureIdentifier(); 
 	 bool procedureStatement(); 
-	 bool program(); 
-	 bool programHeading();  //Create first SymbolTable here
-	 SemanticRecord programIdentifier(); 
+	 bool program();  //Close program SymbolTable 
+	 bool programHeading();  //Create program SymbolTable
+	 bool programIdentifier(SemanticRecord&); 
 	 bool readParameter(); 
 	 bool readParameterTail(); 
 	 bool readStatement(); 
@@ -105,15 +105,15 @@ public:
 	 bool statementTail();
 	 bool stepValue(); 
 	 bool systemGoal(); 
-	 bool term(); 
+	 bool term(SemanticRecord&); 
 	 bool termTail(); 
-	 bool type(SemanticRecord& type_rec); 
-	 bool valueParameterSection(); 
+	 bool type(SemanticRecord&); 
+	 bool valueParameterSection(SemanticRecord&); 
 	 bool variableDeclaration();   // add symbols to current symbol tables
 	 bool variableDeclarationPart(); 
 	 bool variableDeclarationTail(); 
 	 bool variableIdentifier(); 
-	 bool variableParameterSection(); 
+	 bool variableParameterSection(SemanticRecord&); 
 	 bool whileStatement(); 
 	 bool writeParameter(); 
 	 bool writeParameterTail(); 

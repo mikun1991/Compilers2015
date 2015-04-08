@@ -80,10 +80,10 @@ void SymbolTable::printTable()
 		return;
 	std::cout
 		<< "\nCurrent Table Name: " << lexeme().getValue()
-		<< "\nCurrent Table Level: " << level()
-		<< "\nCurrent Table Size : " << size()
-		<< "\nCurrent Table Offset: " << offset()
-		<< "\n";
+		<< "\nCurrent Table Level: " << level();
+		//<< "\nCurrent Table Size : " << size()
+		//<< "\nCurrent Table Offset: " << offset()
+		//<< "\n";
 
 	std::cout << "\nSymbol Name:\tDataType: \tOffset: \n";
 
