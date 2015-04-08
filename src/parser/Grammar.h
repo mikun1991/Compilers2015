@@ -86,9 +86,9 @@ public:
 	 bool optionalSign(); 
 	 bool ordinalExpression(); 
 	 bool procedureAndFunctionDeclarationPart(); 
-	 bool procedureDeclaration();
-	 bool procedureHeading(); 
-	 bool procedureIdentifier(); 
+	 bool procedureDeclaration();  //Close procedure SymbolTable
+	 bool procedureHeading();   //Create procedure SymbolTable
+	 bool procedureIdentifier(SemanticRecord&); 
 	 bool procedureStatement(); 
 	 bool program();  //Close program SymbolTable 
 	 bool programHeading();  //Create program SymbolTable
