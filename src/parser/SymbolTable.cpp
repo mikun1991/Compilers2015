@@ -63,7 +63,7 @@ void SymbolTable::insert(Lexeme lex,  DataType type)
 
 void SymbolTable::insert(Symbol tableSymbol)
 {
-	_symbolLookup.insert(tableSymbol);
+	_symbolLookup[tableSymbol.lexeme().getValue()] = tableSymbol;
 }
 
 const Symbol SymbolTable::lookup(const string name, bool& outFound)
