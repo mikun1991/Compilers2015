@@ -9,6 +9,9 @@
 #include "Operand.h"
 #include "SemanticRecord.h"
 
+#include <iostream>
+#include <fstream>
+
 //this class will keep track of 
 //the current instance of the symbol table
 //as well as current semantic actions
@@ -29,6 +32,7 @@ public:
 	bool insertSymbol(const Token token, LexemeResources::DataType type);
 	bool insertSymbol(SemanticRecord& record);
 	const Symbol lookupSymbol(std::string name, bool& found);
+	std::string lookupSymbolAddress(std::string name, bool& found);
 
 	void printCurrentTable();
 
@@ -52,7 +56,6 @@ public:
 
 private:
 	//file pointer
-	
 
 
 	//for namespace collisions

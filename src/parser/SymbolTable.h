@@ -26,11 +26,15 @@ public:
 
 	void insert(Lexeme lex,  LexemeResources::DataType type);
 
+
 	const Symbol lookup(const std::string name, bool& outFound);
 
 	void printTable();
 
 private:
+	//this should only be called when closing a table 
+	void insert(Symbol tableSymbol);
+
 	int _currentOffset;
 
 	SymbolTable * _parentTable;

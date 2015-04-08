@@ -8,6 +8,7 @@ using namespace LexemeResources;
 SemanticAnalyser::SemanticAnalyser()
 {
 	_currentTable = NULL;
+	_outFile.open("compiledUCode.txt");
 }
 
 bool SemanticAnalyser::createTable(const Token token, DataType type)
@@ -20,11 +21,17 @@ bool SemanticAnalyser::createTable(const Token token, DataType type)
 
 	bool found = false;
 	const Symbol match = _currentTable->lookup(token.getLexeme().getValue(), found);
-	/*if (found){		// I commented this out for now...need to create tables with the name of functions/procedures that are already on parent table
-		//there is already an entry with this name
+
+	if (found && 
+		(match.lexeme().getValue() != "while" || 
+		 match.lexeme().getValue() != "for" ||
+		 match.lexeme().getValue() != "if" || match.lexeme().getValue() != "repeat"))
+
+	{//there is already an entry with this name
 		symbolCollisionError(token);
 		return false;
-	}*/
+	}
+
 	_currentTable = _currentTable->createTable(token.getLexeme(), type);
 	return true;
 }
@@ -108,6 +115,22 @@ const Symbol SemanticAnalyser::lookupSymbol(string name, bool& found)
 	return _currentTable->lookup(name, found);
 }
 
+string SemanticAnalyser::lookupSymbolAddress(string name, bool& found)
+{
+	Symbol matchingSymbol = lookupSymbol(name, found);
+
+	if (!found){
+		return string();
+	}
+
+	char address[64] = { 0 };
+	sprintf(address, "%d(D%d)", matchingSymbol.offset(), matchingSymbol.level());
+	string addressString(address);
+
+	return addressString;
+}
+
+
 void SemanticAnalyser::symbolCollisionError(const Token token)
 {
 	string err = "This variable has already been used: " + token.getLexeme().getValue() + " \nline:" + to_string(token.getLineNumber()) + " \ncol:" + to_string(token.getColumnNumber())+"!!.\n";
@@ -123,7 +146,14 @@ void SemanticAnalyser::printCurrentTable()
 
 void SemanticAnalyser::add(SemanticRecord addRecords)
 {
-	
+	assert(addRecords.size() == 2);
+
+	Token first = addRecords.getNextId();
+
+
+	//addressFirst = lookupSymbolAddress(addRecords.getNextId());
+
+
 }
 
 void SemanticAnalyser::sub(SemanticRecord subractRecords)
@@ -172,7 +202,4 @@ void SemanticAnalyser::branchIfTrue()
 
 }
 
-void SemanticAnalyser::
-{
 
-}

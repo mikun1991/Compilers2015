@@ -41,6 +41,13 @@ SymbolTable* SymbolTable::closeTable()
 	//clear the current entries in the table
 	_symbolLookup.clear();
 
+	if (_parentTable){
+		Symbol newSymbol(_lexeme, _dataType, _level, 0, _size);
+		//add itself to the parent table
+		_parentTable->insert(newSymbol);
+	}
+
+
 	return _parentTable;
 }
 
@@ -52,6 +59,11 @@ void SymbolTable::insert(Lexeme lex,  DataType type)
 	_currentOffset += size;
 
 	_symbolLookup[lex.getValue()] =  newSymbol;
+}
+
+void SymbolTable::insert(Symbol tableSymbol)
+{
+	_symbolLookup.insert(tableSymbol);
 }
 
 const Symbol SymbolTable::lookup(const string name, bool& outFound)
