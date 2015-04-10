@@ -82,10 +82,8 @@ private:
 
 	//////////////
 	//fun ways to generate errors
-	
 	//for missing objects
 	void missingObject(const Lexeme lex);
-
 	//for namespace collisions
 	void symbolCollisionError(const Token lex);
 	std::list<std::string> _errList;

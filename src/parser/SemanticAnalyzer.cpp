@@ -189,6 +189,11 @@ string SemanticAnalyser::generateMachineValue(Lexeme lex)
 	return machineVal;
 }
 
+void SemanticAnalyser::missingObject(const Lexeme lex)
+{
+	string err = "The corresponding symbol was not found for" + lex.getValue() + "\n";
+	_errList.push_back(err);
+}
 
 void SemanticAnalyser::symbolCollisionError(const Token token)
 {
