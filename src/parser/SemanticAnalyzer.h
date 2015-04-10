@@ -33,11 +33,19 @@ public:
 	bool insertSymbol(SemanticRecord& record);
 	const Symbol lookupSymbol(std::string name, bool& found);
 	std::string lookupSymbolAddress(std::string name, bool& found);
+	
+	std::string stringLitToVal(std::string value);
+	std::string intLitToVal(std::string value);
+	std::string floatLitToVal(std::string value);
+	
+	std::string generateMachineValue(Lexeme lex);
+
 
 	void printCurrentTable();
-
 	std::string errorMsg();
 
+	//These are the commands that we can call from the parser
+	//with the semantic records to generate that code 
 	void assignment(SemanticRecord assigmentRecords);
 
 	void add(SemanticRecord addRecords);
@@ -46,18 +54,37 @@ public:
 	void divide(SemanticRecord divideRecords);
 	void modulus(SemanticRecord modRecords);
 
+
 	void compGr(SemanticRecord compareRecords);
 	void compGrEq(SemanticRecord compareRecords);
 	void compLt(SemanticRecord compareRecords);
 	void compLtEq(SemanticRecord compareRecords);
 
 	void branchIfTrue();
+	void branchIfFalse();
 
 
 private:
+	//these are some helper functions so i can be lazy in creating
+	//the functions for writing command
+	void twoValueCommand(std::string command, SemanticRecord records);
+
+	//if we have methods which call the uMachine instructions
+	//we can be sneeky and add comments which describe the 
+	//value that we are working with, this will make 
+	//debugging the uMachine code alot easier.
+	void push(Lexeme val);
+	void writeCommand(std::string command);
+
+
 	//file pointer
 	std::ofstream _outFile;
 
+	//////////////
+	//fun ways to generate errors
+	
+	//for missing objects
+	void missingObject(const Lexeme lex);
 
 	//for namespace collisions
 	void symbolCollisionError(const Token lex);

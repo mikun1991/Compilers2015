@@ -1,9 +1,15 @@
 #include "SemanticAnalyzer.h"
 
+//use this to turn on and off comments in the 
+//written uMahine code
+#define ENABLE_DEBUGGING true
+
 #include <assert.h>
 
 using namespace std;
 using namespace LexemeResources;
+
+
 
 SemanticAnalyser::SemanticAnalyser()
 {
@@ -130,6 +136,59 @@ string SemanticAnalyser::lookupSymbolAddress(string name, bool& found)
 	return addressString;
 }
 
+string SemanticAnalyser::stringLitToVal(string value)
+{
+	return "#" + value;
+}
+
+string SemanticAnalyser::intLitToVal(string value)
+{
+	return "#" + value;
+}
+
+string SemanticAnalyser::floatLitToVal(string value)
+{
+	return "#" + value;
+}
+
+string SemanticAnalyser::generateMachineValue(Lexeme lex)
+{
+	//figure out if we need to look up the value
+	//of if the value is a literal and we
+	//can pass in the value directly 
+
+	string machineVal;
+	bool found = true;
+	switch (lex.getType())
+	{
+	case MP_INTEGER:
+	case MP_STRING:
+	case MP_FLOAT:
+	case MP_BOOLEAN:
+		machineVal = lookupSymbolAddress(lex.getValue(), found);
+		break;
+	case MP_STRING_LIT:
+		machineVal = stringLitToVal(lex.getValue());
+		break;
+	case MP_INTEGER_LIT:
+		machineVal = intLitToVal(lex.getValue());
+		break;
+	case MP_FLOAT_LIT:
+		machineVal = floatLitToVal(lex.getValue());
+		break;
+	default:
+		assert(false);
+		//this shouldnt happen
+		//but i may have missed some
+	}
+
+	if (!found){
+		missingObject(lex);
+	}
+
+	return machineVal;
+}
+
 
 void SemanticAnalyser::symbolCollisionError(const Token token)
 {
@@ -146,60 +205,88 @@ void SemanticAnalyser::printCurrentTable()
 
 void SemanticAnalyser::add(SemanticRecord addRecords)
 {
-	assert(addRecords.size() == 2);
-
-	Token first = addRecords.getNextId();
-
-
-	//addressFirst = lookupSymbolAddress(addRecords.getNextId());
-
-
+	twoValueCommand("ADDS", addRecords);
 }
 
 void SemanticAnalyser::sub(SemanticRecord subractRecords)
 {
-
+	twoValueCommand("SUBS", subractRecords);
 }
 
 void SemanticAnalyser::multiply(SemanticRecord multiplyRecords)
 {
-
-
+	twoValueCommand("MULS", multiplyRecords);
 }
 
 void SemanticAnalyser::divide(SemanticRecord divideRecords)
 {
-
+	twoValueCommand("DIVS", divideRecords);
 }
 
 void SemanticAnalyser::modulus(SemanticRecord modRecords)
 {
-
+	twoValueCommand("MODS", modRecords);
 }
 
 void SemanticAnalyser::compGr(SemanticRecord compareRecords)
 {
-
+	twoValueCommand("CMPGTS", compareRecords);
 }
 
 void SemanticAnalyser::compGrEq(SemanticRecord compareRecords)
 {
-
+	twoValueCommand("CMPGES", compareRecords);
 }
 
 void SemanticAnalyser::compLt(SemanticRecord compareRecords)
 {
-
+	twoValueCommand("CMPLTS", compareRecords);
 }
 
 void SemanticAnalyser::compLtEq(SemanticRecord compareRecords)
 {
-
+	twoValueCommand("CMPLES", compareRecords);
 }
 
 void SemanticAnalyser::branchIfTrue()
 {
-
+	writeCommand("BRTS");
 }
 
+void SemanticAnalyser::branchIfFalse()
+{
+	writeCommand("BRFS");
+}
 
+void SemanticAnalyser::twoValueCommand(string command, SemanticRecord records)
+{
+	assert(records.size() == 2);
+
+	Lexeme first = records.getNextLexeme();
+	push(first);
+
+	Lexeme second = records.getNextLexeme();
+	push(second);
+
+	writeCommand(command);
+}
+
+void SemanticAnalyser::push(Lexeme lex)
+{
+
+	string val = generateMachineValue(lex);
+
+	_outFile << "PUSH " << val;
+
+	if (ENABLE_DEBUGGING){
+		//add comment with the variable name after the push 
+		_outFile << " ;" << lex.getValue() << std::endl;
+	}
+
+	_outFile << std::endl;
+}
+
+void SemanticAnalyser::writeCommand(string command)
+{
+	_outFile << command << std::endl;
+}
