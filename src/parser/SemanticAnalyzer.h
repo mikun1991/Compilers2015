@@ -22,7 +22,7 @@ public:
 	SemanticAnalyser();
 
 	//return false if there was a name collision
-	bool createTable(Operand operand);
+	bool createTable(LexemeOperand operand);
 	bool createTable(const Lexeme token, LexemeResources::DataType type);
 	void closeTable();
 

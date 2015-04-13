@@ -1,36 +1,56 @@
 #include "SemanticRecord.h"
 
+#include <assert.h>
+
 using namespace LexemeResources;
 using namespace std;
 
 
 void SemanticRecord::addOperand(Lexeme id, DataType type)
 {
-	_identifiers.push_back(LexemeOperand(id, type));
+	LexemeOperand * addOP = new LexemeOperand(id, type);
+	_identifiers.push_back(addOP);
 }
 
 Operand SemanticRecord::getNextOperand()
 {
-	Operand nextOp;
+	Operand* nextOp;
 
 	if (!_identifiers.empty()){
 		nextOp = _identifiers.front();
 		_identifiers.pop_front();
 	}
 
-	return nextOp;
+	return *nextOp;
+}
+
+LexemeOperand SemanticRecord::getNextOperandAsLexeme()
+{
+	LexemeOperand* nextOp = NULL;
+
+	if (!_identifiers.empty()){
+		nextOp = dynamic_cast<LexemeOperand*>( _identifiers.front());
+		_identifiers.pop_front();
+	}
+	assert(nextOp);
+
+	if (nextOp)
+		return *nextOp;
+
+	return LexemeOperand(Lexeme(), UnknownData);
 }
 
 Operand SemanticRecord::showNextOperand()
 {
-	Operand nextOp;
+	Operand* nextOp;
 
 	if (!_identifiers.empty()){
 		nextOp = _identifiers.front();
 		_identifiers.pop_front();
 	}
 
-	return nextOp;
+	// we still own this
+	return Operand(*nextOp);
 }
 
 int SemanticRecord::size() const

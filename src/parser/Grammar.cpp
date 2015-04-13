@@ -648,7 +648,7 @@ bool Grammar::functionHeading()
 		match();
 		type(functionHeading_rec);
 		//_semanticAnalyser->insertSymbol(functionHeading_rec.showNextId(), functionHeading_rec.getType()); 
-		_semanticAnalyser->createTable(functionHeading_rec.getNextOperand());
+		_semanticAnalyser->createTable(functionHeading_rec.getNextOperandAsLexeme());
 		_semanticAnalyser->insertSymbol(optionalFormalParameterList_rec);
 		return true;
 	default:
@@ -1054,7 +1054,7 @@ bool Grammar::procedureHeading()
 		match(); //match "procedure"
 		procedureIdentifier(procedureHeading_rec);
 		//_semanticAnalyser->insertSymbol(procedureHeading_rec.showNextId(), procedureHeading_rec.getType());
-		_semanticAnalyser->createTable(procedureHeading_rec.getNextOperand());
+		_semanticAnalyser->createTable(procedureHeading_rec.getNextOperandAsLexeme());
 		optionalFormalParameterList(optionalFormalParameterList_rec);
 		_semanticAnalyser->insertSymbol(optionalFormalParameterList_rec);
 		return true;
@@ -1151,7 +1151,7 @@ bool Grammar::programHeading()
 		match();
 		//Token next = nextToken();
 		programIdentifier(programHeading_rec);
-		_semanticAnalyser->createTable(programHeading_rec.getNextOperand());
+		_semanticAnalyser->createTable(programHeading_rec.getNextOperandAsLexeme());
 
 		return true; 
 	default:

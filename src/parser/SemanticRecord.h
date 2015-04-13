@@ -16,6 +16,7 @@ public:
 	void addOPerand(Operand operand);
 
 	Operand getNextOperand();
+	LexemeOperand getNextOperandAsLexeme();
 
 	Operand showNextOperand(); // use this to return the first value but keep it in the list of Ids
 	LexemeResources::DataType getType();
@@ -25,7 +26,7 @@ public:
 	void setType(LexemeResources::DataType type);
 
 private:
-	std::list<Operand> _identifiers;
+	std::list<Operand*> _identifiers;
 };
 
 

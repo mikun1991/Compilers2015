@@ -16,7 +16,8 @@ SemanticAnalyser::SemanticAnalyser()
 	_currentTable = NULL;
 	_outFile.open("compiledUCode.txt");
 }
-bool SemanticAnalyser::createTable(Operand operand)
+
+bool SemanticAnalyser::createTable(LexemeOperand operand)
 {
 	LexemeOperand* lexOp = dynamic_cast<LexemeOperand*>(&operand);
 	if (lexOp){
@@ -233,8 +234,8 @@ void SemanticAnalyser::symbolCollisionError(const Token token)
 
 void SemanticAnalyser::printCurrentTable()
 {
-	//if (!_currentTable)
-		//return;
+	if (!_currentTable)
+		return;
 	_currentTable->printTable();
 }
 
