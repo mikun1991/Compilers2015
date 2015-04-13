@@ -37,8 +37,6 @@ public:
 
 	bool onTopOfStack();
 
-	std::string getName();
-
 };
 
 
