@@ -1,0 +1,73 @@
+#include "Operand.h"
+
+#include <assert.h>
+
+using namespace std;
+using namespace LexemeResources;
+
+Operand::Operand(DataType type)
+	: _dataType(type)
+{
+}
+
+Operand::Operand()
+	: _dataType(UnknownData)
+{
+}
+
+bool Operand::onTopOfStack()
+{ 
+	return false;
+}
+
+string Operand::getName()
+{
+	assert(false);
+	return string();
+}
+
+DataType Operand::type()
+{
+	return _dataType;
+}
+
+string Operand::address()
+{
+	return _address;
+}
+
+//-------------
+// StackOperand
+//-------------
+StackOperand::StackOperand(DataType type)
+	:Operand(type)
+{
+}
+
+bool StackOperand::onTopOfStack()
+{
+	//this better be the case
+	//this is why we have this class
+	return true; 
+}
+
+
+
+// --------------
+// LexemeOperand
+// --------------
+LexemeOperand::LexemeOperand(const Lexeme lexeme, DataType type)
+	:_lexeme(lexeme), Operand(type)
+{
+}
+
+string LexemeOperand::getName() const
+{
+	return _lexeme.getValue();
+}
+
+Lexeme LexemeOperand::getLexeme() const
+{
+	return _lexeme;
+}
+

@@ -22,14 +22,15 @@ public:
 	SemanticAnalyser();
 
 	//return false if there was a name collision
-	
-	bool createTable(const Token token, LexemeResources::DataType type);
+	bool createTable(Operand operand);
+	bool createTable(const Lexeme token, LexemeResources::DataType type);
 	void closeTable();
 
 	//i think we should be able to figure out the type from the 
 	//the lexeme (at least some of the time)
 	bool insertSymbol(const Token token);
 	bool insertSymbol(const Token token, LexemeResources::DataType type);
+	bool insertSymbol(const Lexeme lex, LexemeResources::DataType type);
 	bool insertSymbol(SemanticRecord& record);
 	const Symbol lookupSymbol(std::string name, bool& found);
 	std::string lookupSymbolAddress(std::string name, bool& found);
@@ -48,17 +49,17 @@ public:
 	//with the semantic records to generate that code 
 	void assignment(SemanticRecord assigmentRecords);
 
-	void add(SemanticRecord addRecords);
-	void sub(SemanticRecord subtractRecords);
-	void multiply(SemanticRecord multiplyRecords);
-	void divide(SemanticRecord divideRecords);
-	void modulus(SemanticRecord modRecords);
+	Operand add(SemanticRecord addRecords);
+	Operand sub(SemanticRecord subtractRecords);
+	Operand multiply(SemanticRecord multiplyRecords);
+	Operand divide(SemanticRecord divideRecords);
+	Operand modulus(SemanticRecord modRecords);
 
 
-	void compGr(SemanticRecord compareRecords);
-	void compGrEq(SemanticRecord compareRecords);
-	void compLt(SemanticRecord compareRecords);
-	void compLtEq(SemanticRecord compareRecords);
+	Operand compGr(SemanticRecord compareRecords);
+	Operand compGrEq(SemanticRecord compareRecords);
+	Operand compLt(SemanticRecord compareRecords);
+	Operand compLtEq(SemanticRecord compareRecords);
 
 	void branchIfTrue();
 	void branchIfFalse();
@@ -67,14 +68,15 @@ public:
 private:
 	//these are some helper functions so i can be lazy in creating
 	//the functions for writing command
-	void twoValueCommand(std::string command, SemanticRecord records);
+	void twoValueCommand(const std::string command, SemanticRecord records);
 
 	//if we have methods which call the uMachine instructions
 	//we can be sneeky and add comments which describe the 
 	//value that we are working with, this will make 
 	//debugging the uMachine code alot easier.
-	void push(Lexeme val);
-	void writeCommand(std::string command);
+	void push(const Operand val, const LexemeResources::DataType castType = LexemeResources::UnknownData);
+	void cast(const LexemeResources::DataType valType, const LexemeResources::DataType toType);
+	void writeCommand(const std::string command);
 
 
 	//file pointer

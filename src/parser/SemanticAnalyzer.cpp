@@ -16,17 +16,25 @@ SemanticAnalyser::SemanticAnalyser()
 	_currentTable = NULL;
 	_outFile.open("compiledUCode.txt");
 }
+bool SemanticAnalyser::createTable(Operand operand)
+{
+	LexemeOperand* lexOp = dynamic_cast<LexemeOperand*>(&operand);
+	if (lexOp){
+		return createTable(lexOp->getLexeme(), lexOp->type());
+	}
+	return false;
+}
 
-bool SemanticAnalyser::createTable(const Token token, DataType type)
+bool SemanticAnalyser::createTable(const Lexeme lexeme, DataType type)
 {
 	//make sure that the table has been initialized
 	if (!_currentTable){
-		_currentTable = new SymbolTable(token.getLexeme(), type, 0);
+		_currentTable = new SymbolTable(lexeme, type, 0);
 		return true;
 	}
 
 	bool found = false;
-	const Symbol match = _currentTable->lookup(token.getLexeme().getValue(), found);
+	const Symbol match = _currentTable->lookup(lexeme.getValue(), found);
 
 	if (found && 
 		(match.lexeme().getValue() != "while" || 
@@ -34,11 +42,11 @@ bool SemanticAnalyser::createTable(const Token token, DataType type)
 		 match.lexeme().getValue() != "if" || match.lexeme().getValue() != "repeat"))
 
 	{//there is already an entry with this name
-		symbolCollisionError(token);
+		symbolCollisionError(Token(lexeme, -1, -1));
 		return false;
 	}
 
-	_currentTable = _currentTable->createTable(token.getLexeme(), type);
+	_currentTable = _currentTable->createTable(lexeme, type);
 	return true;
 }
 
@@ -98,13 +106,35 @@ bool SemanticAnalyser::insertSymbol(const Token token, DataType type)
 	return true;
 }
 
+bool SemanticAnalyser::insertSymbol(const Lexeme lex, DataType type)
+{
+	if (!_currentTable){
+		assert(false);
+		return false;//this should not happend;
+	}
+
+	bool found;
+	const Symbol foundSymbol = _currentTable->lookup(lex.getValue(), found);
+
+	if (found){
+		symbolCollisionError(Token(lex, -1, -1));
+		return false;
+	}
+
+	_currentTable->insert(lex, type);
+	return true;
+}
+
 bool SemanticAnalyser::insertSymbol(SemanticRecord& record)
 {
 	int numIds = record.size();
 
 	for (int i = 0; i < numIds; i++)
 	{
-		insertSymbol(record.getNextId(), record.getType());
+		Operand next = record.getNextOperand();
+		LexemeOperand* nextOp = dynamic_cast<LexemeOperand*>(&next);
+		if (nextOp)
+			insertSymbol(nextOp->getLexeme(), nextOp->type());
 	}
 
 	return true;
@@ -197,7 +227,7 @@ void SemanticAnalyser::missingObject(const Lexeme lex)
 
 void SemanticAnalyser::symbolCollisionError(const Token token)
 {
-	string err = "This variable has already been used: " + token.getLexeme().getValue() + " \nline:" + to_string(token.getLineNumber()) + " \ncol:" + to_string(token.getColumnNumber())+"!!.\n";
+	string err = "This variable has already been used: " + token.getLexeme().getValue() + " \nline:" + to_string(token.getLineNumber()) + " \ncol:" + to_string(token.getColumnNumber()) + "!!.\n";
 	_errList.push_back(err);
 }
 
@@ -208,49 +238,66 @@ void SemanticAnalyser::printCurrentTable()
 	_currentTable->printTable();
 }
 
-void SemanticAnalyser::add(SemanticRecord addRecords)
+Operand SemanticAnalyser::add(SemanticRecord addRecords)
 {
 	twoValueCommand("ADDS", addRecords);
+	return StackOperand(UnknownData);
 }
 
-void SemanticAnalyser::sub(SemanticRecord subractRecords)
+Operand SemanticAnalyser::sub(SemanticRecord subractRecords)
 {
 	twoValueCommand("SUBS", subractRecords);
+	return StackOperand(UnknownData);
+
 }
 
-void SemanticAnalyser::multiply(SemanticRecord multiplyRecords)
+Operand SemanticAnalyser::multiply(SemanticRecord multiplyRecords)
 {
 	twoValueCommand("MULS", multiplyRecords);
+	return StackOperand(UnknownData);
+
 }
 
-void SemanticAnalyser::divide(SemanticRecord divideRecords)
+Operand SemanticAnalyser::divide(SemanticRecord divideRecords)
 {
 	twoValueCommand("DIVS", divideRecords);
+	return StackOperand(UnknownData);
+
 }
 
-void SemanticAnalyser::modulus(SemanticRecord modRecords)
+Operand SemanticAnalyser::modulus(SemanticRecord modRecords)
 {
 	twoValueCommand("MODS", modRecords);
+	return StackOperand(UnknownData);
+
 }
 
-void SemanticAnalyser::compGr(SemanticRecord compareRecords)
+Operand SemanticAnalyser::compGr(SemanticRecord compareRecords)
 {
 	twoValueCommand("CMPGTS", compareRecords);
+	return StackOperand(UnknownData);
+
 }
 
-void SemanticAnalyser::compGrEq(SemanticRecord compareRecords)
+Operand SemanticAnalyser::compGrEq(SemanticRecord compareRecords)
 {
 	twoValueCommand("CMPGES", compareRecords);
+	return StackOperand(UnknownData);
+
 }
 
-void SemanticAnalyser::compLt(SemanticRecord compareRecords)
+Operand SemanticAnalyser::compLt(SemanticRecord compareRecords)
 {
 	twoValueCommand("CMPLTS", compareRecords);
+	return StackOperand(UnknownData);
+
 }
 
-void SemanticAnalyser::compLtEq(SemanticRecord compareRecords)
+Operand SemanticAnalyser::compLtEq(SemanticRecord compareRecords)
 {
 	twoValueCommand("CMPLES", compareRecords);
+	return StackOperand(UnknownData);
+
 }
 
 void SemanticAnalyser::branchIfTrue()
@@ -263,35 +310,67 @@ void SemanticAnalyser::branchIfFalse()
 	writeCommand("BRFS");
 }
 
-void SemanticAnalyser::twoValueCommand(string command, SemanticRecord records)
+void SemanticAnalyser::twoValueCommand(const string command, SemanticRecord records)
 {
 	assert(records.size() == 2);
 
-	Lexeme first = records.getNextLexeme();
+	//we need to do some sort of type resolution here if the two operands are not
+	//the same type, one approach could be to take the smallest common type
+	//or to take the type of the first value (current behavior)
+
+	Operand first = records.getNextOperand();
 	push(first);
 
-	Lexeme second = records.getNextLexeme();
-	push(second);
+	Operand second = records.getNextOperand();
+	push(second, first.type());
 
 	writeCommand(command);
 }
 
-void SemanticAnalyser::push(Lexeme lex)
+void SemanticAnalyser::push(Operand val, DataType castType)
 {
+	if (!val.onTopOfStack())
+	{
 
-	string val = generateMachineValue(lex);
+		//then this should be on the top of the stack
+		//and it doesnt need to be pushed
+		LexemeOperand* lexOp = dynamic_cast<LexemeOperand*>(&val);
+		assert(lexOp);
+		string valAddress = generateMachineValue(lexOp->getLexeme());
+		_outFile << "PUSH " << valAddress;
 
-	_outFile << "PUSH " << val;
+		if (ENABLE_DEBUGGING && !val.getName().empty()){
+			//add comment with the variable name after the push 
+			_outFile << " ;" << val.getName() << std::endl;
+		}
 
-	if (ENABLE_DEBUGGING){
-		//add comment with the variable name after the push 
-		_outFile << " ;" << lex.getValue() << std::endl;
+		_outFile << std::endl;
 	}
-
-	_outFile << std::endl;
+	cast(val.type(), castType);
 }
 
-void SemanticAnalyser::writeCommand(string command)
+void SemanticAnalyser::cast(const DataType valType,const DataType toType)
+{
+	if (valType == toType){
+		return; //already the correct type
+	}
+
+	if (valType == IntData && toType == FloatData){
+		writeCommand("CASTSF");
+		return;
+	}
+
+	if (valType == FloatData && toType == IntData){
+		writeCommand("CASTSI");
+		return;
+	}
+
+	assert(false);
+	//we should not be casting other type
+	return;
+}
+
+void SemanticAnalyser::writeCommand(const string command)
 {
 	_outFile << command << std::endl;
 }

@@ -1,117 +1,45 @@
 #include "SemanticRecord.h"
 
-//<<<<<<< HEAD
-//#include <assert.h>
-//
-//
-//SemanticOrganizer::SemanticOrganizer()
-//{
-//	_currentRecord = NULL;
-//}
-//
-//void SemanticOrganizer::openRecord()
-//{
-//	_currentRecord = new SemanticRecord(_currentRecord);
-//}
-//
-//void SemanticOrganizer::insertOperand(Operand newOperand)
-//{ 
-//	assert(_currentRecord);
-//	_currentRecord->insertOperand(newOperand);
-//}
-//
-//
-//bool SemanticOrganizer::hasNext()
-//{
-//	_currentRecord->hasNext();
-//}
-//
-//void SemanticOrganizer::closeRecord()
-//{
-//	SemanticRecord* nextUp = _currentRecord->referenced();
-//	delete _currentRecord;
-//	_currentRecord = nextUp;
-//}
-//
-//
-//SemanticRecord::SemanticRecord(SemanticRecord * referencing)
-//{
-//	_referenceRecord = referencing;
-//}
-//
-//void SemanticRecord::insertOperand(Operand newOperand)
-//{
-//
-//}
-//
-//bool SemanticRecord::hasNext()
-//{
-//	return _valuesInRecord.empty();
-//}
-//
-//Operand SemanticRecord::nextOperand()
-//{
-//	return _valuesInRecord.front();
-//	_valuesInRecord.pop_front();
-//}
-//
-//SemanticRecord* SemanticRecord::referenced()
-//{
-//	return _referenceRecord;
-//}
-//=======
 using namespace LexemeResources;
 using namespace std;
 
-void SemanticRecord::addId(Lexeme id)
+
+void SemanticRecord::addOperand(Lexeme id, DataType type)
 {
-	Token newToken;
-	newToken.setLexeme(id);
-	_identifiers.push_back(newToken);
+	_identifiers.push_back(LexemeOperand(id, type));
 }
 
-void SemanticRecord::setType(DataType type)
+Operand SemanticRecord::getNextOperand()
 {
-	_type = type;
-}
-
-Lexeme SemanticRecord::getNextLexeme()
-{
-	Token nextToken = getNextId();
-	return nextToken.getLexeme();
-}
-
-Token SemanticRecord::getNextId()
-{
-	Token myToken;
+	Operand nextOp;
 
 	if (!_identifiers.empty()){
-		myToken = _identifiers.front();
+		nextOp = _identifiers.front();
 		_identifiers.pop_front();
 	}
 
-	return myToken;
+	return nextOp;
 }
 
-Token SemanticRecord::showNextId()
+Operand SemanticRecord::showNextOperand()
 {
-	Token myToken;
+	Operand nextOp;
 
 	if (!_identifiers.empty()){
-		myToken = _identifiers.front();
+		nextOp = _identifiers.front();
+		_identifiers.pop_front();
 	}
 
-	return myToken;
+	return nextOp;
 }
 
-DataType SemanticRecord::getType()
-{
-	return _type;
-}
-
-
-int SemanticRecord::size()
+int SemanticRecord::size() const
 {
 	return _identifiers.size();
 }
 
+
+void SemanticRecord::setType(DataType type)
+{ 
+	//need to iterate through the list and reset all of the types
+}

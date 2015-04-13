@@ -648,7 +648,7 @@ bool Grammar::functionHeading()
 		match();
 		type(functionHeading_rec);
 		//_semanticAnalyser->insertSymbol(functionHeading_rec.showNextId(), functionHeading_rec.getType()); 
-		_semanticAnalyser->createTable(functionHeading_rec.getNextId(), functionHeading_rec.getType());
+		_semanticAnalyser->createTable(functionHeading_rec.getNextOperand());
 		_semanticAnalyser->insertSymbol(optionalFormalParameterList_rec);
 		return true;
 	default:
@@ -669,7 +669,7 @@ bool Grammar::functionIdentifier(SemanticRecord& functionIdentifier_rec)
 	//110
 	case MP_IDENTIFIER:
 		logRule(110);
-		functionIdentifier_rec.addId(currentLexeme());
+		functionIdentifier_rec.addOperand(currentLexeme());
 		match();
 		return true;
 	default:
@@ -688,7 +688,7 @@ bool Grammar::identifierList(SemanticRecord& identifierList_rec)
 	{
 	//113
 	case MP_IDENTIFIER:
-		identifierList_rec.addId(currentLexeme());
+		identifierList_rec.addOperand(currentLexeme());
 		logRule(113);
 		match();
 		identifierTail(identifierList_rec);
@@ -714,7 +714,7 @@ bool Grammar::identifierTail(SemanticRecord& identifierTail_rec)
 		if (nextTokenType() != MP_IDENTIFIER){
 			error(TypeList() << MP_IDENTIFIER);
 		}
-		identifierTail_rec.addId(currentLexeme());
+		identifierTail_rec.addOperand(currentLexeme());
 		match();
 		identifierTail(identifierTail_rec);
 		return true;
@@ -1054,7 +1054,7 @@ bool Grammar::procedureHeading()
 		match(); //match "procedure"
 		procedureIdentifier(procedureHeading_rec);
 		//_semanticAnalyser->insertSymbol(procedureHeading_rec.showNextId(), procedureHeading_rec.getType());
-		_semanticAnalyser->createTable(procedureHeading_rec.getNextId(), VoidData);
+		_semanticAnalyser->createTable(procedureHeading_rec.getNextOperand());
 		optionalFormalParameterList(optionalFormalParameterList_rec);
 		_semanticAnalyser->insertSymbol(optionalFormalParameterList_rec);
 		return true;
@@ -1074,7 +1074,7 @@ bool Grammar::procedureIdentifier(SemanticRecord& procedureIdentifier_rec)
 	switch (nextTokenType())
 	{
 	case MP_IDENTIFIER:
-		procedureIdentifier_rec.addId(currentLexeme());
+		procedureIdentifier_rec.addOperand(currentLexeme());
 		LOG(109, logged)
 		match();//
 		return true;
@@ -1151,7 +1151,7 @@ bool Grammar::programHeading()
 		match();
 		//Token next = nextToken();
 		programIdentifier(programHeading_rec);
-		_semanticAnalyser->createTable(programHeading_rec.getNextId(), programHeading_rec.getType());
+		_semanticAnalyser->createTable(programHeading_rec.getNextOperand());
 
 		return true; 
 	default:
@@ -1171,8 +1171,7 @@ bool Grammar::programIdentifier(SemanticRecord& programIdentifier_rec)
 	switch (nextTokenType())
 	{
 	case MP_IDENTIFIER:
-		programIdentifier_rec.addId(currentLexeme());
-		programIdentifier_rec.setType(VoidData);
+		programIdentifier_rec.addOperand(currentLexeme(), VoidData);
 		LOG(107, logged);
 		match();
 		return true;
@@ -1753,7 +1752,7 @@ bool Grammar::variableIdentifier(SemanticRecord& variableIdentifier_rec)
 	{
 	case MP_IDENTIFIER:
 		logRule(108);
-		variableIdentifier_rec.addId(currentLexeme());
+		variableIdentifier_rec.addOperand(currentLexeme());
 		match();
 		return true;
 	default:
