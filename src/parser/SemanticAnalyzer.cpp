@@ -192,6 +192,7 @@ string SemanticAnalyser::generateMachineValue(Lexeme lex)
 	bool found = true;
 	switch (lex.getType())
 	{
+	case MP_IDENTIFIER:
 	case MP_INTEGER:
 	case MP_STRING:
 	case MP_FLOAT:
@@ -302,17 +303,24 @@ StackOperand SemanticAnalyser::infixCommand(SemanticRecord infixSymbols)
 	//the same type, one approach could be to take the smallest common type
 	//or to take the type of the first value (current behavior)
 
-	Operand first = infixSymbols.getNextOperand();
+	Operand * first = infixSymbols.getNextOperandPointer();
 	push(first);
 
 	CommandOperand command = infixSymbols.getNextOperandAsCommand();
 
-	Operand second = infixSymbols.getNextOperand();
-	push(second, first.type());
+	Operand* second = infixSymbols.getNextOperandPointer();
+	push(second, first->type());
 
 	writeCommand(command.getCommand());
 
-	return StackOperand(command.type() == UnknownData? first.type() : command.type());
+	StackOperand retVal = StackOperand(command.type() == UnknownData ? first->type() : command.type());
+	
+	//we own these as soon as the are take from the SemanticRecord
+	//delete them now that we are done 
+	delete first;
+	delete second;
+
+	return retVal;
 }
 
 Operand SemanticAnalyser::twoValueCommand(const string command, SemanticRecord records)
@@ -323,37 +331,42 @@ Operand SemanticAnalyser::twoValueCommand(const string command, SemanticRecord r
 	//the same type, one approach could be to take the smallest common type
 	//or to take the type of the first value (current behavior)
 
-	Operand first = records.getNextOperand();
+	Operand * first = records.getNextOperandPointer();
 	push(first);
+	DataType typeOfOp = first->type();
 
-	Operand second = records.getNextOperand();
-	push(second, first.type());
+	Operand* second = records.getNextOperandPointer();
+	push(second, typeOfOp);
 
 	writeCommand(command);
 
-	return StackOperand(first.type());
+
+	delete first;
+	delete second;
+
+	return StackOperand(typeOfOp);
 }
 
-void SemanticAnalyser::push(Operand val, DataType castType)
+void SemanticAnalyser::push(Operand* val, DataType castType)
 {
-	if (!val.onTopOfStack())
+	if (!val->onTopOfStack())
 	{
 
 		//then this should be on the top of the stack
 		//and it doesnt need to be pushed
-		LexemeOperand* lexOp = dynamic_cast<LexemeOperand*>(&val);
+		LexemeOperand* lexOp = dynamic_cast<LexemeOperand*>(val);
 		assert(lexOp);
 		string valAddress = generateMachineValue(lexOp->getLexeme());
 		_outFile << "PUSH " << valAddress;
 
-		if (ENABLE_DEBUGGING && !val.getName().empty()){
+		if (ENABLE_DEBUGGING && !val->getName().empty()){
 			//add comment with the variable name after the push 
-			_outFile << " ;" << val.getName() << std::endl;
+			_outFile << " ;" << val->getName() << std::endl;
 		}
 
 		_outFile << std::endl;
 	}
-	cast(val.type(), castType);
+	cast(val->type(), castType);
 }
 
 void SemanticAnalyser::cast(const DataType valType,const DataType toType)

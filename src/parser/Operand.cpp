@@ -61,7 +61,7 @@ LexemeOperand::LexemeOperand(const Lexeme lexeme, DataType type)
 {
 }
 
-string LexemeOperand::getName() const
+string LexemeOperand::getName()
 {
 	return _lexeme.getValue();
 }

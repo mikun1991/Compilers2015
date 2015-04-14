@@ -47,7 +47,7 @@ class LexemeOperand : public Operand
 public:
 	LexemeOperand(const Lexeme lexeme, LexemeResources::DataType type);
 
-	std::string getName() const;
+	std::string getName();
 
 	Lexeme getLexeme() const;
 protected:

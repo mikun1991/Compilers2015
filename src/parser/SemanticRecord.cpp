@@ -25,14 +25,32 @@ void SemanticRecord::addOperand(StackOperand operand)
 
 }
 
-Operand SemanticRecord::getNextOperand()
+void SemanticRecord::addOperand(Operand* operand)
 {
-	Operand* nextOp;
+	_identifiers.push_back(operand);
+}
+
+Operand* SemanticRecord::getNextOperandPointer()
+{
+	Operand* nextOp = NULL;
 
 	if (!_identifiers.empty()){
 		nextOp = _identifiers.front();
 		_identifiers.pop_front();
 	}
+
+	return nextOp;
+}
+
+Operand SemanticRecord::getNextOperand()
+{
+	Operand* nextOp = NULL;
+
+	if (!_identifiers.empty()){
+		nextOp = _identifiers.front();
+		_identifiers.pop_front();
+	}
+	assert(nextOp);
 
 	return *nextOp;
 }

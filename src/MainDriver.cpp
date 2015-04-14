@@ -32,6 +32,7 @@ int main(int argc, char * argv[])
 	ifstream inputFile(argv[1]);
 	//just do this to make sure that is a valid file
 	//the scanner will be responsible for it's own  file pointer
+
 	if (!inputFile.is_open()){
 		fprintf(stdout, "Could not open file!!! \nCheck the path and try again");
 		return 1;

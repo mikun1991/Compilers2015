@@ -15,7 +15,9 @@ public:
 	void addOperand(Lexeme id, LexemeResources::DataType type = LexemeResources::UnknownData);
 	void addOperand(CommandOperand operand);
 	void addOperand(StackOperand operand);
+	void addOperand(Operand* operand);
 
+	Operand* getNextOperandPointer();
 	Operand getNextOperand();
 	LexemeOperand getNextOperandAsLexeme();
 	CommandOperand getNextOperandAsCommand();

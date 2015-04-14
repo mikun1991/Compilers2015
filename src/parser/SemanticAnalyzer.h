@@ -75,7 +75,7 @@ private:
 	//we can be sneeky and add comments which describe the 
 	//value that we are working with, this will make 
 	//debugging the uMachine code alot easier.
-	void push(const Operand val, const LexemeResources::DataType castType = LexemeResources::UnknownData);
+	void push(Operand* val, const LexemeResources::DataType castType = LexemeResources::UnknownData);
 	void cast(const LexemeResources::DataType valType, const LexemeResources::DataType toType);
 	void writeCommand(const std::string command);
 
