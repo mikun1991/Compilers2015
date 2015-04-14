@@ -13,10 +13,12 @@ class SemanticRecord{
 
 public:
 	void addOperand(Lexeme id, LexemeResources::DataType type = LexemeResources::UnknownData);
-	void addOPerand(Operand operand);
+	void addOperand(CommandOperand operand);
+	void addOperand(StackOperand operand);
 
 	Operand getNextOperand();
 	LexemeOperand getNextOperandAsLexeme();
+	CommandOperand getNextOperandAsCommand();
 
 	Operand showNextOperand(); // use this to return the first value but keep it in the list of Ids
 	LexemeResources::DataType getType();

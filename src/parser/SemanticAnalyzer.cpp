@@ -241,64 +241,47 @@ void SemanticAnalyser::printCurrentTable()
 
 Operand SemanticAnalyser::add(SemanticRecord addRecords)
 {
-	twoValueCommand("ADDS", addRecords);
-	return StackOperand(UnknownData);
+	return twoValueCommand("ADDS", addRecords);
 }
 
 Operand SemanticAnalyser::sub(SemanticRecord subractRecords)
 {
-	twoValueCommand("SUBS", subractRecords);
-	return StackOperand(UnknownData);
-
+	return twoValueCommand("SUBS", subractRecords);
 }
 
 Operand SemanticAnalyser::multiply(SemanticRecord multiplyRecords)
 {
-	twoValueCommand("MULS", multiplyRecords);
-	return StackOperand(UnknownData);
-
+	return twoValueCommand("MULS", multiplyRecords);
 }
 
 Operand SemanticAnalyser::divide(SemanticRecord divideRecords)
 {
-	twoValueCommand("DIVS", divideRecords);
-	return StackOperand(UnknownData);
-
+	return twoValueCommand("DIVS", divideRecords);
 }
 
 Operand SemanticAnalyser::modulus(SemanticRecord modRecords)
 {
-	twoValueCommand("MODS", modRecords);
-	return StackOperand(UnknownData);
-
+	return twoValueCommand("MODS", modRecords);
 }
 
 Operand SemanticAnalyser::compGr(SemanticRecord compareRecords)
 {
-	twoValueCommand("CMPGTS", compareRecords);
-	return StackOperand(UnknownData);
-
+	return twoValueCommand("CMPGTS", compareRecords);
 }
 
 Operand SemanticAnalyser::compGrEq(SemanticRecord compareRecords)
 {
-	twoValueCommand("CMPGES", compareRecords);
-	return StackOperand(UnknownData);
-
+	return twoValueCommand("CMPGES", compareRecords);
 }
 
 Operand SemanticAnalyser::compLt(SemanticRecord compareRecords)
 {
-	twoValueCommand("CMPLTS", compareRecords);
-	return StackOperand(UnknownData);
-
+	return twoValueCommand("CMPLTS", compareRecords);
 }
 
 Operand SemanticAnalyser::compLtEq(SemanticRecord compareRecords)
 {
-	twoValueCommand("CMPLES", compareRecords);
-	return StackOperand(UnknownData);
-
+	return twoValueCommand("CMPLES", compareRecords);
 }
 
 void SemanticAnalyser::branchIfTrue()
@@ -311,7 +294,28 @@ void SemanticAnalyser::branchIfFalse()
 	writeCommand("BRFS");
 }
 
-void SemanticAnalyser::twoValueCommand(const string command, SemanticRecord records)
+StackOperand SemanticAnalyser::infixCommand(SemanticRecord infixSymbols)
+{
+	assert(infixSymbols.size() == 3);
+
+	//we need to do some sort of type resolution here if the two operands are not
+	//the same type, one approach could be to take the smallest common type
+	//or to take the type of the first value (current behavior)
+
+	Operand first = infixSymbols.getNextOperand();
+	push(first);
+
+	CommandOperand command = infixSymbols.getNextOperandAsCommand();
+
+	Operand second = infixSymbols.getNextOperand();
+	push(second, first.type());
+
+	writeCommand(command.getCommand());
+
+	return StackOperand(command.type() == UnknownData? first.type() : command.type());
+}
+
+Operand SemanticAnalyser::twoValueCommand(const string command, SemanticRecord records)
 {
 	assert(records.size() == 2);
 
@@ -326,6 +330,8 @@ void SemanticAnalyser::twoValueCommand(const string command, SemanticRecord reco
 	push(second, first.type());
 
 	writeCommand(command);
+
+	return StackOperand(first.type());
 }
 
 void SemanticAnalyser::push(Operand val, DataType castType)

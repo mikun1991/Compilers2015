@@ -55,65 +55,65 @@ private:
 
 public:
 	 
-	 bool factor(SemanticRecord&);
+	 bool factor(SemanticRecord& record);
 	 bool forStatement(); 
 	 bool multiplyingOperator(); 
 	 bool actualParameter(); 
 	 bool actualParameterTail();
-	 bool addingOperator(); 
+	 bool addingOperator(SemanticRecord& record); 
 	 bool assignmentStatement();
 	 bool block(); 
-	 bool booleanExpression(); 
+	 bool booleanExpression(SemanticRecord& record); 
 	 bool compoundStatement(); 
-	 bool controlVariable(SemanticRecord&);
+	 bool controlVariable(SemanticRecord& record);
 	 bool emptyStatement(); 
-	 bool expression(); 
-	 bool factorTail(SemanticRecord&); 
+	 bool expression(SemanticRecord& record); 
+	 bool factorTail(SemanticRecord& record); 
 	 bool finalValue(); 
-	 bool formalParameterSection(SemanticRecord&);
-	 bool formalParameterSectionTail(SemanticRecord&); 
+	 bool formalParameterSection(SemanticRecord& record);
+	 bool formalParameterSectionTail(SemanticRecord& record); 
 	 bool functionDeclaration();  // close function SymbolTable  
 	 bool functionHeading();   // create function SymbolTable, add function parameters symbols
-	 bool functionIdentifier(SemanticRecord&); 
-	 bool identifierList(SemanticRecord&); 
-	 bool identifierTail(SemanticRecord&); 
+	 bool functionIdentifier(SemanticRecord& record); 
+	 bool identifierList(SemanticRecord& record); 
+	 bool identifierTail(SemanticRecord& record); 
 	 bool ifStatement();
 	 bool initialValue();  
 	 bool optionalActualParameterList();  
 	 bool optionalElsePart(); 
-	 bool optionalFormalParameterList(SemanticRecord&); 
-	 bool optionalRelationalPart(); 
+	 bool optionalFormalParameterList(SemanticRecord& record); 
+	 bool optionalRelationalPart(SemanticRecord& record); 
 	 bool optionalSign(); 
 	 bool ordinalExpression(); 
 	 bool procedureAndFunctionDeclarationPart(); 
 	 bool procedureDeclaration();  //Close procedure SymbolTable
 	 bool procedureHeading();   //Create procedure SymbolTable
-	 bool procedureIdentifier(SemanticRecord&); 
-	 bool procedureStatement(); 
+	 bool procedureIdentifier(SemanticRecord& record); 
+	 bool procedureStatement();
 	 bool program();  //Close program SymbolTable 
 	 bool programHeading();  //Create program SymbolTable
-	 bool programIdentifier(SemanticRecord&); 
+	 bool programIdentifier(SemanticRecord& record); 
 	 bool readParameter(); 
 	 bool readParameterTail(); 
-	 bool readStatement(); 
-	 bool relationalOperator(); 
+	 bool readStatement();
+	 bool relationalOperator(SemanticRecord& record); 
 	 bool repeatStatement();
-	 bool simpleExpression(); 
-	 bool statement(); 
+	 bool simpleExpression(SemanticRecord& record); 
+	 bool statement(SemanticRecord& record); 
 	 bool statementPart(); 
 	 bool statementSequence(); 
 	 bool statementTail();
 	 bool stepValue(); 
 	 bool systemGoal(); 
-	 bool term(SemanticRecord&); 
-	 bool termTail(); 
-	 bool type(SemanticRecord&); 
-	 bool valueParameterSection(SemanticRecord&); 
+	 bool term(SemanticRecord& record); 
+	 bool termTail(SemanticRecord& record); 
+	 bool type(SemanticRecord& record); 
+	 bool valueParameterSection(SemanticRecord& record); 
 	 bool variableDeclaration();   // add symbols to current symbol tables
 	 bool variableDeclarationPart(); 
 	 bool variableDeclarationTail(); 
-	 bool variableIdentifier(SemanticRecord&); 
-	 bool variableParameterSection(SemanticRecord&); 
+	 bool variableIdentifier(SemanticRecord& record); 
+	 bool variableParameterSection(SemanticRecord& record); 
 	 bool whileStatement(); 
 	 bool writeParameter(); 
 	 bool writeParameterTail(); 

@@ -12,6 +12,19 @@ void SemanticRecord::addOperand(Lexeme id, DataType type)
 	_identifiers.push_back(addOP);
 }
 
+void SemanticRecord::addOperand(CommandOperand operand)
+{
+	CommandOperand* cmdOp = new CommandOperand(operand);
+	_identifiers.push_back(cmdOp);
+}
+
+void SemanticRecord::addOperand(StackOperand operand)
+{
+	StackOperand* stkOp = new StackOperand(operand);
+	_identifiers.push_back(stkOp);
+
+}
+
 Operand SemanticRecord::getNextOperand()
 {
 	Operand* nextOp;
@@ -39,6 +52,23 @@ LexemeOperand SemanticRecord::getNextOperandAsLexeme()
 
 	return LexemeOperand(Lexeme(), UnknownData);
 }
+
+CommandOperand SemanticRecord::getNextOperandAsCommand()
+{
+	CommandOperand* nextOp = NULL;
+
+	if (!_identifiers.empty()){
+		nextOp = dynamic_cast<CommandOperand*>(_identifiers.front());
+		_identifiers.pop_front();
+	}
+	assert(nextOp);
+
+	if (nextOp)
+		return *nextOp;
+	
+	return CommandOperand("", UnknownData);
+}
+
 
 Operand SemanticRecord::showNextOperand()
 {

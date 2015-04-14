@@ -56,5 +56,16 @@ protected:
 };
 
 
+class CommandOperand : public Operand
+{
+public:
+	CommandOperand(std::string command, LexemeResources::DataType type = LexemeResources::UnknownData);
+
+	std::string getCommand() const;
+protected:
+
+	const std::string _command;
+};
+
 
 #endif // OPERAND_H

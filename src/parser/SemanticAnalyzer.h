@@ -65,10 +65,11 @@ public:
 	void branchIfFalse();
 
 
+	StackOperand infixCommand(SemanticRecord infixSymbols);
 private:
 	//these are some helper functions so i can be lazy in creating
 	//the functions for writing command
-	void twoValueCommand(const std::string command, SemanticRecord records);
+	Operand twoValueCommand(const std::string command, SemanticRecord records);
 
 	//if we have methods which call the uMachine instructions
 	//we can be sneeky and add comments which describe the 

@@ -71,3 +71,16 @@ Lexeme LexemeOperand::getLexeme() const
 	return _lexeme;
 }
 
+// --------------
+// CommandOperand
+// --------------
+
+CommandOperand::CommandOperand(string command, DataType type)
+	:Operand(type), _command(command)
+{
+}
+
+string CommandOperand::getCommand() const
+{
+	return _command;
+}
