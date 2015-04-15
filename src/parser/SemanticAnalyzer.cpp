@@ -177,7 +177,7 @@ string SemanticAnalyser::lookupSymbolAddress(string name, bool& found)
 
 string SemanticAnalyser::stringLitToVal(string value)
 {
-	return "#" + value;
+	return "#\"" + value + "\"";
 }
 
 string SemanticAnalyser::intLitToVal(string value)
@@ -303,6 +303,38 @@ void SemanticAnalyser::branchIfFalse()
 	writeCommand("BRFS");
 }
 
+void SemanticAnalyser::programHeading()
+{
+	int memAlloc = _currentTable->size();
+	
+	_outFile << "MOV SP D0" << "\n";
+	_outFile << "PUSH SP" << "\n";
+	_outFile << "PUSH #" <<to_string(memAlloc) <<" \n";
+	_outFile << "ADDS" << "\n";
+	_outFile << "POP SP" << "\n";
+}
+
+void SemanticAnalyser::programTail()
+{
+	//deallocate and Halt!!!
+	_outFile << "MOV DO SP" << " \n";
+	_outFile << "HLT" << " \n";
+}
+
+void SemanticAnalyser::writeList(SemanticRecord writeSymbols, bool writeLn)
+{
+	while (writeSymbols.size()){
+		Operand * nextOp = writeSymbols.getNextOperandPointer();
+		push(nextOp);
+		delete nextOp;
+		_outFile << "WRTS " << " \n";
+	}
+	//TODO: this could be optimized to be inlcuded as the last command in the loop
+	if (writeLn){
+		_outFile << "WRTLN" << " \n";
+	}
+}
+
 void SemanticAnalyser::prefixCommand(SemanticRecord infixSymbols)
 {
 	//this should be used for non stack commands like move or compare
@@ -321,7 +353,7 @@ void SemanticAnalyser::prefixCommand(SemanticRecord infixSymbols)
 		secondArg = generateMachineValue(second->getLexeme());
 	}
 
-	_outFile << command.getCommand() << " " << firstArg << " " << secondArg << " \n";
+	_outFile << command.getCommand() << " " << secondArg << " " << firstArg << " \n";
 }
 
 
@@ -388,14 +420,14 @@ void SemanticAnalyser::push(Operand* val, DataType castType)
 		LexemeOperand* lexOp = dynamic_cast<LexemeOperand*>(val);
 		assert(lexOp);
 		string valAddress = generateMachineValue(lexOp->getLexeme());
-		_outFile << "PUSH " << valAddress;
 
 		if (ENABLE_DEBUGGING && !val->getName().empty()){
-			//add comment with the variable name after the push 
-			_outFile << " ;" << val->getName() << std::endl;
+			//add comment with the variable name before the push 
+			_outFile << ";\t\tPushing: " << val->getName() << "\n";
 		}
 
-		_outFile << std::endl;
+		_outFile << "PUSH " << valAddress << " \n";
+
 	}
 	if (castType != UnknownData){
 		cast(val->type(), castType);
@@ -425,5 +457,5 @@ void SemanticAnalyser::cast(const DataType valType,const DataType toType)
 
 void SemanticAnalyser::writeCommand(const string command)
 {
-	_outFile << command << std::endl;
+	_outFile << command << "\n\n";
 }

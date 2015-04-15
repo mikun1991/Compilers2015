@@ -84,7 +84,7 @@ public:
 	 bool optionalFormalParameterList(SemanticRecord& record); 
 	 bool optionalRelationalPart(SemanticRecord& record); 
 	 bool optionalSign(); 
-	 bool ordinalExpression(); 
+	 bool ordinalExpression(SemanticRecord& record); 
 	 bool procedureAndFunctionDeclarationPart(); 
 	 bool procedureDeclaration();  //Close procedure SymbolTable
 	 bool procedureHeading();   //Create procedure SymbolTable
@@ -115,8 +115,8 @@ public:
 	 bool variableIdentifier(SemanticRecord& record); 
 	 bool variableParameterSection(SemanticRecord& record); 
 	 bool whileStatement(); 
-	 bool writeParameter(); 
-	 bool writeParameterTail(); 
+	 bool writeParameter(SemanticRecord& record); 
+	 bool writeParameterTail(SemanticRecord& record); 
 	 bool writeStatement();
 
 };

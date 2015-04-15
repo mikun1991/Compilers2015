@@ -58,6 +58,12 @@ void SymbolTable::insert(Lexeme lex,  DataType type)
 	Symbol newSymbol(lex, type, _level, _currentOffset, size);
 	_currentOffset += size;
 
+	//this should be the same, and now
+	//size will be correct after all the 
+	//variables have been added , but before
+	//the symbol table has been closed
+	_size = _currentOffset;
+
 	_symbolLookup[lex.getValue()] =  newSymbol;
 }
 

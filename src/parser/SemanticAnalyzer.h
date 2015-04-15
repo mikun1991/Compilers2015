@@ -65,7 +65,10 @@ public:
 	void branchIfTrue();
 	void branchIfFalse();
 
+	void programHeading();
+	void programTail();
 
+	void writeList(SemanticRecord writeSymbols, bool writeLn = true);
 	void prefixCommand(SemanticRecord infixSymbols);
 	StackOperand infixStackCommand(SemanticRecord infixSymbols);
 
