@@ -319,7 +319,7 @@ bool Grammar::assignmentStatement()
 		assignmentStatement_rec.addOperand(CommandOperand("MOV"));
 		match();
 		expression(assignmentStatement_rec);
-		_semanticAnalyser->infixCommand(assignmentStatement_rec);
+		_semanticAnalyser->prefixCommand(assignmentStatement_rec);
 		return true;
 	/*
 	case MP_IDENTIFIER:
@@ -924,7 +924,7 @@ bool Grammar::optionalRelationalPart(SemanticRecord& record)
 		logRule(74);
 		relationalOperator(record);
 		simpleExpression(record);
-		record.addOperand(_semanticAnalyser->infixCommand(record));
+		record.addOperand(_semanticAnalyser->infixStackCommand(record));
 		//we should have enough to test
 		//the equivalence now
 		return true;
@@ -1606,7 +1606,7 @@ bool Grammar::termTail(SemanticRecord& record)
 		logRule(83);
 		addingOperator(record);
 		term(record);
-		termTailRecord.addOperand(_semanticAnalyser->infixCommand(record));
+		termTailRecord.addOperand(_semanticAnalyser->infixStackCommand(record));
 		//we should have enough to complete this command now
 		// and we pass the command on to the nex part of the tail
 		return termTail(termTailRecord);

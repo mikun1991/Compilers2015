@@ -20,6 +20,7 @@ class SemanticAnalyser
 
 public:
 	SemanticAnalyser();
+	~SemanticAnalyser();
 
 	//return false if there was a name collision
 	bool createTable(LexemeOperand operand);
@@ -65,7 +66,9 @@ public:
 	void branchIfFalse();
 
 
-	StackOperand infixCommand(SemanticRecord infixSymbols);
+	void prefixCommand(SemanticRecord infixSymbols);
+	StackOperand infixStackCommand(SemanticRecord infixSymbols);
+
 private:
 	//these are some helper functions so i can be lazy in creating
 	//the functions for writing command

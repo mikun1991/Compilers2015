@@ -17,6 +17,11 @@ SemanticAnalyser::SemanticAnalyser()
 	_outFile.open("compiledUCode.txt");
 }
 
+SemanticAnalyser::~SemanticAnalyser()
+{
+	_outFile.close();
+}
+
 bool SemanticAnalyser::createTable(LexemeOperand operand)
 {
 	LexemeOperand* lexOp = dynamic_cast<LexemeOperand*>(&operand);
@@ -132,10 +137,13 @@ bool SemanticAnalyser::insertSymbol(SemanticRecord& record)
 
 	for (int i = 0; i < numIds; i++)
 	{
-		Operand next = record.getNextOperand();
-		LexemeOperand* nextOp = dynamic_cast<LexemeOperand*>(&next);
+		Operand* next = record.getNextOperandPointer();
+		LexemeOperand* nextOp = dynamic_cast<LexemeOperand*>(next);
+		assert(nextOp);
 		if (nextOp)
 			insertSymbol(nextOp->getLexeme(), nextOp->type());
+		delete next;
+
 	}
 
 	return true;
@@ -295,7 +303,30 @@ void SemanticAnalyser::branchIfFalse()
 	writeCommand("BRFS");
 }
 
-StackOperand SemanticAnalyser::infixCommand(SemanticRecord infixSymbols)
+void SemanticAnalyser::prefixCommand(SemanticRecord infixSymbols)
+{
+	//this should be used for non stack commands like move or compare
+
+	LexemeOperand * first = dynamic_cast<LexemeOperand*>(infixSymbols.getNextOperandPointer());
+	assert(first);
+	string firstArg = generateMachineValue(first->getLexeme());
+	delete first;
+
+	CommandOperand command = infixSymbols.getNextOperandAsCommand();
+
+	string secondArg;
+	LexemeOperand* second = NULL;
+	if (infixSymbols.size() > 0){
+		second = dynamic_cast<LexemeOperand*>(infixSymbols.getNextOperandPointer());
+		secondArg = generateMachineValue(second->getLexeme());
+	}
+
+	_outFile << command.getCommand() << " " << firstArg << " " << secondArg << " \n";
+}
+
+
+
+StackOperand SemanticAnalyser::infixStackCommand(SemanticRecord infixSymbols)
 {
 	assert(infixSymbols.size() == 3);
 
@@ -366,7 +397,9 @@ void SemanticAnalyser::push(Operand* val, DataType castType)
 
 		_outFile << std::endl;
 	}
-	cast(val->type(), castType);
+	if (castType != UnknownData){
+		cast(val->type(), castType);
+	}
 }
 
 void SemanticAnalyser::cast(const DataType valType,const DataType toType)
