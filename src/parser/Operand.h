@@ -18,6 +18,7 @@ public:
 	virtual std::string getName();
 	std::string address();
 	LexemeResources::DataType type();
+	void setType(LexemeResources::DataType);
 
 protected:
 

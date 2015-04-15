@@ -31,6 +31,11 @@ DataType Operand::type()
 	return _dataType;
 }
 
+void Operand::setType(LexemeResources::DataType myType)
+{
+	_dataType = myType;
+}
+
 string Operand::address()
 {
 	return _address;

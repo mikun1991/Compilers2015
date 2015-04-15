@@ -110,4 +110,10 @@ int SemanticRecord::size() const
 void SemanticRecord::setType(DataType type)
 { 
 	//need to iterate through the list and reset all of the types
+
+	std::list<Operand*>::const_iterator iterator;
+	for (iterator = _identifiers.begin(); iterator != _identifiers.end(); ++iterator) {
+		Operand* myOP = *iterator;
+		myOP->setType(type);
+	}
 }
