@@ -386,6 +386,17 @@ StackOperand SemanticAnalyser::infixStackCommand(SemanticRecord infixSymbols)
 	return retVal;
 }
 
+StackOperand SemanticAnalyser::push(Lexeme lex, DataType type)
+{
+	LexemeOperand * lexOp = new LexemeOperand(lex, UnknownData);
+
+	push(lexOp);
+
+	delete lexOp;
+
+	return StackOperand(lexOp->type());
+}
+
 Operand SemanticAnalyser::twoValueCommand(const string command, SemanticRecord records)
 {
 	assert(records.size() == 2);

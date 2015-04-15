@@ -72,6 +72,8 @@ public:
 	void prefixCommand(SemanticRecord infixSymbols);
 	StackOperand infixStackCommand(SemanticRecord infixSymbols);
 
+	StackOperand push(Lexeme lex, LexemeResources::DataType type = LexemeResources::UnknownData);
+
 private:
 	//these are some helper functions so i can be lazy in creating
 	//the functions for writing command

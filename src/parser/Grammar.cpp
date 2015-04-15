@@ -87,27 +87,27 @@ bool Grammar::factor(SemanticRecord& factor_rec)
 	switch (nextTokenType())
 	{
 		case MP_INTEGER_LIT:
-			factor_rec.addOperand(currentLexeme(), IntData);
+			factor_rec.addOperand(_semanticAnalyser->push( currentLexeme(), IntData));
 			logRule(99);
 			match();
 			return true;
 		case MP_FLOAT_LIT:
-			factor_rec.addOperand(currentLexeme(), FloatData);
+			factor_rec.addOperand(_semanticAnalyser->push(currentLexeme(), FloatData));
 			logRule(100);
 			match();
 			return true;
 		case MP_STRING_LIT:
-			factor_rec.addOperand(currentLexeme(), StringData);
+			factor_rec.addOperand(_semanticAnalyser->push(currentLexeme(), StringData));
 			logRule(101);
 			match();
 			return true;
 		case MP_TRUE:
-			factor_rec.addOperand(currentLexeme(), BoolData);
+			factor_rec.addOperand(_semanticAnalyser->push(currentLexeme(), BoolData));
 			logRule(102);
 			match();
 			return true;
 		case MP_FALSE:
-			factor_rec.addOperand(currentLexeme(), BoolData);
+			factor_rec.addOperand(_semanticAnalyser->push(currentLexeme(), BoolData));
 			logRule(103);
 			match();
 			return true;
@@ -688,7 +688,7 @@ bool Grammar::functionIdentifier(SemanticRecord& functionIdentifier_rec)
 	//110
 	case MP_IDENTIFIER:
 		logRule(110);
-		functionIdentifier_rec.addOperand(currentLexeme());
+		functionIdentifier_rec.addOperand(_semanticAnalyser->push(currentLexeme(), UnknownData));
 		match();
 		return true;
 	default:
@@ -707,7 +707,7 @@ bool Grammar::identifierList(SemanticRecord& identifierList_rec)
 	{
 	//113
 	case MP_IDENTIFIER:
-		identifierList_rec.addOperand(currentLexeme());
+		identifierList_rec.addOperand(_semanticAnalyser->push(currentLexeme(), UnknownData));
 		logRule(113);
 		match();
 		identifierTail(identifierList_rec);
@@ -733,7 +733,7 @@ bool Grammar::identifierTail(SemanticRecord& identifierTail_rec)
 		if (nextTokenType() != MP_IDENTIFIER){
 			error(TypeList() << MP_IDENTIFIER);
 		}
-		identifierTail_rec.addOperand(currentLexeme());
+		identifierTail_rec.addOperand(_semanticAnalyser->push(currentLexeme()));
 		match();
 		identifierTail(identifierTail_rec);
 		return true;
@@ -1104,7 +1104,7 @@ bool Grammar::procedureIdentifier(SemanticRecord& procedureIdentifier_rec)
 	switch (nextTokenType())
 	{
 	case MP_IDENTIFIER:
-		procedureIdentifier_rec.addOperand(currentLexeme());
+		procedureIdentifier_rec.addOperand(_semanticAnalyser->push(currentLexeme()));
 		LOG(109, logged)
 		match();//
 		return true;
@@ -1585,12 +1585,16 @@ bool Grammar::term(SemanticRecord& term_rec)
 	case MP_FALSE:
 	case MP_NOT:
 	case MP_LPAREN:
-	case MP_IDENTIFIER:
+	case MP_IDENTIFIER:{
 		//all of the above cases fall through to parse <Factor> <FactorTail>
 		logRule(91);
-		factor(term_rec);
-		factorTail(term_rec);
-		return true;
+		SemanticRecord termRecord;
+		factor(termRecord);
+		factorTail(termRecord);
+		term_rec.addOperand(termRecord.getNextOperandPointer());
+		assert(termRecord.size() == 0);
+
+		return true; }
 
 	default:
 		//Everythng else fails
@@ -1795,7 +1799,7 @@ bool Grammar::variableIdentifier(SemanticRecord& variableIdentifier_rec)
 	{
 	case MP_IDENTIFIER:
 		logRule(108);
-		variableIdentifier_rec.addOperand(currentLexeme());
+		variableIdentifier_rec.addOperand(_semanticAnalyser->push(currentLexeme()));
 		match();
 		return true;
 	default:
