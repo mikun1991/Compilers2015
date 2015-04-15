@@ -316,7 +316,7 @@ bool Grammar::assignmentStatement()
 			return false;
 		}
 		logRule(54);
-		assignmentStatement_rec.addOperand(CommandOperand("MOV"));
+		assignmentStatement_rec.addOperand(CommandOperand("POP"));
 		match();
 		expression(assignmentStatement_rec);
 		_semanticAnalyser->prefixCommand(assignmentStatement_rec);
@@ -707,7 +707,7 @@ bool Grammar::identifierList(SemanticRecord& identifierList_rec)
 	{
 	//113
 	case MP_IDENTIFIER:
-		identifierList_rec.addOperand(_semanticAnalyser->push(currentLexeme(), UnknownData));
+		identifierList_rec.addOperand(currentLexeme());
 		logRule(113);
 		match();
 		identifierTail(identifierList_rec);
@@ -1799,7 +1799,7 @@ bool Grammar::variableIdentifier(SemanticRecord& variableIdentifier_rec)
 	{
 	case MP_IDENTIFIER:
 		logRule(108);
-		variableIdentifier_rec.addOperand(_semanticAnalyser->push(currentLexeme()));
+		variableIdentifier_rec.addOperand(currentLexeme());
 		match();
 		return true;
 	default:

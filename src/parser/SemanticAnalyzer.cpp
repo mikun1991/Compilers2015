@@ -350,7 +350,8 @@ void SemanticAnalyser::prefixCommand(SemanticRecord infixSymbols)
 	LexemeOperand* second = NULL;
 	if (infixSymbols.size() > 0){
 		second = dynamic_cast<LexemeOperand*>(infixSymbols.getNextOperandPointer());
-		secondArg = generateMachineValue(second->getLexeme());
+		if (second)
+			secondArg = generateMachineValue(second->getLexeme());
 	}
 
 	_outFile << command.getCommand() << " " << secondArg << " " << firstArg << " \n";
