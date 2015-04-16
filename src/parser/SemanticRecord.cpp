@@ -6,6 +6,14 @@ using namespace LexemeResources;
 using namespace std;
 
 
+SemanticRecord::~SemanticRecord()
+{
+	while (_identifiers.size()){
+		delete _identifiers.front();
+		_identifiers.pop_front();
+	}
+}
+
 void SemanticRecord::addOperand(Lexeme id, DataType type)
 {
 	LexemeOperand * addOP = new LexemeOperand(id, type);
@@ -94,7 +102,6 @@ Operand SemanticRecord::showNextOperand()
 
 	if (!_identifiers.empty()){
 		nextOp = _identifiers.front();
-		_identifiers.pop_front();
 	}
 
 	// we still own this

@@ -57,7 +57,7 @@ public:
 	 
 	 bool factor(SemanticRecord& record);
 	 bool forStatement(); 
-	 bool multiplyingOperator(); 
+	 bool multiplyingOperator(SemanticRecord& record); 
 	 bool actualParameter(); 
 	 bool actualParameterTail();
 	 bool addingOperator(SemanticRecord& record); 

@@ -15,6 +15,7 @@ SemanticAnalyser::SemanticAnalyser()
 {
 	_currentTable = NULL;
 	_outFile.open("compiledUCode.txt");
+	_labelCounter = 0;
 }
 
 SemanticAnalyser::~SemanticAnalyser()
@@ -160,9 +161,10 @@ const Symbol SemanticAnalyser::lookupSymbol(string name, bool& found)
 	return _currentTable->lookup(name, found);
 }
 
-string SemanticAnalyser::lookupSymbolAddress(string name, bool& found)
+string SemanticAnalyser::lookupSymbolAddress(string name, bool& found, DataType& outType)
 {
 	Symbol matchingSymbol = lookupSymbol(name, found);
+	outType = matchingSymbol.dataType();
 
 	if (!found){
 		return string();
@@ -190,12 +192,13 @@ string SemanticAnalyser::floatLitToVal(string value)
 	return "#" + value;
 }
 
-string SemanticAnalyser::generateMachineValue(Lexeme lex)
+MachineVal SemanticAnalyser::generateMachineValue(Lexeme lex)
 {
 	//figure out if we need to look up the value
 	//of if the value is a literal and we
 	//can pass in the value directly 
 
+	DataType type;
 	string machineVal;
 	bool found = true;
 	switch (lex.getType())
@@ -205,15 +208,18 @@ string SemanticAnalyser::generateMachineValue(Lexeme lex)
 	case MP_STRING:
 	case MP_FLOAT:
 	case MP_BOOLEAN:
-		machineVal = lookupSymbolAddress(lex.getValue(), found);
+		machineVal = lookupSymbolAddress(lex.getValue(), found, type);
 		break;
 	case MP_STRING_LIT:
+		type = StringData;
 		machineVal = stringLitToVal(lex.getValue());
 		break;
 	case MP_INTEGER_LIT:
+		type = IntData;
 		machineVal = intLitToVal(lex.getValue());
 		break;
 	case MP_FLOAT_LIT:
+		type = FloatData;
 		machineVal = floatLitToVal(lex.getValue());
 		break;
 	default:
@@ -226,7 +232,7 @@ string SemanticAnalyser::generateMachineValue(Lexeme lex)
 		missingObject(lex);
 	}
 
-	return machineVal;
+	return MachineVal(machineVal, type);
 }
 
 void SemanticAnalyser::missingObject(const Lexeme lex)
@@ -248,61 +254,6 @@ void SemanticAnalyser::printCurrentTable()
 	_currentTable->printTable();
 }
 
-Operand SemanticAnalyser::add(SemanticRecord addRecords)
-{
-	return twoValueCommand("ADDS", addRecords);
-}
-
-Operand SemanticAnalyser::sub(SemanticRecord subractRecords)
-{
-	return twoValueCommand("SUBS", subractRecords);
-}
-
-Operand SemanticAnalyser::multiply(SemanticRecord multiplyRecords)
-{
-	return twoValueCommand("MULS", multiplyRecords);
-}
-
-Operand SemanticAnalyser::divide(SemanticRecord divideRecords)
-{
-	return twoValueCommand("DIVS", divideRecords);
-}
-
-Operand SemanticAnalyser::modulus(SemanticRecord modRecords)
-{
-	return twoValueCommand("MODS", modRecords);
-}
-
-Operand SemanticAnalyser::compGr(SemanticRecord compareRecords)
-{
-	return twoValueCommand("CMPGTS", compareRecords);
-}
-
-Operand SemanticAnalyser::compGrEq(SemanticRecord compareRecords)
-{
-	return twoValueCommand("CMPGES", compareRecords);
-}
-
-Operand SemanticAnalyser::compLt(SemanticRecord compareRecords)
-{
-	return twoValueCommand("CMPLTS", compareRecords);
-}
-
-Operand SemanticAnalyser::compLtEq(SemanticRecord compareRecords)
-{
-	return twoValueCommand("CMPLES", compareRecords);
-}
-
-void SemanticAnalyser::branchIfTrue()
-{
-	writeCommand("BRTS");
-}
-
-void SemanticAnalyser::branchIfFalse()
-{
-	writeCommand("BRFS");
-}
-
 void SemanticAnalyser::programHeading()
 {
 	int memAlloc = _currentTable->size();
@@ -321,7 +272,54 @@ void SemanticAnalyser::programTail()
 	_outFile << "HLT" << " \n";
 }
 
-void SemanticAnalyser::writeList(SemanticRecord writeSymbols, bool writeLn)
+void SemanticAnalyser::ifStatementBegin(int& nextLabel)
+{
+	//if not true then branch to the next 
+	//label, which should be the else or
+	//the end of the if statement
+	nextLabel = getNextLabelVal();
+	_outFile << "BRFS L" << nextLabel  << " \n";
+
+}
+
+void SemanticAnalyser::ifStatementElse(int currentLabel, int&nextLabel)
+{
+	//end of true section jump to the end 
+	nextLabel = getNextLabelVal();
+	_outFile << "L" << nextLabel << ":\n";
+
+	//the if was false start here 
+	_outFile << "L" << currentLabel << ":\n";
+
+}
+
+void SemanticAnalyser::ifStatementEnd(int currentLabel)
+{
+	_outFile << "L" << currentLabel << ":\n";
+}
+
+void SemanticAnalyser::whileStatementPrecondition(int& repeatLabel)
+{
+	repeatLabel = getNextLabelVal();
+	_outFile << "L" << repeatLabel << ":\n";
+}
+
+void SemanticAnalyser::whileStatementPostcondition(int& exitLabel)
+{
+	//if false exit
+	_outFile << "BRFS L" << exitLabel << ":\n";
+
+	exitLabel = getNextLabelVal();
+	_outFile << "L" << exitLabel << ":\n";
+}
+
+void SemanticAnalyser::whileStatementPostbody(int repeatLabel, int exitLabel)
+{
+	_outFile << "BR L" << repeatLabel << " \n";
+	_outFile << "L:" << exitLabel << "\n";
+}
+
+void SemanticAnalyser::writeList(SemanticRecord& writeSymbols, bool writeLn)
 {
 	while (writeSymbols.size()){
 		Operand * nextOp = writeSymbols.getNextOperandPointer();
@@ -335,34 +333,94 @@ void SemanticAnalyser::writeList(SemanticRecord writeSymbols, bool writeLn)
 	}
 }
 
-void SemanticAnalyser::prefixCommand(SemanticRecord infixSymbols)
+void SemanticAnalyser::repeatBegin(int& beginLabel)
 {
-	//this should be used for non stack commands like move or compare
+	beginLabel = getNextLabelVal();
+	_outFile << "L:" << beginLabel << "\n";
+}
+
+void SemanticAnalyser::repeatExit(int repeatLabel)
+{
+	_outFile << "BRTS L" << repeatLabel << "\n";
+}
+
+void SemanticAnalyser::forBegin(int& beginCondition, SemanticRecord controlVars)
+{
+	//we need to allocate the space for the variables
+	int level = _currentTable->level() + 1;
+	
+	int controlVals = 3;// one for control variable,step val, and one for the final value
+	_outFile << "MOV SP D"<< level << "\n";
+	_outFile << "PUSH SP" << "\n";
+	_outFile << "PUSH #" << to_string( controlVals ) << " \n";
+	_outFile << "ADDS" << "\n";
+	_outFile << "POP SP" << "\n";
+	//we have created the space now we need to copy the input values into position
+	
+
+
+	LexemeOperand lexOp2 = controlVars.getNextOperandAsLexeme();
+	MachineVal initVal = generateMachineValue(lexOp2.getLexeme());
+	LexemeOperand lexOp1 = controlVars.getNextOperandAsLexeme();
+	MachineVal controlVal = generateMachineValue(lexOp1.getLexeme());
+	LexemeOperand lexOp3 = controlVars.getNextOperandAsLexeme();
+	MachineVal finalVal = generateMachineValue(lexOp3.getLexeme());
+
+	_outFile << "MOV " << controlVal.value << " 0(D" << level << ") " << "\n";
+	_outFile << "MOV " << initVal.value << " 1(D" << level << ") " << "\n";
+	_outFile << "MOV " << finalVal.value << " 2(D" << level << ") " << "\n";
+
+	controlVal.value = " 0(D" + to_string(level) + ") ";
+	initVal.value = " 1(D" + to_string(level) + ") ";
+	finalVal.value = " 2(D" + to_string(level) + ") ";
+	
+	//copied values into alocated memory
+
+	//start the contitional 
+	//if control is less than zero 
+
+
+	_outFile << "ADD " << controlVal.value << " " << initVal.value << " " << initVal.value <<" \n";
+
+
+}
+
+void SemanticAnalyser::forEndCondition(int& exitLoop)
+{
+	//the condition has been checked branch if false
+}
+
+void SemanticAnalyser::forEndBody(int exitLoop)
+{
+
+}
+
+void SemanticAnalyser::unaryPrefixCommand(SemanticRecord& infixSymbols)
+{
+	assert(infixSymbols.size() == 2);
 
 	LexemeOperand * first = dynamic_cast<LexemeOperand*>(infixSymbols.getNextOperandPointer());
 	assert(first);
-	string firstArg = generateMachineValue(first->getLexeme());
+	MachineVal firstArg = generateMachineValue(first->getLexeme());
 	delete first;
 
 	CommandOperand command = infixSymbols.getNextOperandAsCommand();
 
-	string secondArg;
-	LexemeOperand* second = NULL;
-	if (infixSymbols.size() > 0){
-		second = dynamic_cast<LexemeOperand*>(infixSymbols.getNextOperandPointer());
-		if (second)
-			secondArg = generateMachineValue(second->getLexeme());
-	}
+	//MachineVal secondArg;
+	//LexemeOperand* second = NULL;
+	//if (infixSymbols.size() > 0){
+	//	second = dynamic_cast<LexemeOperand*>(infixSymbols.getNextOperandPointer());
+	//	if (second)
+	//		secondArg = generateMachineValue(second->getLexeme());
+	//}
 
-	_outFile << command.getCommand() << " " << secondArg << " " << firstArg << " \n";
+	_outFile << command.getCommand()  << " " << firstArg.value << " \n";
 }
 
-
-
-StackOperand SemanticAnalyser::infixStackCommand(SemanticRecord infixSymbols)
+StackOperand SemanticAnalyser::infixStackCommand(SemanticRecord& infixSymbols)
 {
 	assert(infixSymbols.size() == 3);
-
+	
 	//we need to do some sort of type resolution here if the two operands are not
 	//the same type, one approach could be to take the smallest common type
 	//or to take the type of the first value (current behavior)
@@ -392,10 +450,10 @@ StackOperand SemanticAnalyser::push(Lexeme lex, DataType type)
 	LexemeOperand * lexOp = new LexemeOperand(lex, UnknownData);
 
 	push(lexOp);
+	StackOperand retVal(lexOp->type());
 
 	delete lexOp;
-
-	return StackOperand(lexOp->type());
+	return retVal;
 }
 
 Operand SemanticAnalyser::twoValueCommand(const string command, SemanticRecord records)
@@ -431,14 +489,18 @@ void SemanticAnalyser::push(Operand* val, DataType castType)
 		//and it doesnt need to be pushed
 		LexemeOperand* lexOp = dynamic_cast<LexemeOperand*>(val);
 		assert(lexOp);
-		string valAddress = generateMachineValue(lexOp->getLexeme());
+		MachineVal valAddress = generateMachineValue(lexOp->getLexeme());
+
+		//I dont like this but it is a way to pass the
+		//type back up
+		val->setType(valAddress.type);
 
 		if (ENABLE_DEBUGGING && !val->getName().empty()){
 			//add comment with the variable name before the push 
 			_outFile << ";\t\tPushing: " << val->getName() << "\n";
 		}
 
-		_outFile << "PUSH " << valAddress << " \n";
+		_outFile << "PUSH " << valAddress.value << " \n";
 
 	}
 	if (castType != UnknownData){
@@ -470,4 +532,9 @@ void SemanticAnalyser::cast(const DataType valType,const DataType toType)
 void SemanticAnalyser::writeCommand(const string command)
 {
 	_outFile << command << "\n\n";
+}
+
+int SemanticAnalyser::getNextLabelVal()
+{
+	return _labelCounter++;
 }

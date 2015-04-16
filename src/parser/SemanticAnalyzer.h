@@ -12,6 +12,20 @@
 #include <iostream>
 #include <fstream>
 
+
+struct MachineVal
+{
+	MachineVal(std::string inValue = "", LexemeResources::DataType inType = LexemeResources::UnknownData)
+		:type(inType), value(inValue)
+	{
+		value = inValue;
+		type = inType;
+	}
+
+	std::string value; //address or literal value
+	LexemeResources::DataType type;
+};
+
 //this class will keep track of 
 //the current instance of the symbol table
 //as well as current semantic actions
@@ -33,44 +47,57 @@ public:
 	bool insertSymbol(const Token token, LexemeResources::DataType type);
 	bool insertSymbol(const Lexeme lex, LexemeResources::DataType type);
 	bool insertSymbol(SemanticRecord& record);
+
+
 	const Symbol lookupSymbol(std::string name, bool& found);
-	std::string lookupSymbolAddress(std::string name, bool& found);
+	std::string lookupSymbolAddress(std::string name, bool& found, LexemeResources::DataType& outType);
 	
 	std::string stringLitToVal(std::string value);
 	std::string intLitToVal(std::string value);
 	std::string floatLitToVal(std::string value);
 	
-	std::string generateMachineValue(Lexeme lex);
+	MachineVal generateMachineValue(Lexeme lex);
 
 
 	void printCurrentTable();
 	std::string errorMsg();
 
-	//These are the commands that we can call from the parser
-	//with the semantic records to generate that code 
-	void assignment(SemanticRecord assigmentRecords);
-
-	Operand add(SemanticRecord addRecords);
-	Operand sub(SemanticRecord subtractRecords);
-	Operand multiply(SemanticRecord multiplyRecords);
-	Operand divide(SemanticRecord divideRecords);
-	Operand modulus(SemanticRecord modRecords);
-
-
-	Operand compGr(SemanticRecord compareRecords);
-	Operand compGrEq(SemanticRecord compareRecords);
-	Operand compLt(SemanticRecord compareRecords);
-	Operand compLtEq(SemanticRecord compareRecords);
-
-	void branchIfTrue();
-	void branchIfFalse();
 
 	void programHeading();
 	void programTail();
 
-	void writeList(SemanticRecord writeSymbols, bool writeLn = true);
-	void prefixCommand(SemanticRecord infixSymbols);
-	StackOperand infixStackCommand(SemanticRecord infixSymbols);
+	//call this after the booleanExpression has
+	//been evaluated and is on top of the stack
+	void ifStatementBegin(int& nextLabel);
+	void ifStatementElse(int currentLabel, int& exitLabel);
+	void ifStatementEnd(int lastLabel);
+
+	//while statement
+	void whileStatementPrecondition(int& repeatLabel);
+	void whileStatementPostcondition(int& endLabel);
+	void whileStatementPostbody(int repeatLabel, int exitLoop);
+
+	//repeat statement
+	void repeatBegin(int& repeatStart);
+	void repeatExit(int repeatStart);
+
+	//for statement
+	void forBegin(int& beginCondition, SemanticRecord controlVars);
+	void forEndCondition(int& exitLoop);
+	void forEndBody(int exitLoop);
+
+	void writeList(SemanticRecord& writeSymbols, bool writeLn = true);
+
+	//The command is in the form
+	//[Command] [Argument] 
+	void unaryPrefixCommand(SemanticRecord& infixSymbols);
+	
+
+
+	//The command are in the order they are encountered
+	//ie A + B 
+	// Operand Command Operand
+	StackOperand infixStackCommand(SemanticRecord& infixSymbols);
 
 	StackOperand push(Lexeme lex, LexemeResources::DataType type = LexemeResources::UnknownData);
 
@@ -100,6 +127,9 @@ private:
 	std::list<std::string> _errList;
 	
 	SymbolTable * _currentTable;
+
+	int getNextLabelVal();
+	int _labelCounter;
 };
 
 
