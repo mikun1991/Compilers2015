@@ -322,7 +322,7 @@ bool Grammar::assignmentStatement()
 	switch (nextTokenType())
 	{
 	//conflict with this and following case, both go to same thing
-	case MP_IDENTIFIER:
+    case MP_IDENTIFIER:{
 		variableIdentifier(assignmentStatement_rec);
 		if (nextTokenType() != MP_ASSIGN){
 			error(TypeList() << MP_ASSIGN );
@@ -334,9 +334,10 @@ bool Grammar::assignmentStatement()
 		//dont neet to keep this value
 		//because it has been pushed to the stack
 		//it will be popped into the variable identifier
-		expression(SemanticRecord());
+        SemanticRecord expressionRecord;
+		expression(expressionRecord);
 		_semanticAnalyser->unaryPrefixCommand(assignmentStatement_rec);
-		return true;
+        return true;}
 	/*
 	case MP_IDENTIFIER:
 		functionIdentifier();
