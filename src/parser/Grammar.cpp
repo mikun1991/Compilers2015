@@ -757,7 +757,7 @@ bool Grammar::identifierTail(SemanticRecord& identifierTail_rec)
 		if (nextTokenType() != MP_IDENTIFIER){
 			error(TypeList() << MP_IDENTIFIER);
 		}
-		identifierTail_rec.addOperand(_semanticAnalyser->push(currentLexeme()));
+		identifierTail_rec.addOperand(currentLexeme());
 		match();
 		identifierTail(identifierTail_rec);
 		return true;
@@ -1324,20 +1324,38 @@ bool Grammar::relationalOperator(SemanticRecord& record)
 
 	switch (nextTokenType())
 	{
-	case MP_EQUAL:
-		LOG(76, logged);
+		case MP_EQUAL:{
+			logRule(76);
+			string equalCommand = record.showNextOperand().type() == MP_FLOAT ? "CMPEQSF" : "CMPEGSF";
+			record.addOperand(CommandOperand(equalCommand));
+			match();
+			break;}
+			
 	case MP_LTHAN:
-		LOG(77, logged);
+		logRule(77);
+		match();
+		break;
+			
 	case MP_GTHAN:
-		LOG(78, logged);
+		logRule(78);
+		match();
+		break;
+			
 	case MP_LEQUAL:
-		LOG(79, logged);
+		logRule(79);
+		match();
+		break;
+		
 	case MP_GEQUAL:
-		LOG(80, logged);
+		logRule(80);
+		match();
+		break;
+		
 	case MP_NEQUAL:
-		LOG(81, logged);
+		logRule(81);
 		match();
 		return true;
+		
 	default:
 		error(TypeList() << MP_EQUAL << MP_LTHAN << MP_GTHAN << MP_LEQUAL << MP_GEQUAL << MP_NEQUAL);
 	}

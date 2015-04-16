@@ -20,6 +20,7 @@ SemanticAnalyser::SemanticAnalyser()
 
 SemanticAnalyser::~SemanticAnalyser()
 {
+    _outFile.flush();
 	_outFile.close();
 }
 
@@ -222,6 +223,14 @@ MachineVal SemanticAnalyser::generateMachineValue(Lexeme lex)
 		type = FloatData;
 		machineVal = floatLitToVal(lex.getValue());
 		break;
+    case MP_TRUE:
+        type = BoolData;
+        machineVal = "#1";
+        break;
+    case MP_FALSE:
+        type = BoolData;
+        machineVal = "#0";
+        break;
 	default:
 		assert(false);
 		//this shouldnt happen
@@ -506,6 +515,7 @@ void SemanticAnalyser::push(Operand* val, DataType castType)
 	if (castType != UnknownData){
 		cast(val->type(), castType);
 	}
+    _outFile.flush();
 }
 
 void SemanticAnalyser::cast(const DataType valType,const DataType toType)

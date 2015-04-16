@@ -3,7 +3,7 @@ program helloWorld;
 	myBool:Boolean;
 	counter:Integer;
   
-	function monkey(var dog:Boolean):Boolean;
+	function monkey(var dog : Boolean) : Boolean;
 		var mBool:Boolean;
 		begin
 			dog := true;
