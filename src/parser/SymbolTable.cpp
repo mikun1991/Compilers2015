@@ -72,6 +72,7 @@ void SymbolTable::insert(Symbol tableSymbol)
 	tableSymbol.setOffset(_currentOffset);
 	_currentOffset += tableSymbol.size();
 	_symbolLookup[tableSymbol.lexeme().getValue()] = tableSymbol;
+	_size = _currentOffset;
 }
 
 const Symbol SymbolTable::lookup(const string name, bool& outFound)
