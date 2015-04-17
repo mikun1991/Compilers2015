@@ -1326,7 +1326,7 @@ bool Grammar::relationalOperator(SemanticRecord& record)
 	{
 		case MP_EQUAL:{
 			logRule(76);
-			string equalCommand = record.showNextOperand().type() == MP_FLOAT ? "CMPEQSF" : "CMPEGSF";
+			string equalCommand = record.showNextOperand().type() == MP_FLOAT ? "CMPEQSF" : "CMPEQS";
 			record.addOperand(CommandOperand(equalCommand));
 			match();
 			break;}
