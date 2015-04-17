@@ -1135,7 +1135,7 @@ bool Grammar::procedureIdentifier(SemanticRecord& procedureIdentifier_rec)
 	switch (nextTokenType())
 	{
 	case MP_IDENTIFIER:
-		procedureIdentifier_rec.addOperand(_semanticAnalyser->push(currentLexeme()));
+		procedureIdentifier_rec.addOperand(currentLexeme());
 		LOG(109, logged)
 		match();//
 		return true;
@@ -1324,37 +1324,47 @@ bool Grammar::relationalOperator(SemanticRecord& record)
 
 	switch (nextTokenType())
 	{
-		case MP_EQUAL:{
-			logRule(76);
-			string equalCommand = record.showNextOperand().type() == MP_FLOAT ? "CMPEQSF" : "CMPEQS";
-			record.addOperand(CommandOperand(equalCommand));
-			match();
-			break;}
+	case MP_EQUAL:{
+					  logRule(76);
+					  string equalCommand = record.showNextOperand().type() == MP_FLOAT ? "CMPEQSF" : "CMPEQS";
+					  record.addOperand(CommandOperand(equalCommand));
+					  match();
+					  break; }
 			
-	case MP_LTHAN:
-		logRule(77);
-		match();
-		break;
+	case MP_LTHAN:{
+					  logRule(77);
+					  string lthanCommand = record.showNextOperand().type() == MP_FLOAT ? "CMPLTSF" : "CMPLTS";
+					  record.addOperand(CommandOperand(lthanCommand));
+					  match();
+					  break; }
 			
-	case MP_GTHAN:
-		logRule(78);
-		match();
-		break;
+	case MP_GTHAN:{
+					  logRule(78);
+					  string gthanCommand = record.showNextOperand().type() == MP_FLOAT ? "CMPGTSF" : "CMPGTS";
+					  record.addOperand(CommandOperand(gthanCommand));
+					  match();
+					  break; }
 			
-	case MP_LEQUAL:
-		logRule(79);
-		match();
-		break;
+	case MP_LEQUAL:{
+					   logRule(79);
+					   string lequalCommand = record.showNextOperand().type() == MP_FLOAT ? "CMPLESF" : "CMPLES";
+					   record.addOperand(CommandOperand(lequalCommand));
+					   match();
+					   break; }
 		
-	case MP_GEQUAL:
-		logRule(80);
-		match();
-		break;
+	case MP_GEQUAL:{
+					   logRule(80);
+					   string gequalCommand = record.showNextOperand().type() == MP_FLOAT ? "CMPGESF" : "CMPGES";
+					   record.addOperand(CommandOperand(gequalCommand));
+					   match();
+					   break; }
 		
-	case MP_NEQUAL:
-		logRule(81);
-		match();
-		return true;
+	case MP_NEQUAL:{
+					   logRule(81);
+					   string nequalCommand = record.showNextOperand().type() == MP_FLOAT ? "CMPNESF" : "CMPNES";
+					   record.addOperand(CommandOperand(nequalCommand));
+					   match();
+					   break; }
 		
 	default:
 		error(TypeList() << MP_EQUAL << MP_LTHAN << MP_GTHAN << MP_LEQUAL << MP_GEQUAL << MP_NEQUAL);
