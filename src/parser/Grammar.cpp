@@ -1951,6 +1951,7 @@ bool Grammar::writeParameter(SemanticRecord& record )
 	case MP_TRUE:
 		logRule(53);
 		ordinalExpression(record);
+		_semanticAnalyser->writeCommand("WRTS");
 		return true;
 	default:
 		error(TypeList() << MP_PLUS << MP_MINUS << MP_INTEGER_LIT << MP_FLOAT_LIT << MP_STRING_LIT << MP_BOOLEAN << MP_NOT << MP_LPAREN << MP_IDENTIFIER << MP_FALSE << MP_TRUE);
@@ -2005,7 +2006,8 @@ bool Grammar::writeStatement()
 			match();
 			writeParameter(writeRecords);
 			writeParameterTail(writeRecords);
-			_semanticAnalyser->writeList(writeRecords, addLine);
+			//_semanticAnalyser->writeList(writeRecords, addLine);
+			_semanticAnalyser->writeCommand("WRTLN #\"\"");
 			if (nextTokenType() != MP_RPAREN){
 				error(TypeList() << MP_RPAREN);
 				return false;

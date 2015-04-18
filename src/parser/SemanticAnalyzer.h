@@ -101,6 +101,8 @@ public:
 
 	StackOperand push(Lexeme lex, LexemeResources::DataType type = LexemeResources::UnknownData);
 
+	void writeCommand(const std::string command);
+
 private:
 	//these are some helper functions so i can be lazy in creating
 	//the functions for writing command
@@ -112,8 +114,7 @@ private:
 	//debugging the uMachine code alot easier.
 	void push(Operand* val, const LexemeResources::DataType castType = LexemeResources::UnknownData);
 	void cast(const LexemeResources::DataType valType, const LexemeResources::DataType toType);
-	void writeCommand(const std::string command);
-
+	
 
 	//file pointer
 	std::ofstream _outFile;

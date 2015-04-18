@@ -277,7 +277,7 @@ void SemanticAnalyser::programHeading()
 void SemanticAnalyser::programTail()
 {
 	//deallocate and Halt!!!
-	_outFile << "MOV DO SP" << " \n";
+	_outFile << "MOV D0 SP" << " \n";
 	_outFile << "HLT" << " \n";
 }
 
