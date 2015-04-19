@@ -18,10 +18,11 @@ program helloWorld;
 		end
 	;
 	begin
+		counter := 5;
 	
 		for counter:=0 to 9 do write(counter);
 	
-		while counter > 0 do
+		while counter > 1 do
 			begin
 				writeln(counter);
 				counter := counter - 1

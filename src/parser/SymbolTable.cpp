@@ -25,7 +25,7 @@ SymbolTable* SymbolTable::createTable(Lexeme lexeme, LexemeResources::DataType t
 	return childTable;
 }
 
-SymbolTable* SymbolTable::closeTable()
+SymbolTable* SymbolTable::closeTable(bool includeInParent)
 {
 	///size the size of the symbol table so this 
 	//symbol will have the correct size

@@ -22,7 +22,7 @@ public:
 
 	//close the current table and return
 	// a pointer to the parent table
-	SymbolTable* closeTable();
+	SymbolTable* closeTable(bool includeInParent = true);
 
 	void insert(Lexeme lex,  LexemeResources::DataType type);
 

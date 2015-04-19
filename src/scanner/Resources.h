@@ -250,7 +250,7 @@ namespace LexemeResources
 
 	enum DataType
 	{
-		IntData,
+		IntData = 0,
 		StringData,
 		FloatData,
 		BoolData,

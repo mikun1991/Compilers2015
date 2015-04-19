@@ -39,7 +39,7 @@ public:
 	//return false if there was a name collision
 	bool createTable(LexemeOperand operand);
 	bool createTable(const Lexeme token, LexemeResources::DataType type);
-	void closeTable();
+	void closeTable(bool deleteEntry= false); 
 
 	//i think we should be able to figure out the type from the 
 	//the lexeme (at least some of the time)
@@ -64,7 +64,8 @@ public:
 	std::string errorMsg();
 
 
-	void programHeading();
+	void programHeading(int& beginLabel);
+	void programJump(int beginLabel);
 	void programTail();
 
 	//call this after the booleanExpression has
@@ -83,9 +84,8 @@ public:
 	void repeatExit(int repeatStart);
 
 	//for statement
-	void forBegin(int& beginCondition, SemanticRecord controlVars);
-	void forEndCondition(int& exitLoop);
-	void forEndBody(int exitLoop);
+	void forBegin(int& beginCondition, int& exitLoop, SemanticRecord& controlVars);
+	void forEndBody(int loopAgain, int exitLoop, SemanticRecord& intialRecord);
 
 	void writeList(SemanticRecord& writeSymbols, bool writeLn = true);
 

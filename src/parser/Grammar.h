@@ -69,7 +69,7 @@ public:
 	 bool emptyStatement(); 
 	 bool expression(SemanticRecord& record); 
 	 bool factorTail(SemanticRecord& record); 
-	 bool finalValue(); 
+	 bool finalValue(SemanticRecord& record); 
 	 bool formalParameterSection(SemanticRecord& record);
 	 bool formalParameterSectionTail(SemanticRecord& record); 
 	 bool functionDeclaration();  // close function SymbolTable  
@@ -78,7 +78,7 @@ public:
 	 bool identifierList(SemanticRecord& record); 
 	 bool identifierTail(SemanticRecord& record); 
 	 bool ifStatement();
-	 bool initialValue();  
+	 bool initialValue(SemanticRecord& record);  
 	 bool optionalActualParameterList();  
 	 bool optionalElsePart(); 
 	 bool optionalFormalParameterList(SemanticRecord& record); 
@@ -103,7 +103,7 @@ public:
 	 bool statementPart(); 
 	 bool statementSequence(); 
 	 bool statementTail();
-	 bool stepValue(); 
+	 bool stepValue(SemanticRecord& record); 
 	 bool systemGoal(); 
 	 bool term(SemanticRecord& record); 
 	 bool termTail(SemanticRecord& record); 

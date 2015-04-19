@@ -58,7 +58,7 @@ bool SemanticAnalyser::createTable(const Lexeme lexeme, DataType type)
 	return true;
 }
 
-void SemanticAnalyser::closeTable()
+void SemanticAnalyser::closeTable(bool deleteEntry)
 {
 	SymbolTable* parent = _currentTable->closeTable();
 	if (parent){
@@ -244,6 +244,14 @@ MachineVal SemanticAnalyser::generateMachineValue(Lexeme lex)
         type = BoolData;
         machineVal = "#0";
         break;
+	case MP_TO:
+		type = IntData;
+		machineVal = "#1";
+		break;
+	case MP_DOWNTO:
+		type = IntData;
+		machineVal = "#-1";
+		break;
 	default:
 		assert(false);
 		//this shouldnt happen
@@ -276,15 +284,27 @@ void SemanticAnalyser::printCurrentTable()
 	_currentTable->printTable();
 }
 
-void SemanticAnalyser::programHeading()
+void SemanticAnalyser::programHeading(int& beginLabel)
+{
+	beginLabel = getNextLabelVal();
+	writeCommand("BR L" + to_string(beginLabel) + "");
+}
+
+void SemanticAnalyser::programJump(int beginLabel)
 {
 	int memAlloc = _currentTable->size();
-	
-	_outFile << "MOV SP D0" << "\n";
+
+	writeCommand("L" + to_string(beginLabel) + ":");
+
+	int level = _currentTable->level();
+
+	_outFile << "MOV SP D" << to_string(level) << " \n";
 	_outFile << "PUSH SP" << "\n";
-	_outFile << "PUSH #" <<to_string(memAlloc) <<" \n";
+	_outFile << "PUSH #" << to_string(memAlloc) << " \n";
 	_outFile << "ADDS" << "\n";
 	_outFile << "POP SP" << "\n";
+
+
 }
 
 void SemanticAnalyser::programTail()
@@ -299,6 +319,8 @@ void SemanticAnalyser::ifStatementBegin(int& nextLabel)
 	//if not true then branch to the next 
 	//label, which should be the else or
 	//the end of the if statement
+	if (ENABLE_DEBUGGING)
+		_outFile << "\n; Start 'if' statement \n";
 	nextLabel = getNextLabelVal();
 	_outFile << "BRFS L" << nextLabel  << " \n";
 
@@ -310,6 +332,7 @@ void SemanticAnalyser::ifStatementElse(int currentLabel, int&nextLabel)
 	nextLabel = getNextLabelVal();
 	_outFile << "L" << nextLabel << ":\n";
 
+
 	//the if was false start here 
 	_outFile << "L" << currentLabel << ":\n";
 
@@ -318,10 +341,15 @@ void SemanticAnalyser::ifStatementElse(int currentLabel, int&nextLabel)
 void SemanticAnalyser::ifStatementEnd(int currentLabel)
 {
 	_outFile << "L" << currentLabel << ":\n";
+	if (ENABLE_DEBUGGING)
+		_outFile << "; end 'if' statement \n\n";
+
 }
 
 void SemanticAnalyser::whileStatementPrecondition(int& repeatLabel)
 {
+	if (ENABLE_DEBUGGING)
+		_outFile << "\n; Start 'while' statement \n";
 	repeatLabel = getNextLabelVal();
 	_outFile << "L" << repeatLabel << ":\n";
 }
@@ -329,16 +357,22 @@ void SemanticAnalyser::whileStatementPrecondition(int& repeatLabel)
 void SemanticAnalyser::whileStatementPostcondition(int& exitLabel)
 {
 	//if false exit
-	_outFile << "BRFS L" << exitLabel << ":\n";
-
 	exitLabel = getNextLabelVal();
-	_outFile << "L" << exitLabel << ":\n";
+	_outFile << "BRFS L" << exitLabel << " \n";
+	if (ENABLE_DEBUGGING)
+		_outFile << "; end 'while' condition \n";
+
+	//exitLabel = getNextLabelVal();
+	//_outFile << "L" << exitLabel << ":\n";
 }
 
 void SemanticAnalyser::whileStatementPostbody(int repeatLabel, int exitLabel)
 {
 	_outFile << "BR L" << repeatLabel << " \n";
-	_outFile << "L:" << exitLabel << "\n";
+	_outFile << "L" << exitLabel << ":\n";
+
+	if (ENABLE_DEBUGGING)
+		_outFile << "; end 'while' loop \n\n";
 }
 
 void SemanticAnalyser::writeList(SemanticRecord& writeSymbols, bool writeLn)
@@ -363,57 +397,120 @@ void SemanticAnalyser::repeatBegin(int& beginLabel)
 
 void SemanticAnalyser::repeatExit(int repeatLabel)
 {
+	//repeat condition will leave false on the stack if it fails
+	//and we will continue
+
 	_outFile << "BRTS L" << repeatLabel << "\n";
 }
 
-void SemanticAnalyser::forBegin(int& beginCondition, SemanticRecord controlVars)
+void SemanticAnalyser::forBegin(int& beginCondition,int& exitLoop, SemanticRecord& controlVars)
 {
 	//we need to allocate the space for the variables
-	int level = _currentTable->level() + 1;
 	
-	int controlVals = 3;// one for control variable,step val, and one for the final value
-	_outFile << "MOV SP D"<< level << "\n";
-	_outFile << "PUSH SP" << "\n";
-	_outFile << "PUSH #" << to_string( controlVals ) << " \n";
-	_outFile << "ADDS" << "\n";
-	_outFile << "POP SP" << "\n";
-	//we have created the space now we need to copy the input values into position
-	
-
-
-	LexemeOperand lexOp2 = controlVars.getNextOperandAsLexeme();
-	MachineVal initVal = generateMachineValue(lexOp2.getLexeme());
 	LexemeOperand lexOp1 = controlVars.getNextOperandAsLexeme();
-	MachineVal controlVal = generateMachineValue(lexOp1.getLexeme());
+	MachineVal initVal = generateMachineValue(lexOp1.getLexeme());
+
+	//we dont use this for anything because this is on top of the stack
+	Operand lexOp2 = controlVars.getNextOperand();
+	//MachineVal assignedVal = generateMachineValue(lexOp2.getLexeme());
+
 	LexemeOperand lexOp3 = controlVars.getNextOperandAsLexeme();
-	MachineVal finalVal = generateMachineValue(lexOp3.getLexeme());
+	MachineVal stepVal = generateMachineValue(lexOp3.getLexeme());
+	//this should be a -1 or 1 depending on if
+	//we are going up or down. 
 
-	_outFile << "MOV " << controlVal.value << " 0(D" << level << ") " << "\n";
-	_outFile << "MOV " << initVal.value << " 1(D" << level << ") " << "\n";
-	_outFile << "MOV " << finalVal.value << " 2(D" << level << ") " << "\n";
+	//this is on the stack as well so no neet to use it
+	Operand lexOp4 = controlVars.getNextOperand();
+	//MachineVal finalVal = generateMachineValue(lexOp4.getLexeme());
 
-	controlVal.value = " 0(D" + to_string(level) + ") ";
-	initVal.value = " 1(D" + to_string(level) + ") ";
-	finalVal.value = " 2(D" + to_string(level) + ") ";
-	
-	//copied values into alocated memory
+	controlVars.addOperand(new LexemeOperand( lexOp1));
 
-	//start the contitional 
-	//if control is less than zero 
+	if (ENABLE_DEBUGGING)
+		_outFile << "\n;         Begin 'for' loop\n";
+
+	//int level = _currentTable->level() ;
+	//
+	//the intial value is on the stack and will be located at -1 offset current level
+	_outFile << "PUSH " << initVal.value << " \n"; //for current value
+
+	//set SP for offset into control vars
+	//_outFile << "MOV SP D" << to_string(level) << " \n";
 
 
-	_outFile << "ADD " << controlVal.value << " " << initVal.value << " " << initVal.value <<" \n";
+	//_outFile << "PUSH " << initVal.value << " \n";
 
+	//change the loop variable to its assignment
+	//_outFile << "PUSH " << "-3(D" << level << ") \n";
+	_outFile << "PUSH " << "-3(SP) \n"; //one 
+	_outFile << "POP " << initVal.value << " \n"; //zero
+
+	//////////////////////////////////////
+	////////////initialized
+	//////////////////////////////////////
+
+	//skip loop increment the first time
+	int skipIncrement = getNextLabelVal();
+	_outFile << "BR L" << skipIncrement << "\n";
+
+	//begin the the condition check
+	beginCondition = getNextLabelVal();
+	_outFile << "L" << beginCondition << ": \n";
+
+	//update the loop variable
+	_outFile << "PUSH " << stepVal.value << " \n"; //one 
+	_outFile << "PUSH " << initVal.value << " \n"; //one two
+	_outFile << "ADDS " << " \n"; //one
+	_outFile << "POP " << "-3(SP) \n";// -3  // zero
+	_outFile << "PUSH " << "-3(SP) \n";//one
+	_outFile << "POP " << initVal.value << " \n";//zero
+	//loop variable updated
+
+	_outFile << "L" << skipIncrement << ": \n";
+
+	//check against limit
+	_outFile << "PUSH " << "-3(SP) \n"; //one
+	_outFile << "PUSH " << "-3(SP) \n"; //two
+	//limit checked
+
+	string compare = stepVal.value == "#-1" ? "CMPGES" : "CMPLES";
+	_outFile << compare << "\n";
+
+	exitLoop = getNextLabelVal();
+	_outFile << "BRFS L" << to_string(exitLoop) << " \n";
+
+
+	//if the step is negative we continue if greater than the condition
+	//otherwise we want to continue if the value is less than the condition
 
 }
 
-void SemanticAnalyser::forEndCondition(int& exitLoop)
+void SemanticAnalyser::forEndBody(int loopAgain, int exitLoop, SemanticRecord& intialRecord)
 {
-	//the condition has been checked branch if false
-}
+	//int level = _currentTable->level();
+	//revert to control variable
+	LexemeOperand lexOp1 = intialRecord.getNextOperandAsLexeme();
+	MachineVal initVal = generateMachineValue(lexOp1.getLexeme());
 
-void SemanticAnalyser::forEndBody(int exitLoop)
-{
+	_outFile << "MOV  -3(SP) " << initVal.value << " \n";
+
+
+	_outFile << "BR L" << to_string(loopAgain) << " \n";
+	_outFile << "L" << to_string(exitLoop) << ": \n";
+
+	//revert to value before loop
+	_outFile << "POP " << initVal.value << " \n";
+
+	//this will pop off the intial assigment value
+	//_outFile << "PUSH D" << to_string(level) << " \n";
+	//_outFile << "PUSH #-2" << " \n";
+	//_outFile << "ADDS" << " \n";
+	_outFile << "POP 1(SP)" << " \n";
+	_outFile << "POP 1(SP)" << " \n";
+	//we are now three down to where we should be
+	//BOOYAH!!!
+
+	if (ENABLE_DEBUGGING)
+		_outFile << "\n;         End 'for' loop\n";
 
 }
 
@@ -519,7 +616,7 @@ void SemanticAnalyser::push(Operand* val, DataType castType)
 
 		if (ENABLE_DEBUGGING && !val->getName().empty()){
 			//add comment with the variable name before the push 
-			_outFile << ";\t\tPushing: " << val->getName() << "\n";
+			_outFile << ";\t\tPushing: " << val->getName() << " Type:" << to_string(val->type())<< "\n";
 		}
 
 		_outFile << "PUSH " << valAddress.value << " \n";
@@ -554,7 +651,7 @@ void SemanticAnalyser::cast(const DataType valType,const DataType toType)
 
 void SemanticAnalyser::writeCommand(const string command)
 {
-	_outFile << command << "\n\n";
+	_outFile << command << "\n";
 	_outFile.flush();
 }
 
