@@ -555,6 +555,7 @@ void SemanticAnalyser::cast(const DataType valType,const DataType toType)
 void SemanticAnalyser::writeCommand(const string command)
 {
 	_outFile << command << "\n\n";
+	_outFile.flush();
 }
 
 int SemanticAnalyser::getNextLabelVal()

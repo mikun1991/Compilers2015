@@ -23,6 +23,7 @@ Parser::Parser(TokenStream* tokens, Grammar* grammar)
 Parser::~Parser()
 {
 	//dont assume ownership of the tokenStream
+
 	delete _grammar;
 }
 
@@ -36,6 +37,7 @@ void Parser::parseTokens()
 	catch (ParseException parseErrors){
 
 	}
+	delete _grammar->_semanticAnalyser;
 }
 
 string Parser::errMsgs()
