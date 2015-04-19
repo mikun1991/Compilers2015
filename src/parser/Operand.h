@@ -14,6 +14,7 @@ protected:
 	
 public:
 	Operand();
+	virtual ~Operand(){;}
 	virtual bool onTopOfStack();
 	virtual std::string getName();
 	std::string address();

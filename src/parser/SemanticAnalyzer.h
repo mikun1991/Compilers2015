@@ -56,6 +56,7 @@ public:
 	std::string intLitToVal(std::string value);
 	std::string floatLitToVal(std::string value);
 	
+	LexemeResources::DataType checkType(LexemeOperand* operand);
 	MachineVal generateMachineValue(Lexeme lex);
 
 

@@ -20,6 +20,10 @@ public:
 	void addOperand(Operand* operand);
 
 	Operand* getNextOperandPointer();
+	
+	template<typename TYPE>
+	TYPE* showNextOperandAs();
+	
 	Operand getNextOperand();
 	LexemeOperand getNextOperandAsLexeme();
 	CommandOperand getNextOperandAsCommand();
@@ -34,6 +38,12 @@ public:
 private:
 	std::list<Operand*> _identifiers;
 };
+
+template<typename TYPE>
+TYPE* SemanticRecord::showNextOperandAs()
+{
+	return dynamic_cast<TYPE*>(_identifiers.front());
+}
 
 
 #endif //SEMANTICRECORD_H

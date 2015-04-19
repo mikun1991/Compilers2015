@@ -193,6 +193,19 @@ string SemanticAnalyser::floatLitToVal(string value)
 	return "#" + value;
 }
 
+LexemeResources::DataType SemanticAnalyser::checkType(LexemeOperand* lex)
+{
+	if(!lex){
+		return UnknownData;
+	}
+	
+	MachineVal tempVal;
+	
+	tempVal = generateMachineValue(lex->getLexeme());
+	
+	return tempVal.type;
+}
+
 MachineVal SemanticAnalyser::generateMachineValue(Lexeme lex)
 {
 	//figure out if we need to look up the value
