@@ -51,7 +51,19 @@ SymbolTable* SymbolTable::closeTable(bool includeInParent)
 	return _parentTable;
 }
 
-void SymbolTable::insert(Lexeme lex,  DataType type)
+void SymbolTable::insertArgument(const Lexeme lex, const int offset, const DataType type)
+{ 
+	_argumentTypes.push_back(type);
+
+	int size = 1;
+	Symbol newSymbol(lex, type, _level, offset, size);
+
+	_size = _currentOffset;
+
+	_symbolLookup[lex.getValue()] = newSymbol;
+}
+
+void SymbolTable::insert(const Lexeme lex,const DataType type)
 {
 	//size is always 1 right?!?
 	int size = 1;

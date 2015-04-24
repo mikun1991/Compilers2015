@@ -21,6 +21,10 @@ public:
 	LexemeResources::DataType type();
 	void setType(LexemeResources::DataType);
 
+	bool isAddress();
+
+	LexemeResources::DataType referenceType();
+
 protected:
 
 	LexemeResources::DataType _dataType;
@@ -68,6 +72,5 @@ protected:
 
 	const std::string _command;
 };
-
 
 #endif // OPERAND_H

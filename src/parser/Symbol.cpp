@@ -9,8 +9,8 @@ Symbol::Symbol()
 {
 }
 
-Symbol::Symbol(Lexeme lex, LexemeResources::DataType dataType, int level, int offset, int size)
-	:_lexeme(lex), _dataType(dataType), _level(level), _offset(offset), _size(size)
+Symbol::Symbol(Lexeme lex, LexemeResources::DataType dataType, int level, int offset, int size, list<DataType> arguments)
+	: _lexeme(lex), _dataType(dataType), _level(level), _offset(offset), _size(size), _argumentTypes(arguments)
 {
 }
 

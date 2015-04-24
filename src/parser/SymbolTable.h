@@ -24,7 +24,8 @@ public:
 	// a pointer to the parent table
 	SymbolTable* closeTable(bool includeInParent = true);
 
-	void insert(Lexeme lex,  LexemeResources::DataType type);
+	void insert(const Lexeme lex, const LexemeResources::DataType type);
+	void insertArgument(const Lexeme lex,const int offset, const LexemeResources::DataType type);
 
 
 	const Symbol lookup(const std::string name, bool& outFound);

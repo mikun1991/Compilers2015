@@ -256,6 +256,10 @@ namespace LexemeResources
 		BoolData,
 		VoidData,
 
+		AddressInt,
+		AddressString,
+		AddressFloat,
+		AddressBool,
 
 		UnknownData		//others ?
 	};

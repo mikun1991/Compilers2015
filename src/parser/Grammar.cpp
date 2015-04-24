@@ -606,15 +606,17 @@ bool Grammar::formalParameterSection(SemanticRecord& formalParameterSection_rec)
 {
 	switch (nextTokenType())
 	{
-	case MP_IDENTIFIER:
+	case MP_IDENTIFIER: //by value
 		logRule(25);
 		valueParameterSection(formalParameterSection_rec);
 		return true;
-	case MP_VAR:
+	case MP_VAR:{//by reference
 		logRule(26);
-		variableParameterSection(formalParameterSection_rec);
-		return true;
-
+		SemanticRecord temp;
+		variableParameterSection(temp);
+		temp.convertTypesToAddresses();
+		formalParameterSection_rec.addOperands(temp);
+		return true;}
 	default:
 		error(TypeList() << MP_IDENTIFIER << MP_VAR);
 	}

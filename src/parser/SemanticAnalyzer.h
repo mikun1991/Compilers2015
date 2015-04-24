@@ -36,18 +36,16 @@ public:
 	SemanticAnalyser();
 	~SemanticAnalyser();
 
-	//return false if there was a name collision
 	bool createTable(LexemeOperand operand);
 	bool createTable(const Lexeme token, LexemeResources::DataType type);
 	void closeTable(bool deleteEntry= false); 
 
-	//i think we should be able to figure out the type from the 
-	//the lexeme (at least some of the time)
-	bool insertSymbol(const Token token);
-	bool insertSymbol(const Token token, LexemeResources::DataType type);
-	bool insertSymbol(const Lexeme lex, LexemeResources::DataType type);
-	bool insertSymbol(SemanticRecord& record);
+	bool insertSymbol(const Lexeme lex, DataType type);
+	bool insertArgument(const Lexeme lex,const int offset,const DataType type);
 
+	bool insertSymbol(SemanticRecord& record);
+	//bool insertArgument(SemanticRecord& record);
+	
 
 	const Symbol lookupSymbol(std::string name, bool& found);
 	std::string lookupSymbolAddress(std::string name, bool& found, LexemeResources::DataType& outType);
@@ -86,6 +84,16 @@ public:
 	//for statement
 	void forBegin(int& beginCondition, int& exitLoop, SemanticRecord& controlVars);
 	void forEndBody(int loopAgain, int exitLoop, SemanticRecord& intialRecord);
+
+
+	void generateActivationRecord(int beginRecord);
+
+	void functionHeading(int& beginLabel);
+	void functionEnd();
+
+	void procedureHeading(int& beginLabel);
+	void procedureEnd();
+
 
 	void writeList(SemanticRecord& writeSymbols, bool writeLn = true);
 

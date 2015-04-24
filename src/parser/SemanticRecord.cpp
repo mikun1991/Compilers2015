@@ -14,6 +14,13 @@ SemanticRecord::~SemanticRecord()
 	}
 }
 
+void SemanticRecord::addOperands(SemanticRecord& other)
+{
+	while (other.size()){
+		addOperand(other.getNextOperandPointer);
+	}
+}
+
 void SemanticRecord::addOperand(Lexeme id, DataType type)
 {
 	LexemeOperand * addOP = new LexemeOperand(id, type);
@@ -122,5 +129,29 @@ void SemanticRecord::setType(DataType type)
 	for (iterator = _identifiers.begin(); iterator != _identifiers.end(); ++iterator) {
 		Operand* myOP = *iterator;
 		myOP->setType(type);
+	}
+}
+
+void SemanticRecord::convertTypesToAddresses()
+{
+	for (Operand* op: _identifiers){
+		op->setType(dataToAddressType(op->type()));
+	}
+}
+
+DataType SemanticRecord::dataToAddressType(DataType type)
+{
+	switch (type)
+	{
+	case IntData:
+		return AddressInt;
+	case FloatData:
+		return AddressFloat;
+	case StringData:
+		return AddressString;
+	case BoolData:
+		return AddressBool;
+	default:
+		return type;
 	}
 }

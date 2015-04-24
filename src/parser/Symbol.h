@@ -9,7 +9,13 @@ class Symbol
 public:
 	Symbol();
 
-	Symbol(Lexeme lex, LexemeResources::DataType dataType, int level, int offset = -1, int size = -1);
+	Symbol(Lexeme lex,
+		LexemeResources::DataType dataType, 
+		int level, 
+		int offset = -1, 
+		int size = -1, 
+		std::list<LexemeResources::DataType> arguments = std::list<LexemeResources::DataType>()
+		);
 
 	Lexeme lexeme() const;
 	LexemeResources::DataType dataType() const;
@@ -29,6 +35,8 @@ protected:
 	int _offset;
 
 	int _size;
+
+	std::list<LexemeResources::DataType> _argumentTypes;
 };
 
 

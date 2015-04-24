@@ -71,48 +71,48 @@ void SemanticAnalyser::closeTable(bool deleteEntry)
 	}
 }
 
-bool SemanticAnalyser::insertSymbol(const Token token)
-{
-	DataType type = UnknownData;
-
-	switch (token.getLexeme().getType())
-	{
-	case MP_INTEGER:
-		type = IntData;
-		break;
-	case MP_FLOAT:
-		type = FloatData;
-		break;
-	case MP_STRING:
-		type = StringData;
-	default:
-		type = UnknownData;
-	}
-
-	//i think we may need to set the type manually for functions/procedures....
-	//i am not sure how we will get the reurn type
-
-	return insertSymbol(token, type);
-}
-
-bool SemanticAnalyser::insertSymbol(const Token token, DataType type)
-{
-	if (!_currentTable){
-		assert(false);
-		return false;//this should not happend;
-	}
-
-	bool found;
-	const Symbol foundSymbol = _currentTable->lookup(token.getLexeme().getValue(), found);
-
-	if (found){
-		symbolCollisionError(token);
-		return false;
-	}
-
-	_currentTable->insert(token.getLexeme(), type);
-	return true;
-}
+//bool SemanticAnalyser::insertSymbol(const Token token)
+//{
+//	DataType type = UnknownData;
+//
+//	switch (token.getLexeme().getType())
+//	{
+//	case MP_INTEGER:
+//		type = IntData;
+//		break;
+//	case MP_FLOAT:
+//		type = FloatData;
+//		break;
+//	case MP_STRING:
+//		type = StringData;
+//	default:
+//		type = UnknownData;
+//	}
+//
+//	//i think we may need to set the type manually for functions/procedures....
+//	//i am not sure how we will get the reurn type
+//
+//	return insertSymbol(token, type);
+//}
+//
+////bool SemanticAnalyser::insertSymbol(const Token token, DataType type)
+//{
+//	if (!_currentTable){
+//		assert(false);
+//		return false;//this should not happend;
+//	}
+//
+//	bool found;
+//	const Symbol foundSymbol = _currentTable->lookup(token.getLexeme().getValue(), found);
+//
+//	if (found){
+//		symbolCollisionError(token);
+//		return false;
+//	}
+//
+//	_currentTable->insert(token.getLexeme(), type);
+//	return true;
+//}
 
 bool SemanticAnalyser::insertSymbol(const Lexeme lex, DataType type)
 {
@@ -133,23 +133,62 @@ bool SemanticAnalyser::insertSymbol(const Lexeme lex, DataType type)
 	return true;
 }
 
-bool SemanticAnalyser::insertSymbol(SemanticRecord& record)
+bool SemanticAnalyser::insertArgument(const Lexeme lex, const int offset, const DataType type)
 {
-	int numIds = record.size();
-
-	for (int i = 0; i < numIds; i++)
-	{
-		Operand* next = record.getNextOperandPointer();
-		LexemeOperand* nextOp = dynamic_cast<LexemeOperand*>(next);
-		assert(nextOp);
-		if (nextOp)
-			insertSymbol(nextOp->getLexeme(), nextOp->type());
-		delete next;
-
+	if (!_currentTable){
+		assert(false);
+		return false;//this should not happend;
 	}
 
+	bool found;
+	const Symbol foundSymbol = _currentTable->lookup(lex.getValue(), found);
+
+
+	if (found){
+		symbolCollisionError(Token(lex, -1, -1));
+		return false;
+	}
+
+	_currentTable->insertArgument(lex, offset, type);
+	return true;
+
+}
+
+bool SemanticAnalyser::insertSymbol(SemanticRecord& record)
+{
+	for (int i = 0; i < record.size(); i++)
+	{
+		if (record.showNextOperandAs<LexemeOperand>()){
+			LexemeOperand* nextOp = record.showNextOperandAs<LexemeOperand>();
+			assert(nextOp);
+			insertSymbol(nextOp->getLexeme(), nextOp->type());
+		}
+		else{
+			assert(false);
+			return false;
+		}
+		delete record.getNextOperandPointer();
+	}
 	return true;
 }
+
+//bool SemanticAnalyser::insertArgument(SemanticRecord& record)
+//{
+//	for (int i = 0; i < record.size(); i++)
+//	{
+//		if (record.showNextOperandAs<LexemeOperand>()){
+//			LexemeOperand* nextOp = record.showNextOperandAs<LexemeOperand>();
+//			assert(nextOp);
+//			insertSymbol(nextOp->getLexeme(), nextOp->type());
+//		}
+//		else{
+//			assert(false);
+//			return false;
+//		}
+//		delete record.getNextOperandPointer();
+//	}
+//	return true;
+//}
 
 const Symbol SemanticAnalyser::lookupSymbol(string name, bool& found)
 {
@@ -298,11 +337,11 @@ void SemanticAnalyser::programJump(int beginLabel)
 
 	int level = _currentTable->level();
 
-	_outFile << "MOV SP D" << to_string(level) << " \n";
-	_outFile << "PUSH SP" << "\n";
-	_outFile << "PUSH #" << to_string(memAlloc) << " \n";
-	_outFile << "ADDS" << "\n";
-	_outFile << "POP SP" << "\n";
+	writeCommand("MOV SP D" + to_string(level) );
+	writeCommand("PUSH SP" );
+	writeCommand("PUSH #" + to_string(memAlloc) );
+	writeCommand("ADDS" );
+	writeCommand("POP SP" );
 
 
 }
@@ -514,6 +553,80 @@ void SemanticAnalyser::forEndBody(int loopAgain, int exitLoop, SemanticRecord& i
 
 }
 
+void SemanticAnalyser::functionHeading(int& beginLabel)
+{
+	int label = getNextLabelVal();
+	_outFile << "L" << to_string(label) << ": \n";
+}
+//
+//void SemanticAnalyser::functionEndHeading(int startFunction, SemanticRecord& record )
+//{
+//	////this is where we start after the variable and (sub) function/procedure
+//	////declairations
+//	//writeCommand("L" + to_string(startFunction) + ":");
+//
+//	////all of variables represented by the record should
+//	////have been pushed to the stack before the function was called
+//	//
+//	////Stack
+//	////------------------
+//	//// V1 | V2 | V3 | PC |
+//	////------------------^
+//	////                  SP
+//
+//	////swap the position of the first variable and
+//	////the PC value so that when we return the PC
+//	////is in the right position to return
+//
+//	//writeCommand("MOV -1(SP) 0(SP)");
+//
+//	////Stack
+//	////------------------------
+//	//// V1 | V2 | V3 | PC | PC
+//	////----------------------^----
+//	////                SP
+//
+//	//int offset = record.size() + 1;
+//	//offset = offset * (-1); //offset back
+//	//writeCommand("MOV "+to_string(offset)+"(SP)  -1(SP)");
+//
+//	////Stack
+//	////----------------------------
+//	//// V1 | V2 | V3 | V1  | PC
+//	////----------------------^--------------
+//	////                     SP
+//
+//	//int offset = record.size();
+//	//writeCommand("MOV " + to_string(-offset) + "(SP)  1(SP)");
+//
+//	////Stack
+//	////-------------------------
+//	//// PC | V2 | V3 | V1  | 
+//	////----------------------^----------
+//	////                      SP
+//
+//	////move the relative position of the first argument in the
+//	////semantic record so that the offset will point to the correct
+//	////place
+//
+//
+//	//
+//	////add the arguments to the symbol table with 
+//	////the adjusted offset values
+//	//
+//
+//
+//	//while (record.size()){
+//	//	insertArgument()
+//	//}
+//}
+
+void SemanticAnalyser::functionEnd()
+{
+
+
+}
+
 void SemanticAnalyser::unaryPrefixCommand(SemanticRecord& infixSymbols)
 {
 	assert(infixSymbols.size() == 2);
@@ -538,6 +651,7 @@ void SemanticAnalyser::unaryPrefixCommand(SemanticRecord& infixSymbols)
 
 StackOperand SemanticAnalyser::infixStackCommand(SemanticRecord& infixSymbols)
 {
+	int size = infixSymbols.size();
 	assert(infixSymbols.size() == 3);
 	
 	//we need to do some sort of type resolution here if the two operands are not
@@ -614,12 +728,17 @@ void SemanticAnalyser::push(Operand* val, DataType castType)
 		//type back up
 		val->setType(valAddress.type);
 
+		string addressOperator;
+		if (lexOp->isAddress()){
+			addressOperator = "@";
+		}
+
 		if (ENABLE_DEBUGGING && !val->getName().empty()){
 			//add comment with the variable name before the push 
 			_outFile << ";\t\tPushing: " << val->getName() << " Type:" << to_string(val->type())<< "\n";
 		}
 
-		_outFile << "PUSH " << valAddress.value << " \n";
+		_outFile << "PUSH " << addressOperator << valAddress.value << " \n";
 
 	}
 	if (castType != UnknownData){

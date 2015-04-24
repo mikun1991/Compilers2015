@@ -29,6 +29,6 @@ program SalaryTaxTest;
 
  begin 
  
- salary :=  123.45 
+ salary :=  123.45 ;
  
  end.

@@ -14,6 +14,8 @@ class SemanticRecord{
 public:
 	~SemanticRecord();
 
+
+	void addOperands(SemanticRecord& other);
 	void addOperand(Lexeme id, LexemeResources::DataType type = LexemeResources::UnknownData);
 	void addOperand(CommandOperand operand);
 	void addOperand(StackOperand operand);
@@ -35,7 +37,13 @@ public:
 
 	void setType(LexemeResources::DataType type);
 
+	void convertTypesToAddresses();
+
 private:
+
+	LexemeResources::DataType dataToAddressType(LexemeResources::DataType type);
+
+
 	std::list<Operand*> _identifiers;
 };
 
