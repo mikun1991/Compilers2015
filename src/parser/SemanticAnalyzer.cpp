@@ -572,8 +572,8 @@ void SemanticAnalyser::generateActivationRecord(int beginRecord)
 
 void SemanticAnalyser::functionHeading(int& beginLabel)
 {
-	int label = getNextLabelVal();
-	_outFile << "L" << to_string(label) << ": \n";
+	beginLabel = getNextLabelVal();
+	writeCommand("BR" + to_string(beginLabel));
 }
 
 void SemanticAnalyser::functionEnd()
@@ -605,8 +605,8 @@ void SemanticAnalyser::functionEnd()
 
 void SemanticAnalyser::procedureHeading(int& beginProc)
 {
-	int label = getNextLabelVal();
-	_outFile << "L" << to_string(label) << ": \n";
+	beginProc = getNextLabelVal();
+	writeCommand("BR L" +to_string(beginProc));
 }
 
 void SemanticAnalyser::procedureEnd()

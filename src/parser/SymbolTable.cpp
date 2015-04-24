@@ -123,11 +123,12 @@ void SymbolTable::printTable()
 int SymbolTable::allocSize()
 { 
 	unordered_map<string, Symbol>::const_iterator sym = _symbolLookup.cbegin();
-	int allocSize; //need one for each non argument type
+	int allocSize = 0; //need one for each non argument type
 	while (sym != _symbolLookup.cend()){
 		if (!DataIsAddress(sym->second.dataType())){
-			sym++;
+			allocSize++;
 		}
+		sym++;
 	}
 	return allocSize;
 }
