@@ -329,23 +329,6 @@ void SemanticAnalyser::programHeading(int& beginLabel)
 	writeCommand("BR L" + to_string(beginLabel) + "");
 }
 
-void SemanticAnalyser::programJump(int beginLabel)
-{
-	int memAlloc = _currentTable->size();
-
-	writeCommand("L" + to_string(beginLabel) + ":");
-
-	int level = _currentTable->level();
-
-	writeCommand("MOV SP D" + to_string(level) );
-	writeCommand("PUSH SP" );
-	writeCommand("PUSH #" + to_string(memAlloc) );
-	writeCommand("ADDS" );
-	writeCommand("POP SP" );
-
-
-}
-
 void SemanticAnalyser::programTail()
 {
 	//deallocate and Halt!!!
@@ -553,78 +536,100 @@ void SemanticAnalyser::forEndBody(int loopAgain, int exitLoop, SemanticRecord& i
 
 }
 
+void SemanticAnalyser::insertArguments(SemanticRecord& inputRecord)
+{
+	int offset = inputRecord.size();
+	offset++; //for the program counter
+	offset = offset* (-1);//moving backwards from SP at time of call
+
+	while (inputRecord.size()){
+		if (inputRecord.showNextOperandAs<LexemeOperand>()){
+			LexemeOperand nextOp = inputRecord.getNextOperandAsLexeme();
+			insertArgument(nextOp.getLexeme(), offset, nextOp.type());
+			offset++;
+		}
+	}
+}
+
+void SemanticAnalyser::generateActivationRecord(int beginRecord)
+{
+
+	//The size of the memeory that we are going to need will be 
+	//equal to the number of new variables
+
+	int memAlloc = _currentTable->allocSize();
+
+	writeCommand("L" + to_string(beginRecord) + ":");
+
+	int level = _currentTable->level();
+
+	writeCommand("MOV SP D" + to_string(level));
+	writeCommand("PUSH SP");
+	writeCommand("PUSH #" + to_string(memAlloc));
+	writeCommand("ADDS");
+	writeCommand("POP SP");
+}
+
 void SemanticAnalyser::functionHeading(int& beginLabel)
 {
 	int label = getNextLabelVal();
 	_outFile << "L" << to_string(label) << ": \n";
 }
-//
-//void SemanticAnalyser::functionEndHeading(int startFunction, SemanticRecord& record )
-//{
-//	////this is where we start after the variable and (sub) function/procedure
-//	////declairations
-//	//writeCommand("L" + to_string(startFunction) + ":");
-//
-//	////all of variables represented by the record should
-//	////have been pushed to the stack before the function was called
-//	//
-//	////Stack
-//	////------------------
-//	//// V1 | V2 | V3 | PC |
-//	////------------------^
-//	////                  SP
-//
-//	////swap the position of the first variable and
-//	////the PC value so that when we return the PC
-//	////is in the right position to return
-//
-//	//writeCommand("MOV -1(SP) 0(SP)");
-//
-//	////Stack
-//	////------------------------
-//	//// V1 | V2 | V3 | PC | PC
-//	////----------------------^----
-//	////                SP
-//
-//	//int offset = record.size() + 1;
-//	//offset = offset * (-1); //offset back
-//	//writeCommand("MOV "+to_string(offset)+"(SP)  -1(SP)");
-//
-//	////Stack
-//	////----------------------------
-//	//// V1 | V2 | V3 | V1  | PC
-//	////----------------------^--------------
-//	////                     SP
-//
-//	//int offset = record.size();
-//	//writeCommand("MOV " + to_string(-offset) + "(SP)  1(SP)");
-//
-//	////Stack
-//	////-------------------------
-//	//// PC | V2 | V3 | V1  | 
-//	////----------------------^----------
-//	////                      SP
-//
-//	////move the relative position of the first argument in the
-//	////semantic record so that the offset will point to the correct
-//	////place
-//
-//
-//	//
-//	////add the arguments to the symbol table with 
-//	////the adjusted offset values
-//	//
-//
-//
-//	//while (record.size()){
-//	//	insertArgument()
-//	//}
-//}
 
 void SemanticAnalyser::functionEnd()
 {
+	//put the stack pointer back to its original spot
+	int level = _currentTable->level();
+	writeCommand("MOV D" + to_string(level) + " SP");
 
+	//the return value is now one above the stack
+	//at the SP is the PC before the function call
+	//and and below that are all of the input variables
+	
+	int alloc = _currentTable->allocSize();
 
+	int offset = alloc;
+	writeCommand("MOV 1(SP) " + to_string(-(offset)) + "(SP)"); //move Ret
+	writeCommand("MOV 0(SP) " + to_string(-(offset)+1) + "(SP)"); //move PC
+
+	//move the SP into position
+
+	writeCommand("PUSH SP");
+	writeCommand("PUSH #1");// for ret val
+	writeCommand("ADDS");
+	writeCommand("PUSH #" +to_string(alloc)); //for offset
+	writeCommand("SUBS");
+	writeCommand("POP SP");
+
+}
+
+void SemanticAnalyser::procedureHeading(int& beginProc)
+{
+	int label = getNextLabelVal();
+	_outFile << "L" << to_string(label) << ": \n";
+}
+
+void SemanticAnalyser::procedureEnd()
+{
+	//put the stack pointer back to its original spot
+	int level = _currentTable->level();
+	writeCommand("MOV D" + to_string(level) + " SP");
+
+	//the return value is now one above the stack
+	//at the SP is the PC before the function call
+	//and and below that are all of the input variables
+
+	int alloc = _currentTable->allocSize();
+
+	int offset = alloc;
+	writeCommand("MOV 0(SP) " + to_string(-(offset)) + "(SP)"); //move PC
+
+	//move the SP into position
+
+	writeCommand("PUSH SP");
+	writeCommand("PUSH #" + to_string(alloc)); //for offset
+	writeCommand("SUBS");
+	writeCommand("POP SP");
 }
 
 void SemanticAnalyser::unaryPrefixCommand(SemanticRecord& infixSymbols)
@@ -729,7 +734,7 @@ void SemanticAnalyser::push(Operand* val, DataType castType)
 		val->setType(valAddress.type);
 
 		string addressOperator;
-		if (lexOp->isAddress()){
+		if (DataIsAddress(lexOp->type())){
 			addressOperator = "@";
 		}
 
