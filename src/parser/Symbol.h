@@ -25,6 +25,8 @@ public:
 	int offset() const;
 	void setOffset(int offset);
 
+	std::list<LexemeResources::DataType> argumentTypes() const;
+
 protected:
 
 

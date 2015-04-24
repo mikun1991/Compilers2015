@@ -44,4 +44,8 @@ void Symbol::setOffset(int offset)
 	_offset = offset;
 }
 
+list<DataType> Symbol::argumentTypes() const
+{
+	return _argumentTypes;
+}
 

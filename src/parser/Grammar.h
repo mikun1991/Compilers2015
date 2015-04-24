@@ -58,8 +58,8 @@ public:
 	 bool factor(SemanticRecord& record);
 	 bool forStatement(); 
 	 bool multiplyingOperator(SemanticRecord& record); 
-	 bool actualParameter(); 
-	 bool actualParameterTail();
+	 bool actualParameter(SemanticRecord& params); 
+	 bool actualParameterTail(SemanticRecord& params);
 	 bool addingOperator(SemanticRecord& record); 
 	 bool assignmentStatement();
 	 bool block(int begin); 
@@ -79,7 +79,7 @@ public:
 	 bool identifierTail(SemanticRecord& record); 
 	 bool ifStatement();
 	 bool initialValue(SemanticRecord& record);  
-	 bool optionalActualParameterList();  
+	 bool optionalActualParameterList(SemanticRecord& parameters);  
 	 bool optionalElsePart(); 
 	 bool optionalFormalParameterList(SemanticRecord& record); 
 	 bool optionalRelationalPart(SemanticRecord& record); 

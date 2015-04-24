@@ -9,9 +9,9 @@ program NestedFunctionsByTravis;
 				m := x + y;
 			end;
 		begin
-			x:=2;
-			y:=2;
-			z:=addTwo;
+			m:=2;
+			n:=2;
+			z:=addTwo(m,n);
 		end;
 	begin
 		writeln(x);

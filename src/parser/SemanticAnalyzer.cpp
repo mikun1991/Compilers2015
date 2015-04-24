@@ -536,6 +536,60 @@ void SemanticAnalyser::forEndBody(int loopAgain, int exitLoop, SemanticRecord& i
 
 }
 
+void SemanticAnalyser::funProdCall(SemanticRecord& id, SemanticRecord& args)
+{
+	//look up the function
+
+	LexemeOperand* fun = id.showNextOperandAs<LexemeOperand>();
+	assert(fun);
+	bool ok = false;
+	const Symbol funSymbol = _currentTable->lookup(fun->getName(), ok);
+
+	list<DataType> argTypes = funSymbol.argumentTypes();
+
+
+	while (args.size() > 0){
+		if (argTypes.size() == 0){
+			//error out with "Incorrect number of arguments"
+			assert(false);
+			break;
+		}
+		DataType nextArgType = argTypes.front();
+		argTypes.pop_front();
+
+		if (args.showNextOperandAs<LexemeOperand>()){
+			LexemeOperand nextArg = args.getNextOperandAsLexeme();
+			if (DataIsAddress(nextArgType)){
+				//then we need to push the address of the value 
+				//on to the stack
+				bool ok;
+				DataType outType;
+				string addr = lookupSymbolAddress(nextArg.getName(), ok, outType);
+
+				if (!ok){
+					assert(false);
+					//argument not found
+				}
+				if (outType != DataAsReferenceType(nextArgType)){
+					assert(false);
+					//incorrect argument type
+				}
+				writeCommand("PUSH D"+ nextArg.getLevel())
+
+
+			}
+			else{
+				//just push the value its self
+
+			}
+		}
+		else{
+			//they should all have lexemes so we can lok them up
+			assert(false);
+		}
+	}
+}
+
 void SemanticAnalyser::insertArguments(SemanticRecord& inputRecord)
 {
 	int offset = inputRecord.size();
@@ -573,7 +627,7 @@ void SemanticAnalyser::generateActivationRecord(int beginRecord)
 void SemanticAnalyser::functionHeading(int& beginLabel)
 {
 	beginLabel = getNextLabelVal();
-	writeCommand("BR" + to_string(beginLabel));
+	writeCommand("BR L" + to_string(beginLabel));
 }
 
 void SemanticAnalyser::functionEnd()
@@ -600,6 +654,7 @@ void SemanticAnalyser::functionEnd()
 	writeCommand("PUSH #" +to_string(alloc)); //for offset
 	writeCommand("SUBS");
 	writeCommand("POP SP");
+	writeCommand("RET");
 
 }
 
@@ -630,6 +685,8 @@ void SemanticAnalyser::procedureEnd()
 	writeCommand("PUSH #" + to_string(alloc)); //for offset
 	writeCommand("SUBS");
 	writeCommand("POP SP");
+	writeCommand("RET");
+
 }
 
 void SemanticAnalyser::unaryPrefixCommand(SemanticRecord& infixSymbols)
