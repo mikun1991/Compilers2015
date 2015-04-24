@@ -21,10 +21,6 @@ public:
 	LexemeResources::DataType type();
 	void setType(LexemeResources::DataType);
 
-	bool isAddress();
-
-	LexemeResources::DataType referenceType();
-
 protected:
 
 	LexemeResources::DataType _dataType;

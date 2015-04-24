@@ -41,37 +41,6 @@ string Operand::address()
 	return _address;
 }
 
-bool Operand::isAddress()
-{
-	switch (_dataType)
-	{
-	case AddressBool:
-	case AddressFloat:
-	case AddressInt:
-	case AddressString:
-		return true;
-	default:
-		return false;
-	}
-}
-
-DataType Operand::referenceType()
-{
-	switch (_dataType)
-	{
-	case AddressBool:
-		return BoolData;
-	case AddressInt:
-		return IntData;
-	case AddressString:
-		return StringData;
-	case AddressFloat:
-		return FloatData;
-	default:
-		return _dataType;
-	}
-}
-
 //-------------
 // StackOperand
 //-------------

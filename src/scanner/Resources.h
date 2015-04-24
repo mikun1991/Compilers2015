@@ -264,6 +264,39 @@ namespace LexemeResources
 		UnknownData		//others ?
 	};
 
+	static const bool DataIsAddress(DataType inData)
+	{
+		switch (inData)
+		{
+		case AddressBool:
+		case AddressFloat:
+		case AddressInt:
+		case AddressString:
+			return true;
+		default:
+			return false;
+		}
+	}
+
+	static const DataType DataAsReferenceType(DataType inData)
+	{
+		switch (inData)
+		{
+		case AddressBool:
+			return BoolData;
+		case AddressInt:
+			return IntData;
+		case AddressString:
+			return StringData;
+		case AddressFloat:
+			return FloatData;
+		default:
+			return inData;
+		}
+	}
+
+
+
 
 	//Some nice helper functions/structs
 	static const std::string asStr(LexemeType type)

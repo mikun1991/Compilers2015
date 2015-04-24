@@ -32,6 +32,8 @@ public:
 
 	void printTable();
 
+	int allocSize();
+
 private:
 	//this should only be called when closing a table 
 	void insert(Symbol tableSymbol);

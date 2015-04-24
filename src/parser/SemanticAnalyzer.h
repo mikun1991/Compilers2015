@@ -40,8 +40,8 @@ public:
 	bool createTable(const Lexeme token, LexemeResources::DataType type);
 	void closeTable(bool deleteEntry= false); 
 
-	bool insertSymbol(const Lexeme lex, DataType type);
-	bool insertArgument(const Lexeme lex,const int offset,const DataType type);
+	bool insertSymbol(const Lexeme lex, LexemeResources::DataType type);
+	bool insertArgument(const Lexeme lex, const int offset, const LexemeResources::DataType type);
 
 	bool insertSymbol(SemanticRecord& record);
 	//bool insertArgument(SemanticRecord& record);
@@ -63,7 +63,6 @@ public:
 
 
 	void programHeading(int& beginLabel);
-	void programJump(int beginLabel);
 	void programTail();
 
 	//call this after the booleanExpression has
@@ -87,6 +86,8 @@ public:
 
 
 	void generateActivationRecord(int beginRecord);
+
+	void insertArguments(SemanticRecord& inputArgs);
 
 	void functionHeading(int& beginLabel);
 	void functionEnd();

@@ -12,9 +12,10 @@ using namespace LexemeResources;
 SymbolTable::SymbolTable(Lexeme lexeme, LexemeResources::DataType type, int level, SymbolTable* parent)
 	:Symbol(lexeme, type, level)
 {
-	_currentOffset = 0; //TODO: should change this if the type has a return value
+	_currentOffset = 0;
 	_parentTable = parent;
 	_activeChildTable = NULL;
+	_size = 0;
 }
 
 SymbolTable* SymbolTable::createTable(Lexeme lexeme, LexemeResources::DataType type)
@@ -31,7 +32,6 @@ SymbolTable* SymbolTable::closeTable(bool includeInParent)
 	//symbol will have the correct size
 	//when it is refered to
 
-	_size = 0;
 	unordered_map<string, Symbol>::const_iterator symbolIt = _symbolLookup.begin();
 	while (symbolIt != _symbolLookup.end()){
 		_size += symbolIt->second.size();
@@ -58,7 +58,8 @@ void SymbolTable::insertArgument(const Lexeme lex, const int offset, const DataT
 	int size = 1;
 	Symbol newSymbol(lex, type, _level, offset, size);
 
-	_size = _currentOffset;
+	//increment size but not offset
+	_size += size;
 
 	_symbolLookup[lex.getValue()] = newSymbol;
 }
@@ -69,12 +70,7 @@ void SymbolTable::insert(const Lexeme lex,const DataType type)
 	int size = 1;
 	Symbol newSymbol(lex, type, _level, _currentOffset, size);
 	_currentOffset += size;
-
-	//this should be the same, and now
-	//size will be correct after all the 
-	//variables have been added , but before
-	//the symbol table has been closed
-	_size = _currentOffset;
+	_size += size;
 
 	_symbolLookup[lex.getValue()] =  newSymbol;
 }
@@ -122,4 +118,16 @@ void SymbolTable::printTable()
 
 	for (auto& x : _symbolLookup)
 		std::cout << x.first << "\t\t" << x.second.dataType() << "\t\t" << x.second.offset() << "\t\t" << x.second.size() << std::endl;
+}
+
+int SymbolTable::allocSize()
+{ 
+	unordered_map<string, Symbol>::const_iterator sym = _symbolLookup.cbegin();
+	int allocSize; //need one for each non argument type
+	while (sym != _symbolLookup.cend()){
+		if (!DataIsAddress(sym->second.dataType())){
+			sym++;
+		}
+	}
+	return allocSize;
 }

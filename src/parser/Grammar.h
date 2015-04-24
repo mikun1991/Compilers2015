@@ -62,7 +62,7 @@ public:
 	 bool actualParameterTail();
 	 bool addingOperator(SemanticRecord& record); 
 	 bool assignmentStatement();
-	 bool block(); 
+	 bool block(int begin); 
 	 bool booleanExpression(SemanticRecord& record); 
 	 bool compoundStatement(); 
 	 bool controlVariable(SemanticRecord& record);

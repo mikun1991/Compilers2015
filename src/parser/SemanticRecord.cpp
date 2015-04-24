@@ -17,7 +17,7 @@ SemanticRecord::~SemanticRecord()
 void SemanticRecord::addOperands(SemanticRecord& other)
 {
 	while (other.size()){
-		addOperand(other.getNextOperandPointer);
+		addOperand(other.getNextOperandPointer());
 	}
 }
 
