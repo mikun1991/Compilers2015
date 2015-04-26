@@ -84,7 +84,8 @@ public:
 	void forBegin(int& beginCondition, int& exitLoop, SemanticRecord& controlVars);
 	void forEndBody(int loopAgain, int exitLoop, SemanticRecord& intialRecord);
 
-	void funProdCall(SemanticRecord& id, SemanticRecord& args);
+	Operand* funCall(SemanticRecord& id, SemanticRecord& args);
+	void prodCall(SemanticRecord& id, SemanticRecord& args);
 
 	void generateActivationRecord(int beginRecord);
 

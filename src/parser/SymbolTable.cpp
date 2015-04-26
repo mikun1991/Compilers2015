@@ -26,7 +26,7 @@ SymbolTable* SymbolTable::createTable(Lexeme lexeme, LexemeResources::DataType t
 	return childTable;
 }
 
-SymbolTable* SymbolTable::closeTable(bool includeInParent)
+SymbolTable* SymbolTable::closeTable(int label)
 {
 	///size the size of the symbol table so this 
 	//symbol will have the correct size
@@ -43,6 +43,9 @@ SymbolTable* SymbolTable::closeTable(bool includeInParent)
 
 	if (_parentTable){
 		Symbol newSymbol(_lexeme, _dataType, _level, 0, _size);
+		newSymbol.setLabel(label);
+		newSymbol.setArgumentTypes(this->argumentTypes());
+		newSymbol.setFunProd(true);
 		//add itself to the parent table
 		_parentTable->insert(newSymbol);
 	}

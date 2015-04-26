@@ -138,11 +138,22 @@ bool Grammar::factor(SemanticRecord& factor_rec)
 			//the stack
 			SemanticRecord semRect;
 			functionIdentifier(semRect);
+
+			bool found;
+			Symbol sym = _semanticAnalyser->lookupSymbol(semRect.showNextOperandAs<LexemeOperand>()->getName(),found);
+			assert(found);
+			
+			if (sym.funProd()){
+				SemanticRecord funParams;
+				optionalActualParameterList(funParams);
+				factor_rec.addOperand(_semanticAnalyser->funCall(semRect, funParams));
+			}
+			else{
+				factor_rec.addOperand(_semanticAnalyser->push(semRect.showNextOperandAs<LexemeOperand>()->getLexeme()));
+			}
 			//this could be cleaned up
-			factor_rec.addOperand(_semanticAnalyser->push(semRect.getNextOperandAsLexeme().getLexeme()));
-			SemanticRecord funParams;
-			optionalActualParameterList(funParams);
-			_semanticAnalyser->funProdCall(semRect, funParams);
+			//factor_rec.addOperand(_semanticAnalyser->push(semRect.getNextOperandAsLexeme().getLexeme()));
+
 			return true; }
 		/*
 		case MP_IDENTIFIER:
@@ -707,7 +718,7 @@ bool Grammar::functionHeading()
 		type(functionHeading_rec);
 		//_semanticAnalyser->insertSymbol(functionHeading_rec.showNextId(), functionHeading_rec.getType()); 
 		_semanticAnalyser->createTable(functionHeading_rec.getNextOperandAsLexeme());
-		_semanticAnalyser->insertSymbol(optionalFormalParameterList_rec);
+		_semanticAnalyser->insertArguments(optionalFormalParameterList_rec);
 		return true;
 	default:
 		error(TypeList() << MP_FUNCTION);
@@ -1177,7 +1188,7 @@ bool Grammar::procedureStatement()
 		procedureIdentifier(procedureStatement_rec);
 		SemanticRecord prodParams;
 		optionalActualParameterList(prodParams);
-		_semanticAnalyser->funProdCall(procedureStatement_rec, prodParams);
+		_semanticAnalyser->prodCall(procedureStatement_rec, prodParams);
 		return true; }
 	default:
 		error(TypeList() << MP_IDENTIFIER);
@@ -1866,6 +1877,7 @@ bool Grammar::variableDeclarationPart()
 	default:  // epsilon
 		error(TypeList() << MP_VAR << MP_BEGIN << MP_FUNCTION << MP_PROCEDURE);
 	}
+	return false;
 }
 
 /*  Rule 7

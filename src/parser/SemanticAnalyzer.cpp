@@ -53,14 +53,17 @@ bool SemanticAnalyser::createTable(const Lexeme lexeme, DataType type)
 		symbolCollisionError(Token(lexeme, -1, -1));
 		return false;
 	}
-
+	int nextLabel = getNextLabelVal();
+	writeCommand("L" + to_string(nextLabel) + ":");
 	_currentTable = _currentTable->createTable(lexeme, type);
+	_currentTable->setLabel(nextLabel);
 	return true;
 }
 
 void SemanticAnalyser::closeTable(bool deleteEntry)
 {
-	SymbolTable* parent = _currentTable->closeTable();
+
+	SymbolTable* parent = _currentTable->closeTable(_currentTable->label());
 	if (parent){
 		_currentTable = parent;
 		return;
@@ -144,7 +147,7 @@ bool SemanticAnalyser::insertArgument(const Lexeme lex, const int offset, const 
 	const Symbol foundSymbol = _currentTable->lookup(lex.getValue(), found);
 
 
-	if (found){
+	if (!found){
 		symbolCollisionError(Token(lex, -1, -1));
 		return false;
 	}
@@ -156,7 +159,7 @@ bool SemanticAnalyser::insertArgument(const Lexeme lex, const int offset, const 
 
 bool SemanticAnalyser::insertSymbol(SemanticRecord& record)
 {
-	for (int i = 0; i < record.size(); i++)
+	while (record.size() > 0 )
 	{
 		if (record.showNextOperandAs<LexemeOperand>()){
 			LexemeOperand* nextOp = record.showNextOperandAs<LexemeOperand>();
@@ -536,14 +539,14 @@ void SemanticAnalyser::forEndBody(int loopAgain, int exitLoop, SemanticRecord& i
 
 }
 
-void SemanticAnalyser::funProdCall(SemanticRecord& id, SemanticRecord& args)
+void SemanticAnalyser::prodCall(SemanticRecord& id, SemanticRecord& args)
 {
 	//look up the function
 
 	LexemeOperand* fun = id.showNextOperandAs<LexemeOperand>();
 	assert(fun);
 	bool ok = false;
-	const Symbol funSymbol = _currentTable->lookup(fun->getName(), ok);
+	const Symbol funSymbol = lookupSymbol(fun->getName(), ok);
 
 	list<DataType> argTypes = funSymbol.argumentTypes();
 
@@ -574,13 +577,16 @@ void SemanticAnalyser::funProdCall(SemanticRecord& id, SemanticRecord& args)
 					assert(false);
 					//incorrect argument type
 				}
-				writeCommand("PUSH D"+ nextArg.getLevel())
 
+				Symbol matchingSymbol = lookupSymbol(nextArg.getName(), ok);
 
+				writeCommand("PUSH D" + to_string(matchingSymbol.level()));
+				writeCommand("PUSH #" +to_string( matchingSymbol.offset()));
+				writeCommand("ADDS");
 			}
 			else{
 				//just push the value its self
-
+				push(&nextArg, nextArgType);
 			}
 		}
 		else{
@@ -588,6 +594,20 @@ void SemanticAnalyser::funProdCall(SemanticRecord& id, SemanticRecord& args)
 			assert(false);
 		}
 	}
+
+	writeCommand("CALL L" + to_string(funSymbol.label()));
+}
+
+Operand* SemanticAnalyser::funCall(SemanticRecord& id, SemanticRecord& args)
+{
+	prodCall(id, args);
+
+	LexemeOperand* fun = id.showNextOperandAs<LexemeOperand>();
+	assert(fun);
+	bool ok = false;
+	const Symbol funSymbol = lookupSymbol(fun->getName(), ok);
+
+	return new StackOperand(fun->type());
 }
 
 void SemanticAnalyser::insertArguments(SemanticRecord& inputRecord)
@@ -643,15 +663,15 @@ void SemanticAnalyser::functionEnd()
 	int alloc = _currentTable->allocSize();
 
 	int offset = alloc;
-	writeCommand("MOV 1(SP) " + to_string(-(offset)) + "(SP)"); //move Ret
-	writeCommand("MOV 0(SP) " + to_string(-(offset)+1) + "(SP)"); //move PC
+	writeCommand("MOV 0(SP) " + to_string(-(offset)) + "(SP)"); //move Ret
+	writeCommand("MOV -1(SP) " + to_string(-(offset)+1) + "(SP)"); //move PC
 
 	//move the SP into position
 
 	writeCommand("PUSH SP");
 	writeCommand("PUSH #1");// for ret val
 	writeCommand("ADDS");
-	writeCommand("PUSH #" +to_string(alloc)); //for offset
+	writeCommand("PUSH #" +to_string(alloc -1)); //for offset
 	writeCommand("SUBS");
 	writeCommand("POP SP");
 	writeCommand("RET");
@@ -771,7 +791,7 @@ Operand SemanticAnalyser::twoValueCommand(const string command, SemanticRecord r
 
 	delete first;
 	delete second;
-
+	
 	return StackOperand(typeOfOp);
 }
 
