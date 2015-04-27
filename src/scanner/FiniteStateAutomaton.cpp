@@ -342,6 +342,7 @@ Underscore:
 
 		if (charIsDigit(next) || charIsUpperAlphabet(next) || charIsLowerAlphabet(next))
 		{
+			name += temp;
 			name += stream->get();
 			currentColumn++;
 			goto Identifier;

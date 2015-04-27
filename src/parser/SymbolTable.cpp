@@ -86,9 +86,30 @@ void SymbolTable::insert(Symbol tableSymbol)
 	_size = _currentOffset;
 }
 
+const Symbol SymbolTable::lookUpAtLevel(const string name, bool& outFound)
+{
+	outFound = true;
+
+	try{
+		return _symbolLookup.at(name);
+	}
+	catch (out_of_range){
+		outFound = false;
+
+		return Symbol();
+	}
+}
+
 const Symbol SymbolTable::lookup(const string name, bool& outFound)
 {
 	outFound = true;
+	
+	if (name == _lexeme.getValue()){
+		Symbol thisSym(*this);
+		thisSym.setFunProd(true);
+		return thisSym;
+	}
+	
 	try{
 		return _symbolLookup.at(name);
 	}

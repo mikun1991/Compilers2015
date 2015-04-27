@@ -7,17 +7,21 @@ program NestedFunctionsByTravis;
 		begin
 			m:=2;
 			n:=2;
+			z:=8;
 		end;
 		
 		
-		function addTwo(var x, y:Integer):Integer;
-			var m,o,p:Integer;
-			begin
-				m := x + y;
-			end;
+	function addTwo(var x, y:Integer):Integer;
+		var m,o,p:Integer;
+		begin
+			m := x + y;
+		end;
 
 	begin
 		x := 4;
+		haveTwo;
+		writeln(z);
+
 		y := 1;
 		z:=addTwo(x,y);
 		writeln(z);

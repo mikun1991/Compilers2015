@@ -144,10 +144,10 @@ bool SemanticAnalyser::insertArgument(const Lexeme lex, const int offset, const 
 	}
 
 	bool found;
-	const Symbol foundSymbol = _currentTable->lookup(lex.getValue(), found);
+	const Symbol foundSymbol = _currentTable->lookUpAtLevel(lex.getValue(), found);
 
 
-	if (!found){
+	if (found){
 		symbolCollisionError(Token(lex, -1, -1));
 		return false;
 	}
@@ -317,6 +317,7 @@ void SemanticAnalyser::symbolCollisionError(const Token token)
 {
 	string err = "This variable has already been used: " + token.getLexeme().getValue() + " \nline:" + to_string(token.getLineNumber()) + " \ncol:" + to_string(token.getColumnNumber()) + "!!.\n";
 	_errList.push_back(err);
+	assert(false);
 }
 
 void SemanticAnalyser::printCurrentTable()
@@ -660,9 +661,9 @@ void SemanticAnalyser::functionEnd()
 	//at the SP is the PC before the function call
 	//and and below that are all of the input variables
 	
-	int alloc = _currentTable->allocSize();
+	int argSize = _currentTable->allocSize() - _currentTable->size();
 
-	int offset = alloc;
+	int offset = argSize;
 	writeCommand("MOV 0(SP) " + to_string(-(offset)) + "(SP)"); //move Ret
 	writeCommand("MOV -1(SP) " + to_string(-(offset)+1) + "(SP)"); //move PC
 
@@ -671,7 +672,7 @@ void SemanticAnalyser::functionEnd()
 	writeCommand("PUSH SP");
 	writeCommand("PUSH #1");// for ret val
 	writeCommand("ADDS");
-	writeCommand("PUSH #" +to_string(alloc -1)); //for offset
+	writeCommand("PUSH #" + to_string(argSize - 1)); //for offset
 	writeCommand("SUBS");
 	writeCommand("POP SP");
 	writeCommand("RET");
@@ -694,15 +695,16 @@ void SemanticAnalyser::procedureEnd()
 	//at the SP is the PC before the function call
 	//and and below that are all of the input variables
 
-	int alloc = _currentTable->allocSize();
+	int argSize = _currentTable->allocSize() - _currentTable->size();
 
-	int offset = alloc;
-	writeCommand("MOV 0(SP) " + to_string(-(offset)) + "(SP)"); //move PC
+	int offset = argSize;
+	writeCommand("MOV 0(SP) " + to_string(-(offset)) + "(SP)"); //move Ret
+	//writeCommand("MOV -1(SP) " + to_string(-(offset)+1) + "(SP)"); //move PC
 
 	//move the SP into position
 
 	writeCommand("PUSH SP");
-	writeCommand("PUSH #" + to_string(alloc)); //for offset
+	writeCommand("PUSH #" + to_string(argSize)); //for offset
 	writeCommand("SUBS");
 	writeCommand("POP SP");
 	writeCommand("RET");

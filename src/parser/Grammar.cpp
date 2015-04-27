@@ -265,13 +265,25 @@ bool Grammar::actualParameter(SemanticRecord& params)
 	case MP_INTEGER_LIT:
 	case MP_FLOAT_LIT:
 	case MP_STRING_LIT:
-	case MP_NOT:
-	case MP_MINUS:
-	case MP_PLUS: //i think these are gust signs TODO: figure out what to do 
+	case MP_NOT:{ //i think these are gust signs TODO: figure out what to do 
 		logRule(72);
 		params.addOperand(currentLexeme());
 		match();
+		//TODO if the  previous operand is a command collapse the last three.
 		return true;
+	}
+	case MP_MINUS:{
+		logRule(72);
+		DataType type = _semanticAnalyser->checkType(params.showNextOperandAs<LexemeOperand>());
+		params.addOperand(CommandOperand(type == FloatData ? "SUBFS" : "SUBS", type));
+		match();
+		return true; }
+	case MP_PLUS:{
+		logRule(72);
+		DataType type = _semanticAnalyser->checkType(params.showNextOperandAs<LexemeOperand>());
+		params.addOperand(CommandOperand(type == FloatData ? "ADDFS" : "ADDS", type));
+		match();
+		return true; }
 	case MP_LPAREN://what are these for when do they get expanded?
 		logRule(72);
 		match();
@@ -1118,6 +1130,7 @@ bool Grammar::procedureDeclaration()
 			error(TypeList() << MP_SCOLON);
 		}
 		match();
+		_semanticAnalyser->procedureEnd();
 		_semanticAnalyser->printCurrentTable();
 		_semanticAnalyser->closeTable();
 		return true; }
@@ -1551,7 +1564,8 @@ bool Grammar::statement(SemanticRecord& record)
 		break;
 	case MP_IDENTIFIER:  // AMBIGUITY IN LL1 TABLE 38 or 43
 		LOG(38, logged);
-		return assignmentStatement();
+		return procedureAssignmentAmbiguity();
+		//return assignmentStatement();
 		break;
 	default:
 		error(TypeList() << MP_BEGIN << MP_ELSE << MP_END << MP_FOR << MP_IF << MP_PROCEDURE
@@ -1559,6 +1573,24 @@ bool Grammar::statement(SemanticRecord& record)
 
 	}
 
+	return false;
+}
+
+//Need to cheat a little to resolve the ambiguity
+bool Grammar::procedureAssignmentAmbiguity()
+{
+	Token secondToNext;
+	if (!_currentTokens->secondNextToken(secondToNext)){
+		assignmentStatement();
+	}
+
+	switch (secondToNext.getType())
+	{
+	case MP_ASSIGN:
+		return assignmentStatement();
+	default:
+		return procedureStatement();
+	}
 	return false;
 }
 

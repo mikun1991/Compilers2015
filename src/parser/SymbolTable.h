@@ -27,7 +27,7 @@ public:
 	void insert(const Lexeme lex, const LexemeResources::DataType type);
 	void insertArgument(const Lexeme lex,const int offset, const LexemeResources::DataType type);
 
-
+	const Symbol lookUpAtLevel(const std::string name, bool& outFound);
 	const Symbol lookup(const std::string name, bool& outFound);
 
 	void printTable();

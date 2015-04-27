@@ -54,6 +54,7 @@ private:
 	Lexeme currentLexeme();
 
 public:
+	bool procedureAssignmentAmbiguity();
 	 
 	 bool factor(SemanticRecord& record);
 	 bool forStatement(); 
