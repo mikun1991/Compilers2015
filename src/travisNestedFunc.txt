@@ -11,7 +11,7 @@ program NestedFunctionsByTravis;
 		begin
 			x:=2;
 			y:=2;
-			z:=addTwo;
+			z:=addTwo(x, y);
 		end;
 	begin
 		writeln(x);
