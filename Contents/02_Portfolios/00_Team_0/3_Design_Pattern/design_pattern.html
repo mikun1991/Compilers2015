@@ -119,32 +119,73 @@ Identify one design pattern that was used in your capstone project and describe 
 <p>The components of the compiler&#8212;the scanner, parser, symbol table, and semantic analyzer&#8212;were each by way of a specific pattern that students were asked to follow. In some cases, students were allowed to deviate from the patterns. As a result, some students may have chosen a different formal design pattern for portions of the compiler. If so, they appear below.</p>
 <h2>Specific Design Patterns</h2>
 <p>
-Our team did implement a couple of design patterns. 
-The compiler interface was created to allow the program to swap out target virtual machines, having to rewrite minimal code in the program. 
-This is the Strategy Pattern and also follows a design principle, <i>when possible program to an interface rather than a concrete class</i>. 
+Inheritance was used in the Semantic Analyser to represent the different types of operands that could be passed into machine instruction expressions.  The base class for this inheritance scheme was <i>Operand</i>.It was extended by classes <i>Stack Operand</i>, <i>LexemeOperand</i>, and <i>Command Operand</i>. This allowed for polymorphic operands to be stored as pointers in the semantic records so that commands could be passed different operand types in the same semantic record.
 </p>
 
-<pre class="prettyprint" ><code class="language-java">
-public interface Compiler {
-	
-	void openFile();
-	void readInt(String dst);
-	void readFloat(String dst);
-	
-	<span class="nocode">...</span>
-	
-}
+<pre class="prettyprint" ><code class="language-c++">
+
+class Operand
+{
+
+protected:
+  Operand(LexemeResources::DataType _dataType);
+  
+public:
+  Operand();
+  virtual ~Operand(){;}
+  virtual bool onTopOfStack();
+  virtual std::string getName();
+  std::string address();
+  LexemeResources::DataType type();
+  void setType(LexemeResources::DataType);
+
+protected:
+
+  LexemeResources::DataType _dataType;
+  std::string _address;
+};
+
+class StackOperand : public Operand
+{
+public:
+  StackOperand(LexemeResources::DataType type);
+
+  bool onTopOfStack();
+
+};
+
+class LexemeOperand : public Operand
+{
+public:
+  LexemeOperand(const Lexeme lexeme, LexemeResources::DataType type);
+
+  std::string getName();
+
+  Lexeme getLexeme() const;
+
+protected:
+  const Lexeme _lexeme; 
+
+};
+
+class CommandOperand : public Operand
+{
+public:
+  CommandOperand(std::string command, LexemeResources::DataType type = LexemeResources::UnknownData);
+
+  std::string getCommand() const;
+protected:
+
+  const std::string _command;
+};
+
 </code></pre>
 
 <p>
-The Table class follows the Singleton Pattern. 
-The constructor is private and the root table can only be created once. 
-If it has already been created, then the current root is returned by a call to instantiate the class. 
-Tables created at deeper nesting levels have one reference pointing to their parent table. 
-This creates a linked list structure for the symbol table that is also a singleton, as only one list can exist during runtime.
+A Facade pattern was used for the parser. This simplified the interface that the controling program had to interact with, while the <i>Parser</i> class was just a facade for the underlying <i>Grammer</i> class which held the functions used for determining the semantic correctness of the token stream. 
 </p>
 
-<pre class="prettyprint" ><code class="language-java">
+<pre class="prettyprint" ><code class="language-c++">
 public class Table {
 
 	private Table(Table parent) {
