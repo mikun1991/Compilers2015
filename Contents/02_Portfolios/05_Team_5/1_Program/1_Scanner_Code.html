@@ -117,8 +117,7 @@ Compilers 2014
 <h1>Scanner</h1>
 
 <h2>Specifications</h2>
-<pre class="prettyprint"><code class="language-java">
-CMakeLists.txt 
+<pre class="prettyprint"><code class="language-java">CMakeLists.txt 
 FiniteStateAutomaton.cpp:Check the type of token 
 FiniteStateAutomaton.h 
 Lexeme.cpp:Get type and value from lexeme 
@@ -133,10 +132,9 @@ TokenStream.h
 
 1.Use Scanner.cpp read token from file one by one. 
 2.Scan token use  Scanner::scanNextToken() 
-3.In Scanner::scanNextToken() use FiniteStateAutomaton.cpp  to check the type of token then return token  if it is correct, or return error.
-4. Use TokenStream.cpp to build a token file for parser 
-
-</code></pre>
+3.In Scanner::scanNextToken() use FiniteStateAutomaton.cpp  to check the type of token 
+4.Return token  if it is correct, or return error.
+5.Use TokenStream.cpp to build a token file for parser </code></pre>
 
 <h2>Source Listing</h2>
 
